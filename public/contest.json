@@ -1,0 +1,370 @@
+{
+  "title": "Present Perfect vs Past Simple",
+  "settings": {
+    "secondsPerQuestion": 60,
+    "defaultQuestionsPerTeam": 5,
+    "allowCrossTeamRepeats": false
+  },
+  "questions": [
+    {
+      "id": "perfect-past-01",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "Yesterday, I visited my grandmother.",
+        "Yesterday, I have visited my grandmother.",
+        "Yesterday, I has visited my grandmother.",
+        "Yesterday, I visiting my grandmother."
+      ],
+      "correctIndex": 0,
+      "explanation": "Yesterday is a finished time, so use the past simple: visited."
+    },
+    {
+      "id": "perfect-past-02",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "She has already finish her homework.",
+        "She has already finished her homework.",
+        "She already finish her homework.",
+        "She have already finished her homework."
+      ],
+      "correctIndex": 1,
+      "explanation": "Already describes a completed action connected to now. Use has + past participle: has finished."
+    },
+    {
+      "id": "perfect-past-03",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "We seeing that film last Friday.",
+        "We have seen that film last Friday.",
+        "We saw that film last Friday.",
+        "We has seen that film last Friday."
+      ],
+      "correctIndex": 2,
+      "explanation": "Last Friday is a specific finished time, so use saw, the past simple of see."
+    },
+    {
+      "id": "perfect-past-04",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "He have lost his keys, so he cannot open the door.",
+        "He has lose his keys, so he cannot open the door.",
+        "He lose his keys, so he cannot open the door.",
+        "He has lost his keys, so he cannot open the door."
+      ],
+      "correctIndex": 3,
+      "explanation": "The missing keys matter now. Use has + past participle: has lost."
+    },
+    {
+      "id": "perfect-past-05",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "Have you ever visited Petra?",
+        "Has you ever visited Petra?",
+        "Have you ever visit Petra?",
+        "Did you ever visit Petra?"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ever asks about an experience at an unspecified time. Use have + past participle: have visited."
+    },
+    {
+      "id": "perfect-past-06",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "I meet her in 2022.",
+        "I met her in 2022.",
+        "I have met her in 2022.",
+        "I has met her in 2022."
+      ],
+      "correctIndex": 1,
+      "explanation": "In 2022 names a finished time, so use the past simple: met."
+    },
+    {
+      "id": "perfect-past-07",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "They has lived here since 2020.",
+        "They have live here since 2020.",
+        "They have lived here since 2020.",
+        "They lived here since 2020 and still live here."
+      ],
+      "correctIndex": 2,
+      "explanation": "Since 2020 shows an action that started then and continues now. Use have lived."
+    },
+    {
+      "id": "perfect-past-08",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "She goes to the library an hour ago.",
+        "She has gone to the library an hour ago.",
+        "She have gone to the library an hour ago.",
+        "She went to the library an hour ago."
+      ],
+      "correctIndex": 3,
+      "explanation": "An hour ago is a finished time, so use went, the past simple of go."
+    },
+    {
+      "id": "perfect-past-09",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "I have never tried sushi.",
+        "I has never tried sushi.",
+        "I have never try sushi.",
+        "I never tried sushi yesterday."
+      ],
+      "correctIndex": 0,
+      "explanation": "Never describes a life experience up to now. Use have + past participle: have tried."
+    },
+    {
+      "id": "perfect-past-10",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "We have not finished the project last night.",
+        "We did not finish the project last night.",
+        "We does not finish the project last night.",
+        "We did not finished the project last night."
+      ],
+      "correctIndex": 1,
+      "explanation": "Last night is finished. After did not, use the base form finish."
+    },
+    {
+      "id": "perfect-past-11",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "Have he called you yesterday?",
+        "Did he called you yesterday?",
+        "Did he call you yesterday?",
+        "Has he called you yesterday?"
+      ],
+      "correctIndex": 2,
+      "explanation": "Yesterday is a finished time. A past-simple question uses did + base verb: call."
+    },
+    {
+      "id": "perfect-past-12",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "She have just arrived, so you can speak to her now.",
+        "She has just arrive, so you can speak to her now.",
+        "She just arriving, so you can speak to her now.",
+        "She has just arrived, so you can speak to her now."
+      ],
+      "correctIndex": 3,
+      "explanation": "Just shows a very recent event with a result now. Use has arrived."
+    },
+    {
+      "id": "perfect-past-13",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "I bought this notebook two days ago.",
+        "I has bought this notebook two days ago.",
+        "I buyed this notebook two days ago.",
+        "I have bought this notebook two days ago."
+      ],
+      "correctIndex": 0,
+      "explanation": "Two days ago is a finished time, so use bought, the past simple of buy."
+    },
+    {
+      "id": "perfect-past-14",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "They didn't eaten lunch yet.",
+        "They haven't eaten lunch yet.",
+        "They hasn't eaten lunch yet.",
+        "They haven't ate lunch yet."
+      ],
+      "correctIndex": 1,
+      "explanation": "Yet shows something expected up to now. Use have not + past participle: eaten."
+    },
+    {
+      "id": "perfect-past-15",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "When did you started school?",
+        "When have you started school?",
+        "When did you start school?",
+        "When has you started school?"
+      ],
+      "correctIndex": 2,
+      "explanation": "When asks for a specific past time. After did, use the base form start."
+    },
+    {
+      "id": "perfect-past-16",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "My brother have broken his glasses, so he cannot read the board.",
+        "My brother has broke his glasses, so he cannot read the board.",
+        "My brother breaking his glasses, so he cannot read the board.",
+        "My brother has broken his glasses, so he cannot read the board."
+      ],
+      "correctIndex": 3,
+      "explanation": "The broken glasses affect him now. Use has + past participle: broken."
+    },
+    {
+      "id": "perfect-past-17",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "We played football last Saturday.",
+        "We playing football last Saturday.",
+        "We have played football last Saturday.",
+        "We has played football last Saturday."
+      ],
+      "correctIndex": 0,
+      "explanation": "Last Saturday is a finished time, so use the past simple: played."
+    },
+    {
+      "id": "perfect-past-18",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "Did they finished the quiz yet?",
+        "Have they finished the quiz yet?",
+        "Has they finished the quiz yet?",
+        "Have they finish the quiz yet?"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yet asks whether something has happened up to now. Use have + finished."
+    },
+    {
+      "id": "perfect-past-19",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "She travel to Aqaba in 2021.",
+        "She has travelled to Aqaba in 2021.",
+        "She travelled to Aqaba in 2021.",
+        "She have travelled to Aqaba in 2021."
+      ],
+      "correctIndex": 2,
+      "explanation": "In 2021 gives a specific finished time, so use travelled."
+    },
+    {
+      "id": "perfect-past-20",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "I has known my friend for three years.",
+        "I knew my friend for three years and we are still friends.",
+        "I have know my friend for three years.",
+        "I have known my friend for three years."
+      ],
+      "correctIndex": 3,
+      "explanation": "The friendship began three years ago and continues now. Use have known."
+    },
+    {
+      "id": "perfect-past-21",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "Did she write the letter yesterday?",
+        "Have she wrote the letter yesterday?",
+        "Did she wrote the letter yesterday?",
+        "Has she written the letter yesterday?"
+      ],
+      "correctIndex": 0,
+      "explanation": "Yesterday is finished. Use did + the base form write."
+    },
+    {
+      "id": "perfect-past-22",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "We did not seen the new teacher yet.",
+        "We have not seen the new teacher yet.",
+        "We has not seen the new teacher yet.",
+        "We have not saw the new teacher yet."
+      ],
+      "correctIndex": 1,
+      "explanation": "Yet refers to the period up to now. Use have not + past participle: seen."
+    },
+    {
+      "id": "perfect-past-23",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "He score a goal in yesterday's match.",
+        "He has scored a goal in yesterday's match.",
+        "He scored a goal in yesterday's match.",
+        "He have scored a goal in yesterday's match."
+      ],
+      "correctIndex": 2,
+      "explanation": "Yesterday's match is a finished event, so use scored."
+    },
+    {
+      "id": "perfect-past-24",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "Did you ever rode a horse?",
+        "Has you ever ridden a horse?",
+        "Have you ever rode a horse?",
+        "Have you ever ridden a horse?"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ever asks about experience up to now. Use have + past participle: ridden."
+    },
+    {
+      "id": "perfect-past-25",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "I lost my pencil last Monday.",
+        "I lose my pencil last Monday.",
+        "I have lost my pencil last Monday.",
+        "I has lost my pencil last Monday."
+      ],
+      "correctIndex": 0,
+      "explanation": "Last Monday is a finished time, so use lost, the past simple of lose."
+    },
+    {
+      "id": "perfect-past-26",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "She didn't answered the question yet.",
+        "She hasn't answered the question yet.",
+        "She haven't answered the question yet.",
+        "She hasn't answer the question yet."
+      ],
+      "correctIndex": 1,
+      "explanation": "Yet connects the unfinished action to now. Use has not + past participle: answered."
+    },
+    {
+      "id": "perfect-past-27",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "They has arrived at six o'clock yesterday.",
+        "They arrive at six o'clock yesterday.",
+        "They arrived at six o'clock yesterday.",
+        "They have arrived at six o'clock yesterday."
+      ],
+      "correctIndex": 2,
+      "explanation": "Six o'clock yesterday names a specific finished time, so use arrived."
+    },
+    {
+      "id": "perfect-past-28",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "How long has you lived here? I still live here.",
+        "How long have you live here? I still live here.",
+        "How long did you live here? I still live here.",
+        "How long have you lived here? I still live here."
+      ],
+      "correctIndex": 3,
+      "explanation": "The person still lives here, so ask about a period continuing to now: have lived."
+    },
+    {
+      "id": "perfect-past-29",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "The lesson started ten minutes ago.",
+        "The lesson start ten minutes ago.",
+        "The lesson has started ten minutes ago.",
+        "The lesson have started ten minutes ago."
+      ],
+      "correctIndex": 0,
+      "explanation": "Ten minutes ago is a finished time, so use started."
+    },
+    {
+      "id": "perfect-past-30",
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        "I finishing my work, so I can help you now.",
+        "I have finished my work, so I can help you now.",
+        "I has finished my work, so I can help you now.",
+        "I have finish my work, so I can help you now."
+      ],
+      "correctIndex": 1,
+      "explanation": "The completed work has a result now. Use have + past participle: finished."
+    }
+  ]
+}
