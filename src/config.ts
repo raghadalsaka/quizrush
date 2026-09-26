@@ -4,7 +4,6 @@ export const MAX_TEAMS: number = 5
 export const MAX_QUESTIONS_PER_TEAM: number = 50
 export const MAX_SECONDS_PER_QUESTION: number = 600
 export const MAX_TEAM_NAME_LENGTH: number = 30
-export const MAX_REPORTED_ERRORS: number = 15
 export const FLIP_OUT_MS: number = 220
 export const FLIP_IN_MS: number = 320
 export const REVEAL_SETTLE_MS: number = 60

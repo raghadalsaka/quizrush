@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { EffectScope } from 'vue'
 import { OPTION_COUNT } from '../../src/config'
 import { useGame, type Game } from '../../src/composables/useGame'
@@ -52,7 +52,8 @@ describe('useGame: loading', () => {
     expect(game.phase.value).toBe('setup')
   })
 
-  it('shows errors and recovers on retry', async () => {
+  it('logs load errors for the editor and recovers on retry', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
     let attempt = 0
     const game = createGame(() => {
       attempt += 1
@@ -63,7 +64,7 @@ describe('useGame: loading', () => {
     })
     await game.load()
     expect(game.phase.value).toBe('error')
-    expect(game.loadErrors.value).toEqual(['contest.json is not valid JSON'])
+    expect(consoleError).toHaveBeenCalledWith(expect.any(String), ['contest.json is not valid JSON'])
     await game.load()
     expect(game.phase.value).toBe('setup')
   })
@@ -81,6 +82,7 @@ describe('useGame: turns and scoring', () => {
   it('plays round-robin with equal turns and ends on results', async () => {
     const game = await startedGame(['Red', 'Blue', 'Green'], 2)
     const order: number[] = []
+    const upcoming: (string | undefined)[] = []
     for (let turn = 0; turn < 6; turn++) {
       expect(game.phase.value).toBe('ready')
       order.push(game.currentTeamIndex.value)
@@ -88,12 +90,25 @@ describe('useGame: turns and scoring', () => {
       expect(game.phase.value).toBe('answering')
       game.answer(correctIndex(game))
       expect(game.phase.value).toBe('resolved')
+      upcoming.push(game.nextTeam.value?.name)
       game.nextTurn()
     }
     expect(order).toEqual([0, 1, 2, 0, 1, 2])
+    expect(game.nextTeam.value).toBeNull()
+    expect(upcoming).toEqual(['Blue', 'Green', 'Red', 'Blue', 'Green', undefined])
     expect(game.phase.value).toBe('results')
     expect(game.teams.value.map((team) => team.turnsTaken)).toEqual([2, 2, 2])
     expect(game.teams.value.map((team) => team.score)).toEqual([2, 2, 2])
+  })
+
+  it('has no next team to announce when a single team plays', async () => {
+    const game = await startedGame(['Solo'], 2)
+    game.startTurn()
+    game.answer(correctIndex(game))
+    expect(game.nextTeam.value).toBeNull()
+    game.nextTurn()
+    expect(game.currentTeamIndex.value).toBe(0)
+    expect(game.phase.value).toBe('ready')
   })
 
   it('awards exactly one point for a correct answer, even on double clicks', async () => {
@@ -158,37 +173,21 @@ describe('useGame: reveal and teacher controls', () => {
     expect(game.remainingMs.value).toBe(60_000)
   })
 
-  it('restart keeps the question, turn and score and resets the full time', async () => {
-    const game = await startedGame(['Red'], 2)
-    game.startTurn()
-    const question = game.currentQuestion.value
-    advance(45_000)
-    expect(game.restartQuestion(game.cardId.value)).toBe(true)
-    expect(game.remainingMs.value).toBe(60_000)
-    expect(game.currentQuestion.value).toBe(question)
-    expect(game.turnNumber.value).toBe(1)
-    advance(59_000)
-    expect(game.phase.value).toBe('answering')
-    game.answer(correctIndex(game))
-    game.answer(correctIndex(game))
-    expect(game.teams.value[0]?.score).toBe(1)
-  })
-
-  it('restart and replace are refused after resolution', async () => {
+  it('different card is refused after resolution', async () => {
     const game = await startedGame(['Red'], 2)
     game.startTurn()
     game.answer(wrongIndex(game))
-    expect(game.restartQuestion(game.cardId.value)).toBe(false)
     expect(game.replaceCard(game.cardId.value)).toBe(false)
     expect(game.phase.value).toBe('resolved')
   })
 
-  it('a confirmation arriving after time ran out resolves as a timeout instead of restarting', async () => {
+  it('a different-card confirmation arriving after time ran out resolves as a timeout', async () => {
     const game = await startedGame(['Red'], 2)
     game.startTurn()
     const card = game.cardId.value
+    expect(game.canReplace.value).toBe(true)
     jump(60_000)
-    expect(game.restartQuestion(card)).toBe(false)
+    expect(game.replaceCard(card)).toBe(false)
     expect(game.outcome.value?.kind).toBe('timeout')
   })
 
@@ -208,7 +207,6 @@ describe('useGame: reveal and teacher controls', () => {
     advance(500)
     expect(game.phase.value).toBe('answering')
     expect(game.remainingMs.value).toBe(60_000)
-    expect(game.restartQuestion(oldCard)).toBe(false)
     expect(game.replaceCard(oldCard)).toBe(false)
     advance(30_000)
     expect(game.phase.value).toBe('answering')

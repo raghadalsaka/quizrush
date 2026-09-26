@@ -32,7 +32,6 @@ export function useGame(options: GameOptions) {
 
   const phase = ref<Phase>('loading')
   const contest = shallowRef<Contest | null>(null)
-  const loadErrors = ref<string[]>([])
   const teams = ref<Team[]>([])
   const questionsPerTeam = ref(0)
   const secondsPerQuestion = ref(0)
@@ -55,6 +54,18 @@ export function useGame(options: GameOptions) {
   const currentTeam = computed(() => teams.value[currentTeamIndex.value] ?? null)
   const isGameActive = computed(() => IN_GAME_PHASES.includes(phase.value))
   const isGameComplete = computed(() => teams.value.length > 0 && teams.value.every((team) => team.turnsTaken >= questionsPerTeam.value))
+  const nextTeamIndex = computed(() => {
+    if (teams.value.length === 0) {
+      return 0
+    }
+    return (currentTeamIndex.value + 1) % teams.value.length
+  })
+  const nextTeam = computed(() => {
+    if (isGameComplete.value || teams.value.length < 2) {
+      return null
+    }
+    return teams.value[nextTeamIndex.value] ?? null
+  })
   const turnNumber = computed(() => {
     const team = currentTeam.value
     if (team === null) {
@@ -81,7 +92,6 @@ export function useGame(options: GameOptions) {
     loadRequest += 1
     const request = loadRequest
     phase.value = 'loading'
-    loadErrors.value = []
     let result: ContestLoadResult
     try {
       result = await options.loadContest()
@@ -92,8 +102,8 @@ export function useGame(options: GameOptions) {
       return
     }
     if (!result.ok) {
+      console.error('Quizrush could not load contest.json:', result.errors)
       contest.value = null
-      loadErrors.value = result.errors
       phase.value = 'error'
       return
     }
@@ -217,28 +227,15 @@ export function useGame(options: GameOptions) {
     resolve('timeout', null)
   }
 
-  function isActionableCard(forCard: number): boolean {
-    if (phase.value !== 'answering' || forCard !== cardId.value) {
+  function replaceCard(forCard: number): boolean {
+    if (phase.value !== 'answering' || forCard !== cardId.value || deck === null) {
       return false
     }
     if (countdown.isExpired()) {
       resolve('timeout', null)
       return false
     }
-    return true
-  }
-
-  function restartQuestion(forCard: number): boolean {
-    if (!isActionableCard(forCard)) {
-      return false
-    }
-    countdown.start(secondsPerQuestion.value * 1000)
-    announcement.value = 'Question restarted with the full time.'
-    return true
-  }
-
-  function replaceCard(forCard: number): boolean {
-    if (!isActionableCard(forCard) || deck === null || !canReplace.value) {
+    if (!canReplace.value) {
       return false
     }
     countdown.stop()
@@ -258,7 +255,7 @@ export function useGame(options: GameOptions) {
       announcement.value = 'Game over. Here are the final results.'
       return
     }
-    currentTeamIndex.value = (currentTeamIndex.value + 1) % teams.value.length
+    currentTeamIndex.value = nextTeamIndex.value
     phase.value = 'ready'
     announcement.value = `${currentTeam.value?.name ?? 'Next team'}, it's your turn.`
   }
@@ -283,7 +280,6 @@ export function useGame(options: GameOptions) {
   return {
     phase: readonly(phase),
     contest,
-    loadErrors: readonly(loadErrors),
     teams: readonly(teams),
     questionsPerTeam: readonly(questionsPerTeam),
     secondsPerQuestion: readonly(secondsPerQuestion),
@@ -300,13 +296,13 @@ export function useGame(options: GameOptions) {
     isTimerRunning: countdown.isRunning,
     isGameActive,
     isGameComplete,
+    nextTeam,
     turnNumber,
     rankedTeams,
     load,
     startGame,
     startTurn,
     answer,
-    restartQuestion,
     replaceCard,
     nextTurn,
     newGame,

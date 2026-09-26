@@ -51,7 +51,7 @@ All content lives in [`public/contest.json`](public/contest.json). Edit it, comm
 | `questions[].correctIndex` | `0`–`3`: the position of the right answer (`0` is the first option). |
 | `questions[].explanation` | Non-blank text, shown after every answer or timeout. |
 
-If the file is missing, is not valid JSON, or breaks any rule, the app shows a teacher-facing list of problems with a **Retry** button. It never starts with broken data. The JSON is public, so anyone can read the answers.
+The CI tests validate `public/contest.json`, so a file that breaks any rule is never deployed. If the quiz still can't load (for example, no internet), players see a plain "couldn't be loaded" message with a **Try again** button, and the technical details go to the browser console (F12 → Console). The app never starts with broken data. The JSON is public, so anyone can read the answers.
 
 How many questions you need:
 
@@ -64,11 +64,9 @@ The setup screen shows the count and disables **Start Game** until the setup wor
 
 - Teams play in the order they were entered, one question per turn, and every team gets the same number of turns.
 - **Start** draws a random question and flips the card. The timer starts once the answers can be clicked.
-- The first answer (mouse or keys 1–4) locks the question. A correct answer earns exactly 1 point. A wrong answer or a timeout earns 0. The correct answer and the explanation stay visible until the teacher presses **Next Team** (or **See Results**).
+- The first answer (mouse or keys 1–4) locks the question. A correct answer earns exactly 1 point. A wrong answer or a timeout earns 0. The correct answer and the explanation stay visible until the teacher presses **Next Team: <name of the next team>**. With one team it reads **Next Question**, and after the last turn **See Results**.
 - The timer uses a real-time deadline, so a hidden or throttled tab never gets extra time.
-- **Teacher controls** are available while a question is open, and each asks for confirmation:
-  - **Restart Question** gives the same question the full time again. The turn and score don't change.
-  - **Different Card** sets the question aside and draws another one with a fresh timer. The turn and score don't change.
+- **Different Card** (in the teacher controls, while a question is open) asks for confirmation, then sets the question aside and draws another one with a fresh timer. The turn and score don't change.
 - The final leaderboard celebrates every team tied for the top score.
 
 ### Repeat and replacement rules

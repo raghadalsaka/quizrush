@@ -9,7 +9,7 @@ import QuestionCard from './QuestionCard.vue'
 import TeamScoreboard from './TeamScoreboard.vue'
 import TeacherControls from './TeacherControls.vue'
 
-type PendingAction = { kind: 'restart' | 'replace'; cardId: number } | { kind: 'newGame' }
+type PendingAction = { kind: 'replace'; cardId: number } | { kind: 'newGame' }
 
 interface DialogText {
   title: string
@@ -34,19 +34,13 @@ const {
   questionsPerTeam,
   turnNumber,
   isGameComplete,
+  nextTeam,
 } = game
 
 const pending = ref<PendingAction | null>(null)
 
 const dialogText = computed<DialogText>(() => {
   const action = pending.value
-  if (action?.kind === 'restart') {
-    return {
-      title: 'Restart this question?',
-      message: 'The same question starts again with the full time. The turn is not used and no point is given.',
-      confirmLabel: 'Restart Question',
-    }
-  }
   if (action?.kind === 'replace') {
     return {
       title: 'Draw a different card?',
@@ -63,16 +57,16 @@ const dialogText = computed<DialogText>(() => {
 
 watch([phase, cardId], () => {
   const action = pending.value
-  if (action !== null && action.kind !== 'newGame' && (phase.value !== 'answering' || action.cardId !== cardId.value)) {
+  if (action?.kind === 'replace' && (phase.value !== 'answering' || action.cardId !== cardId.value)) {
     pending.value = null
   }
 })
 
-function requestCardAction(kind: 'restart' | 'replace'): void {
+function requestReplace(): void {
   if (phase.value !== 'answering') {
     return
   }
-  pending.value = { kind, cardId: cardId.value }
+  pending.value = { kind: 'replace', cardId: cardId.value }
 }
 
 function confirmPending(): void {
@@ -81,9 +75,7 @@ function confirmPending(): void {
   if (action === null) {
     return
   }
-  if (action.kind === 'restart') {
-    game.restartQuestion(action.cardId)
-  } else if (action.kind === 'replace') {
+  if (action.kind === 'replace') {
     game.replaceCard(action.cardId)
   } else {
     game.newGame()
@@ -111,7 +103,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <main class="mx-auto flex min-h-screen w-full max-w-7xl flex-col items-center gap-4 px-4 pt-4 lg:px-8">
+  <main class="mx-auto flex min-h-screen w-full max-w-7xl flex-col items-center gap-4 px-4 pt-4 pb-32 lg:px-8">
     <header class="flex w-full flex-col items-center gap-2">
       <p class="text-sm font-bold tracking-[0.2em] text-indigo-200 uppercase">{{ contest?.title }}</p>
       <TeamScoreboard :teams="teams" :active-index="currentTeamIndex" :last-award="lastAward" />
@@ -139,8 +131,8 @@ onBeforeUnmount(() => {
       :phase="phase"
       :can-replace="canReplace"
       :is-game-complete="isGameComplete"
-      @restart="requestCardAction('restart')"
-      @replace="requestCardAction('replace')"
+      :next-team-name="nextTeam?.name ?? null"
+      @replace="requestReplace"
       @next="game.nextTurn"
       @new-game="pending = { kind: 'newGame' }"
     />
