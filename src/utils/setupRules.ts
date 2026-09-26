@@ -83,7 +83,7 @@ export function checkSetup(input: SetupInput, questionCount: number, allowCrossT
   const required = requiredQuestionCount(teamCount, input.questionsPerTeam, allowCrossTeamRepeats)
   const hasEnoughQuestions = questionCount >= required
   if (!hasEnoughQuestions) {
-    problems.push(`Not enough questions: ${required} needed, ${questionCount} available. Lower the questions per team or teams, or add questions to contest.json.`)
+    problems.push(`Not enough questions: ${required} needed, ${questionCount} available. Lower the questions per team or the number of teams.`)
   }
   return {
     problems,

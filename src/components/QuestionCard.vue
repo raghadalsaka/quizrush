@@ -13,11 +13,16 @@ const OPTION_CLASSES: Record<OptionState, string> = {
   other: 'border-slate-200 bg-white text-slate-500',
 }
 
-const OPTION_TAGS: Record<OptionState, string> = {
-  open: '',
-  correct: '✓ Correct answer',
-  chosen: '✗ Chosen',
-  other: '',
+interface OptionTag {
+  symbol: string
+  label: string
+}
+
+const OPTION_TAGS: Record<OptionState, OptionTag | null> = {
+  open: null,
+  correct: { symbol: '✓', label: 'Correct answer' },
+  chosen: { symbol: '✗', label: 'Chosen answer' },
+  other: null,
 }
 
 const FLIP_DURATIONS: Record<string, string> = {
@@ -142,9 +147,10 @@ function focusResult(): void {
               {{ OPTION_LABELS[index] }}
             </span>
             <span class="flex-1">{{ option }}</span>
-            <span v-if="OPTION_TAGS[optionState(index)] !== ''" class="shrink-0 text-lg font-black">
-              {{ OPTION_TAGS[optionState(index)] }}
-            </span>
+            <template v-if="OPTION_TAGS[optionState(index)] !== null">
+              <span class="shrink-0 text-3xl font-black" aria-hidden="true">{{ OPTION_TAGS[optionState(index)]?.symbol }}</span>
+              <span class="sr-only">{{ OPTION_TAGS[optionState(index)]?.label }}</span>
+            </template>
           </button>
         </div>
         <p v-if="isAnswerable" class="mt-3 text-base text-slate-600">Tip: press 1–{{ OPTION_COUNT }} on the keyboard to answer.</p>

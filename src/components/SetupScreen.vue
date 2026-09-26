@@ -34,13 +34,6 @@ const check = computed(() =>
   checkSetup(setupInput.value, props.contest.questions.length, props.contest.settings.allowCrossTeamRepeats),
 )
 
-const repeatNote = computed(() => {
-  if (props.contest.settings.allowCrossTeamRepeats) {
-    return 'A question may come up again for a different team, but never twice for the same team.'
-  }
-  return 'Each question is used at most once in the whole game.'
-})
-
 function submit(): void {
   if (check.value.problems.length > 0) {
     return
@@ -88,10 +81,6 @@ function submit(): void {
             required
           />
         </div>
-        <p class="rounded-xl bg-indigo-50 px-4 py-3 text-base">
-          <strong>Repeat rule:</strong> {{ repeatNote }}
-          <span class="block text-sm text-slate-600">Change it with <code>allowCrossTeamRepeats</code> in contest.json.</span>
-        </p>
       </fieldset>
 
       <fieldset class="space-y-5">
