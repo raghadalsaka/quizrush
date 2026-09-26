@@ -61,7 +61,7 @@
         "Have you ever visited Petra?",
         "Has you ever visited Petra?",
         "Have you ever visit Petra?",
-        "Did you ever visit Petra?"
+        "Have you ever visiting Petra?"
       ],
       "correctIndex": 0,
       "explanation": "Ever asks about an experience at an unspecified time. Use have + past participle: have visited."
