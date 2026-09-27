@@ -36,7 +36,7 @@ const pieces = computed<Piece[]>(() =>
     <span
       v-for="(piece, index) in pieces"
       :key="index"
-      class="confetti-piece rounded-sm"
+      class="absolute -top-[4vh] animate-confetti rounded-sm motion-reduce:hidden"
       :style="{
         left: piece.left,
         width: piece.width,

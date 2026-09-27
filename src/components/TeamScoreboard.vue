@@ -18,20 +18,20 @@ defineProps<{
       :class="[
         teamThemeClass(index),
         index === activeIndex
-          ? 'border-transparent bg-(--team) text-(--team-on) shadow-[0_5px_0_var(--team-deep)] lg:translate-x-2'
+          ? 'border-transparent bg-(--team) text-(--team-on) shadow-team-tile lg:translate-x-2'
           : 'border-rule bg-card text-ink',
       ]"
       :aria-current="index === activeIndex ? 'step' : undefined"
     >
       <span class="team-shape text-2xl" :class="{ 'bg-(--team-on)': index === activeIndex }" aria-hidden="true"></span>
       <span class="min-w-0 text-lg font-bold break-words">{{ team.name }}</span>
-      <span :key="team.score" class="font-display text-4xl leading-none font-extrabold tabular-nums" :class="{ 'score-pop': team.score > 0 }">
+      <span :key="team.score" class="inline-block font-display text-4xl leading-none font-extrabold tabular-nums" :class="{ 'animate-score-pop': team.score > 0 }">
         {{ team.score }}
       </span>
       <span
         v-if="lastAward !== null && lastAward.teamIndex === index"
         :key="lastAward.awardId"
-        class="plus-one pointer-events-none absolute -top-5 right-2 rounded-full bg-good px-3 py-0.5 font-display text-2xl font-extrabold text-white shadow-[0_3px_0_var(--color-good-deep)]"
+        class="pointer-events-none absolute -top-5 right-2 rounded-full bg-good px-3 py-0.5 font-display text-2xl font-extrabold text-white shadow-good-edge animate-plus-one motion-reduce:hidden"
         aria-hidden="true"
       >
         +1

@@ -126,7 +126,7 @@ function submit(): void {
         </ul>
         <button
           type="submit"
-          class="btn btn-primary min-h-16 px-10 text-2xl"
+          class="btn btn-primary btn-large"
           :disabled="problems.length > 0"
           :aria-describedby="problems.length > 0 ? 'setup-problems' : undefined"
         >
