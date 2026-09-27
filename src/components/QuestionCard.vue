@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { FLIP_IN_MS, FLIP_OUT_MS, OPTION_COUNT, OPTION_LABELS } from '../config'
+import { FLIP_IN_MS, FLIP_OUT_MS, OPTION_LABELS } from '../config'
 import type { Question } from '../types/contest'
 import type { Outcome, Phase } from '../types/game'
 
@@ -153,7 +153,6 @@ function focusResult(): void {
             </template>
           </button>
         </div>
-        <p v-if="isAnswerable" class="mt-3 text-base text-slate-600">Tip: press 1–{{ OPTION_COUNT }} on the keyboard to answer.</p>
 
         <Transition name="result" @after-enter="focusResult">
           <section

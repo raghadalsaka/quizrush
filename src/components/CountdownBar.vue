@@ -33,22 +33,17 @@ const label = computed(() => {
 
 <template>
   <div class="w-full">
-    <div class="flex flex-wrap items-end justify-between gap-4">
-      <div class="min-w-0">
-        <slot />
-      </div>
-      <div class="text-right">
-        <p class="text-lg font-bold" :class="isLow ? 'text-highlight' : 'text-indigo-100'">{{ label }}</p>
-        <p
-          role="timer"
-          aria-live="off"
-          :aria-label="`${seconds} seconds left`"
-          class="text-6xl leading-none font-black tabular-nums"
-          :class="isLow ? 'text-highlight' : 'text-white'"
-        >
-          {{ seconds }}<span class="text-3xl">s</span>
-        </p>
-      </div>
+    <div class="flex items-end justify-between gap-4">
+      <p class="text-2xl font-bold" :class="isLow ? 'text-highlight' : 'text-indigo-100'">{{ label }}</p>
+      <p
+        role="timer"
+        aria-live="off"
+        :aria-label="`${seconds} seconds left`"
+        class="text-6xl leading-none font-black tabular-nums"
+        :class="isLow ? 'text-highlight' : 'text-white'"
+      >
+        {{ seconds }}<span class="text-3xl">s</span>
+      </p>
     </div>
     <div class="mt-3 h-4 overflow-hidden rounded-full bg-white/15" aria-hidden="true">
       <div

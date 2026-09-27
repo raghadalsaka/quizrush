@@ -32,10 +32,10 @@ const advanceLabel = computed(() => {
 <template>
   <section
     aria-labelledby="teacher-controls-heading"
-    class="fixed right-3 bottom-3 z-10 flex max-w-[calc(100vw-1.5rem)] flex-col items-end gap-1 rounded-2xl border-2 border-dashed border-indigo-300/50 bg-stage-deep/95 p-2 shadow-2xl backdrop-blur"
+    class="fixed bottom-3 left-3 z-10 flex max-w-[calc(100vw-1.5rem)] flex-col items-start gap-1 rounded-2xl border-2 border-dashed border-indigo-300/50 bg-stage-deep/95 p-2 shadow-2xl backdrop-blur"
   >
-    <h2 id="teacher-controls-heading" class="px-1 text-xs font-bold tracking-[0.2em] text-indigo-200 uppercase">Teacher controls</h2>
-    <div class="flex flex-wrap items-center justify-end gap-2">
+    <h2 id="teacher-controls-heading" class="self-center px-1 text-xs font-bold tracking-[0.2em] text-indigo-200 uppercase">Teacher controls</h2>
+    <div class="flex flex-wrap items-center gap-2">
       <button
         v-if="isQuestionOpen"
         type="button"

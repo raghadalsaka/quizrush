@@ -17,8 +17,17 @@
     font-size: clamp(16px, 0.55vw + 11px, 26px);
   }
 
+  html:has(.game-screen) {
+    scrollbar-width: none;
+  }
+
+  html:has(.game-screen)::-webkit-scrollbar {
+    display: none;
+  }
+
   body {
     min-height: 100vh;
+    overflow-x: clip;
     background: radial-gradient(circle at 50% 0%, var(--color-stage) 0%, var(--color-stage-deep) 70%);
     color: white;
     -webkit-font-smoothing: antialiased;

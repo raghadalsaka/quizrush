@@ -7,7 +7,7 @@ import { describeError } from '../utils/errors'
 import { isIntegerInRange } from '../utils/numbers'
 import { cryptoRandomInt, type RandomInt } from '../utils/random'
 import { rankTeams } from '../utils/ranking'
-import { checkSetup, normalizeTeamName } from '../utils/setupRules'
+import { findSetupProblems, normalizeTeamName } from '../utils/setupRules'
 import { useCountdown } from './useCountdown'
 
 export interface GameOptions {
@@ -125,8 +125,7 @@ export function useGame(options: GameOptions) {
     if (phase.value !== 'setup' || loaded === null) {
       return false
     }
-    const check = checkSetup(input, loaded.questions.length, loaded.settings.allowCrossTeamRepeats)
-    if (check.problems.length > 0) {
+    if (findSetupProblems(input, loaded.questions.length, loaded.settings.allowCrossTeamRepeats).length > 0) {
       return false
     }
     const names = input.teamNames.map(normalizeTeamName)

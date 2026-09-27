@@ -2,12 +2,6 @@ import { MAX_QUESTIONS_PER_TEAM, MAX_SECONDS_PER_QUESTION, MAX_TEAMS, MAX_TEAM_N
 import type { SetupInput } from '../types/game'
 import { isIntegerInRange } from './numbers'
 
-export interface SetupCheck {
-  problems: string[]
-  capacityMessage: string
-  hasEnoughQuestions: boolean
-}
-
 const WHOLE_NUMBER_PATTERN: RegExp = /^\d+$/
 
 export function parseWholeNumber(text: string): number {
@@ -27,14 +21,6 @@ export function requiredQuestionCount(teamCount: number, questionsPerTeam: numbe
     return questionsPerTeam
   }
   return teamCount * questionsPerTeam
-}
-
-function describeCapacity(required: number, teamCount: number, questionsPerTeam: number, questionCount: number, allowCrossTeamRepeats: boolean): string {
-  if (allowCrossTeamRepeats) {
-    return `Each team needs ${required} different questions; ${questionCount} available.`
-  }
-  const teamWord = teamCount === 1 ? 'team' : 'teams'
-  return `This game needs ${required} questions (${teamCount} ${teamWord} × ${questionsPerTeam} each); ${questionCount} available.`
 }
 
 function findTeamNameProblems(teamNames: readonly string[]): string[] {
@@ -61,7 +47,7 @@ function findTeamNameProblems(teamNames: readonly string[]): string[] {
   return problems
 }
 
-export function checkSetup(input: SetupInput, questionCount: number, allowCrossTeamRepeats: boolean): SetupCheck {
+export function findSetupProblems(input: SetupInput, questionCount: number, allowCrossTeamRepeats: boolean): string[] {
   const problems: string[] = []
   const teamCount = input.teamNames.length
   const questionsPerTeamValid = isIntegerInRange(input.questionsPerTeam, 1, MAX_QUESTIONS_PER_TEAM)
@@ -78,16 +64,11 @@ export function checkSetup(input: SetupInput, questionCount: number, allowCrossT
   problems.push(...findTeamNameProblems(input.teamNames))
 
   if (!questionsPerTeamValid || !teamCountValid) {
-    return { problems, capacityMessage: 'Enter valid numbers to check question availability.', hasEnoughQuestions: false }
+    return problems
   }
   const required = requiredQuestionCount(teamCount, input.questionsPerTeam, allowCrossTeamRepeats)
-  const hasEnoughQuestions = questionCount >= required
-  if (!hasEnoughQuestions) {
+  if (questionCount < required) {
     problems.push(`Not enough questions: ${required} needed, ${questionCount} available. Lower the questions per team or the number of teams.`)
   }
-  return {
-    problems,
-    capacityMessage: describeCapacity(required, teamCount, input.questionsPerTeam, questionCount, allowCrossTeamRepeats),
-    hasEnoughQuestions,
-  }
+  return problems
 }

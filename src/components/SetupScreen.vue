@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import { MAX_QUESTIONS_PER_TEAM, MAX_SECONDS_PER_QUESTION, MAX_TEAMS, MAX_TEAM_NAME_LENGTH, MIN_TEAMS } from '../config'
 import type { Contest } from '../types/contest'
 import type { SetupInput } from '../types/game'
-import { checkSetup, parseWholeNumber } from '../utils/setupRules'
+import { findSetupProblems, parseWholeNumber } from '../utils/setupRules'
 
 const DEFAULT_TEAM_COUNT: number = 2
 const TEAM_NAME_INPUT_LIMIT: number = MAX_TEAM_NAME_LENGTH + 10
@@ -30,12 +30,12 @@ const setupInput = computed<SetupInput>(() => ({
   secondsPerQuestion: parseWholeNumber(String(secondsPerQuestionText.value)),
 }))
 
-const check = computed(() =>
-  checkSetup(setupInput.value, props.contest.questions.length, props.contest.settings.allowCrossTeamRepeats),
+const problems = computed(() =>
+  findSetupProblems(setupInput.value, props.contest.questions.length, props.contest.settings.allowCrossTeamRepeats),
 )
 
 function submit(): void {
-  if (check.value.problems.length > 0) {
+  if (problems.value.length > 0) {
     return
   }
   emit('start', setupInput.value)
@@ -117,18 +117,15 @@ function submit(): void {
         </ol>
       </fieldset>
 
-      <div class="border-t-2 border-slate-200 pt-6 lg:col-span-2">
-        <p class="text-xl font-bold" :class="check.hasEnoughQuestions ? 'text-correct' : 'text-wrong'">
-          {{ check.capacityMessage }}
-        </p>
-        <ul v-if="check.problems.length > 0" id="setup-problems" class="mt-3 list-disc space-y-1 pl-6 text-lg text-wrong">
-          <li v-for="problem in check.problems" :key="problem">{{ problem }}</li>
+      <div class="flex flex-col items-center gap-6 border-t-2 border-slate-200 pt-6 lg:col-span-2">
+        <ul v-if="problems.length > 0" id="setup-problems" class="list-disc space-y-1 pl-6 text-lg text-wrong">
+          <li v-for="problem in problems" :key="problem">{{ problem }}</li>
         </ul>
         <button
           type="submit"
-          class="btn btn-primary mt-6 min-h-16 px-10 text-2xl"
-          :disabled="check.problems.length > 0"
-          :aria-describedby="check.problems.length > 0 ? 'setup-problems' : undefined"
+          class="btn btn-primary min-h-16 px-10 text-2xl"
+          :disabled="problems.length > 0"
+          :aria-describedby="problems.length > 0 ? 'setup-problems' : undefined"
         >
           Start Game
         </button>
