@@ -1,5 +1,5 @@
 # quizrush
-Quizrush is a timed, team-based classroom quiz app for Grade 6 English. Built with Vue 3 and hosted on GitHub Pages, it uses JSON questions, random draws, instant explanations, and a live leaderboard.
+Quizrush is a timed, team-based classroom quiz app. Built with Vue 3 and hosted on GitHub Pages, it uses JSON questions, random draws, instant explanations, and a live leaderboard.
 
 One teacher runs it on one projector for 1–5 teams. Everything happens in the browser: there is no backend, no accounts, and nothing is saved. Reloading the page starts a fresh game.
 
@@ -21,7 +21,7 @@ All content lives in [`public/contest.json`](public/contest.json). Edit it, comm
 
 ```json
 {
-  "title": "Grade 6 English Challenge",
+  "title": "Classroom Challenge",
   "settings": {
     "secondsPerQuestion": 60,
     "defaultQuestionsPerTeam": 5,
