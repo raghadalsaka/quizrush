@@ -3,6 +3,19 @@ import { computed } from 'vue'
 import { LOW_TIME_MS, TICK_MS } from '../config'
 import type { Phase } from '../types/game'
 
+type TimerState = 'normal' | 'low'
+
+interface TimerStyle {
+  muted: string
+  seconds: string
+  fill: string
+}
+
+const TIMER_STYLES: Record<TimerState, TimerStyle> = {
+  normal: { muted: 'text-ink-soft', seconds: 'text-ink', fill: 'bg-(--team)' },
+  low: { muted: 'text-bad', seconds: 'text-bad', fill: 'bg-bad' },
+}
+
 const props = defineProps<{
   phase: Phase
   remainingMs: number
@@ -13,6 +26,7 @@ const shownMs = computed(() => (props.phase === 'ready' || props.phase === 'reve
 const seconds = computed(() => Math.ceil(shownMs.value / 1000))
 const fraction = computed(() => (props.durationMs > 0 ? Math.min(1, shownMs.value / props.durationMs) : 0))
 const isLow = computed(() => props.phase === 'answering' && shownMs.value <= LOW_TIME_MS)
+const timerStyle = computed(() => TIMER_STYLES[isLow.value ? 'low' : 'normal'])
 
 const label = computed(() => {
   if (props.phase === 'ready') {
@@ -41,22 +55,22 @@ const label = computed(() => {
         <slot />
       </div>
       <div class="text-right">
-        <p class="text-lg font-bold" :class="isLow ? 'text-bad' : 'text-ink-soft'">{{ label }}</p>
+        <p class="text-lg font-bold" :class="timerStyle.muted">{{ label }}</p>
         <p
           role="timer"
           aria-live="off"
           :aria-label="`${seconds} seconds left`"
           class="font-display text-7xl leading-none font-extrabold tabular-nums"
-          :class="isLow ? 'text-bad' : 'text-ink'"
+          :class="timerStyle.seconds"
         >
-          {{ seconds }}<span class="text-3xl" :class="isLow ? 'text-bad' : 'text-ink-soft'">s</span>
+          {{ seconds }}<span class="text-3xl" :class="timerStyle.muted">s</span>
         </p>
       </div>
     </div>
     <div class="mt-3 h-4 overflow-hidden rounded-full bg-track" aria-hidden="true">
       <div
-        class="timer-fill h-full origin-left rounded-full"
-        :class="isLow ? 'bg-bad' : 'bg-(--team)'"
+        class="h-full origin-left rounded-full transition-transform ease-linear"
+        :class="timerStyle.fill"
         :style="{ transform: `scaleX(${fraction})`, transitionDuration: `${TICK_MS}ms` }"
       ></div>
     </div>

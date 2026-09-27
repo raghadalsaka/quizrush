@@ -40,7 +40,7 @@ function ordinal(rank: number): string {
 </script>
 
 <template>
-  <main class="relative mx-auto grid max-w-5xl justify-items-center gap-8 px-4 py-10 text-center">
+  <main class="relative mx-auto grid max-w-5xl select-none justify-items-center gap-8 px-4 py-10 text-center">
     <ConfettiBurst :colors="confettiColors" />
     <header>
       <p class="text-xl font-bold text-ink-soft">Final results</p>
@@ -59,7 +59,7 @@ function ordinal(rank: number): string {
         <span class="w-full text-2xl leading-tight font-bold break-words">{{ team.name }}</span>
         <div
           class="flex w-full flex-col items-center justify-center rounded-t-tile bg-(--team) text-(--team-on)"
-          :class="[STEP_HEIGHTS[team.rank], { 'winner-glow': team.isWinner }]"
+          :class="[STEP_HEIGHTS[team.rank], { 'animate-winner-glow': team.isWinner }]"
         >
           <span class="font-display text-6xl leading-none font-extrabold">{{ ordinal(team.rank) }}</span>
           <span class="mt-2 text-xl font-bold tabular-nums">{{ team.score }} / {{ questionsPerTeam }}</span>
@@ -81,6 +81,6 @@ function ordinal(rank: number): string {
       </li>
     </ol>
 
-    <button type="button" class="btn btn-primary min-h-16 px-10 text-2xl" @click="$emit('newGame')">New Game</button>
+    <button type="button" class="btn btn-primary btn-large" @click="$emit('newGame')">New Game</button>
   </main>
 </template>

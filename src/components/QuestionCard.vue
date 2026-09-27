@@ -120,18 +120,18 @@ function focusResult(): void {
 </script>
 
 <template>
-  <div class="card-stage w-full" :style="FLIP_DURATIONS">
+  <div class="w-full perspective-[1600px]" :style="FLIP_DURATIONS">
     <Transition name="card-flip" mode="out-in" @before-leave="makeInert" @after-enter="focusAfterFlip">
       <div
         v-if="showCover"
         key="cover"
-        class="marquee-bulbs relative flex min-h-[20rem] flex-col items-center justify-center gap-6 rounded-card bg-(--team) p-12 text-center text-(--team-on) shadow-[0_6px_0_var(--team-deep)] [--focus-ring:var(--team-on)]"
+        class="marquee-frame relative flex min-h-80 flex-col items-center justify-center gap-6 rounded-card bg-(--team) p-12 text-center text-(--team-on) shadow-team-edge-md [--focus-ring:var(--team-on)]"
       >
         <p class="relative text-3xl font-bold">Ready, {{ teamName }}?</p>
         <button
           ref="startButton"
           type="button"
-          class="relative rounded-full bg-card px-16 py-4 font-display text-6xl font-extrabold text-(--team-text) shadow-[0_8px_0_var(--team-deep)] transition-transform active:translate-y-1.5"
+          class="relative rounded-full bg-card px-16 py-4 font-display text-6xl font-extrabold text-(--team-text) shadow-team-edge-lg transition-transform active:translate-y-1.5"
           @click="$emit('start')"
         >
           Start
@@ -163,7 +163,7 @@ function focusResult(): void {
               </span>
               <span class="flex-1">{{ option.text }}</span>
               <template v-if="option.style.mark !== null">
-                <span class="stamp shrink-0 font-display text-3xl font-extrabold" :class="option.style.mark.color" aria-hidden="true">
+                <span class="shrink-0 animate-stamp font-display text-3xl font-extrabold" :class="option.style.mark.color" aria-hidden="true">
                   {{ option.style.mark.symbol }}
                 </span>
                 <span class="sr-only">{{ option.style.mark.label }}</span>
@@ -181,7 +181,7 @@ function focusResult(): void {
               :class="resultStyle.tile"
             >
               <span
-                class="stamp grid size-14 place-items-center rounded-full font-display text-3xl font-extrabold text-white"
+                class="grid size-14 animate-stamp place-items-center rounded-full font-display text-3xl font-extrabold text-white"
                 :class="resultStyle.letter"
                 aria-hidden="true"
               >
@@ -201,7 +201,7 @@ function focusResult(): void {
                     <span
                       v-for="(offset, index) in SPARKLE_OFFSETS"
                       :key="`${cardId}-${index}`"
-                      class="sparkle text-3xl text-t4"
+                      class="absolute top-1/2 left-1/2 animate-sparkle text-3xl text-t4 motion-reduce:hidden"
                       :style="{ '--dx': offset.dx, '--dy': offset.dy }"
                       aria-hidden="true"
                     >

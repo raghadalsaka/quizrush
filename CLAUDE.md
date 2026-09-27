@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Quizrush is a single-device, projector-friendly classroom quiz: 1–5 teams take equal round-robin turns on multiple-choice questions loaded from `public/contest.json`. It runs entirely in the browser (Vue 3 + TypeScript + Vite + Tailwind 4) and is served by GitHub Pages at https://quizrush.raghadalsaka.com.
+Quizrush is a single-device classroom quiz for an interactive touch board (a projector also works), where students tap their own answers: 1–5 teams take equal round-robin turns on multiple-choice questions loaded from `public/contest.json`. It runs entirely in the browser (Vue 3 + TypeScript + Vite + Tailwind 4) and is served by GitHub Pages at https://quizrush.raghadalsaka.com.
 
 ## Commands
 
@@ -81,6 +81,8 @@ The look is a bright classroom game show: a whiteboard-white stage, navy "marker
 - **Tokens** live in the `@theme` block of `src/styles/main.css`:
   - Colors: `board`, `card`, `ink` (plus `ink-deep` and `ink-soft`), `rule`, `track`, and `margin` (the index-card rule under the question); the team colors `t1`–`t5`, each with a `-deep` shade, plus `t4-text` for readable sun text; `good` (with `good-deep` and `good-soft`) and `bad` (with `bad-soft`).
   - Radii: `rounded-card` for panels and the question card, `rounded-tile` for tiles, podiums, inputs and buttons.
+  - Shadows: `shadow-team-edge-sm`, `-md` and `-lg` (the team-colored hard edge at 5, 6 and 8px) and `shadow-good-edge` (the +1 pill).
+  - Animations: `--animate-*` tokens with their keyframes, used as `animate-stamp`, `animate-plus-one`, `animate-score-pop`, `animate-sparkle`, `animate-winner-glow` and `animate-confetti`.
   - Use these tokens only, never raw Tailwind palette colors such as indigo or slate.
 - **Type:**
   - `font-display` (Bricolage Grotesque, weights 500–800) is for team names, the countdown, scores and headlines. `font-sans` (Atkinson Hyperlegible Next, 400–800) is for questions, answers and everything else.
@@ -93,13 +95,12 @@ The look is a bright classroom game show: a whiteboard-white stage, navy "marker
   - `--team-clip`, the team's shape.
   - Use them via `bg-(--team)`, `text-(--team-text)` and the `.team-shape` class, and `teamColorVar(index)` where a plain color value is needed. Never hard-code a team color.
   - Colors and shapes follow entry order: magenta circle, ocean square, fern triangle, sun diamond, grape star.
+  - The card cover's `.marquee-frame` draws a dashed frame in `--team-on`.
 - **Shared classes:**
-  - `.btn`, `.btn-primary` and `.btn-small`: a 3px ink border plus a 5px hard "press edge" that sinks on press.
+  - `.btn`, `.btn-primary`, `.btn-small` and `.btn-large`: a 3px ink border plus a 5px hard "press edge" that sinks on press.
   - `.panel`: a white card with a 3px ink border and a 6px ink edge.
   - `.field-input`.
-  - `.marquee-bulbs`: the bulb ring on the card cover, drawn in the team's `--team-on` color.
-  - Motion classes: `.stamp`, `.plus-one`, `.score-pop`, `.sparkle`, `.winner-glow`, `.confetti-piece`, plus the `result` transition.
-  - Press edges come from `--edge` (depth) and `--edge-color` on `.btn` and `.panel`. Set those variables rather than writing a new `box-shadow`.
+  - Press edges on `.btn` and `.panel` come from `--edge` (depth) and `--edge-color`; set those rather than writing a new `box-shadow`. Team-colored surfaces use the `shadow-team-edge-*` tokens.
   - Hard press edges only go on pressable things and main panels. No soft grey shadows, no decorative gradients.
 - **Layout:**
   - The game screen has a left rail (the quiz title and the scoreboard tiles, sticky on `lg`) and a main column (team name and turn, the timer, the question card). Below `lg` it stacks.
@@ -109,8 +110,20 @@ The look is a bright classroom game show: a whiteboard-white stage, navy "marker
   - Feedback is never color alone: ✓ and ✗ come with words, and low time shows "Hurry up!".
   - Focus is a 3px outline in `--focus-ring`: ink by default, and `--team-on` on the card cover. Keep it visible on any new surface.
   - Text on team colors must meet 4.5:1 (sun uses ink text).
-- **Motion:** the card flip (timings in `config.ts`), the press sink, the ✓/✗ stamp, the result panel rising in, the +1, the score bump, the correct-answer sparkles, the winner glow and winner confetti. The global `prefers-reduced-motion` rule in `main.css` must cover any new animation.
+- **Motion:** the card flip (timings in `config.ts`), the press sink, the ✓/✗ stamp, the result panel rising in, the +1, the score bump, the correct-answer sparkles, the winner glow and winner confetti, plus the `card-flip` and `result` Vue transitions. The global `prefers-reduced-motion` rule in `main.css` shortens every CSS animation and transition automatically; don't override it with `!important` or drive motion from JS. Purely decorative motion (each confetti piece, each sparkle, the +1) also carries `motion-reduce:hidden`.
+- **Touch board:**
+  - The root font size in `main.css` follows the viewport width up to 1920px and then scales the whole layout in proportion, capped by the height, so boards that report 4K CSS pixels still fill the screen. Size things in `rem` so they scale with it.
+  - `<html>` has `touch-manipulation` (no double-tap zoom; pinch zoom stays for accessibility) and `overscroll-none` (no pull-to-refresh, which would reload and wipe the game). The tap highlight is off because buttons have their own press edge.
+  - The game and results screens are `select-none`, so a long press doesn't select text. Setup stays selectable for its inputs.
+  - Keep tap targets at least as large as today's smallest (`.btn-small`, 2.5rem) and keep anything students tap in the lower two thirds of the screen, within reach.
 - **Media:** the current visuals are built from CSS shapes and motion only (no images in the UI). The project allows media assets; this design just doesn't use any.
+- **Where styles live:**
+  - Prefer Tailwind utilities in the template for color, spacing, type, layout and responsive states, using the tokens above.
+  - A value with no matching utility becomes an `@theme` token when it is reused or part of the design language, otherwise an arbitrary value. Use the nearest utility only when the difference is invisible.
+  - `main.css` holds only what utilities can't express cleanly: the font faces, `@theme` tokens (with the `--animate-*` keyframes inside it), base rules, the shared classes in `@layer components`, the `.team-1`–`.team-5` blocks, `.marquee-frame`, the Vue transition classes with their keyframes, and the global reduced-motion rule.
+  - Keyframes used only by a Vue transition (`card-flip`, `result`) stay outside `@theme`, because Tailwind drops `@theme` keyframes that no `animate-*` utility uses. The `.team-N` classes stay plain CSS because `teamThemeClass()` builds their names at runtime, where Tailwind's scanner can't see them.
+  - Write every class name as a complete literal string, including inside lookup tables, never by concatenation. A pattern repeated across components becomes a shared class (like `.btn-large`); state-dependent classes within one component go in a lookup table (like `OPTION_STYLES` and `TIMER_STYLES`).
+  - A styling refactor must not change how anything looks: compare screenshots and computed styles before and after.
 
 ## Content and deployment
 
