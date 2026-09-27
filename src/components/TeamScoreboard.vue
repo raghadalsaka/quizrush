@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ScoreAward, Team } from '../types/game'
+import { teamThemeClass } from '../utils/teamTheme'
 
 defineProps<{
   teams: readonly Readonly<Team>[]
@@ -13,18 +14,24 @@ defineProps<{
     <li
       v-for="(team, index) in teams"
       :key="team.name"
-      class="relative flex items-center gap-3 rounded-2xl px-4 py-2"
-      :class="index === activeIndex ? 'bg-highlight text-ink ring-4 ring-white' : 'bg-white/10 text-white'"
+      class="relative grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-tile border-3 px-4 py-2 transition-transform"
+      :class="[
+        teamThemeClass(index),
+        index === activeIndex
+          ? 'border-transparent bg-(--team) text-(--team-on) shadow-[0_5px_0_var(--team-deep)] lg:translate-x-2'
+          : 'border-rule bg-card text-ink',
+      ]"
       :aria-current="index === activeIndex ? 'step' : undefined"
     >
-      <span class="text-lg font-bold">{{ team.name }}</span>
-      <span :key="team.score" class="text-3xl font-black tabular-nums" :class="{ 'score-pop': team.score > 0 }">
+      <span class="team-shape text-2xl" :class="{ 'bg-(--team-on)': index === activeIndex }" aria-hidden="true"></span>
+      <span class="min-w-0 text-lg font-bold break-words">{{ team.name }}</span>
+      <span :key="team.score" class="font-display text-4xl leading-none font-extrabold tabular-nums" :class="{ 'score-pop': team.score > 0 }">
         {{ team.score }}
       </span>
       <span
         v-if="lastAward !== null && lastAward.teamIndex === index"
         :key="lastAward.awardId"
-        class="plus-one pointer-events-none absolute -top-4 left-1/2 text-4xl font-black text-emerald-300 [text-shadow:0_2px_0_#064e3b]"
+        class="plus-one pointer-events-none absolute -top-5 right-2 rounded-full bg-good px-3 py-0.5 font-display text-2xl font-extrabold text-white shadow-[0_3px_0_var(--color-good-deep)]"
         aria-hidden="true"
       >
         +1

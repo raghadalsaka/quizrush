@@ -1,28 +1,36 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { FLIP_IN_MS, FLIP_OUT_MS, OPTION_COUNT, OPTION_LABELS } from '../config'
+import { FLIP_IN_MS, FLIP_OUT_MS, OPTION_LABELS } from '../config'
 import type { Question } from '../types/contest'
 import type { Outcome, Phase } from '../types/game'
 
 type OptionState = 'open' | 'correct' | 'chosen' | 'other'
 
-const OPTION_CLASSES: Record<OptionState, string> = {
-  open: 'border-slate-300 bg-slate-50 text-ink enabled:hover:border-indigo-700 enabled:hover:bg-indigo-50',
-  correct: 'border-correct bg-correct-soft text-ink',
-  chosen: 'border-wrong bg-wrong-soft text-ink',
-  other: 'border-slate-200 bg-white text-slate-500',
-}
-
-interface OptionTag {
+interface OptionMark {
   symbol: string
   label: string
+  color: string
 }
 
-const OPTION_TAGS: Record<OptionState, OptionTag | null> = {
-  open: null,
-  correct: { symbol: '✓', label: 'Correct answer' },
-  chosen: { symbol: '✗', label: 'Chosen answer' },
-  other: null,
+interface OptionStyle {
+  tile: string
+  letter: string
+  mark: OptionMark | null
+}
+
+const OPTION_STYLES: Record<OptionState, OptionStyle> = {
+  open: { tile: 'border-rule bg-card text-ink enabled:hover:border-ink', letter: 'bg-ink', mark: null },
+  correct: {
+    tile: 'border-good bg-good-soft text-ink',
+    letter: 'bg-good',
+    mark: { symbol: '✓', label: 'Correct answer', color: 'text-good' },
+  },
+  chosen: {
+    tile: 'border-bad bg-bad-soft text-ink',
+    letter: 'bg-bad',
+    mark: { symbol: '✗', label: 'Chosen answer', color: 'text-bad' },
+  },
+  other: { tile: 'border-track bg-card text-ink-soft', letter: 'bg-ink-soft', mark: null },
 }
 
 const FLIP_DURATIONS: Record<string, string> = {
@@ -59,6 +67,11 @@ const resultHeading = ref<HTMLParagraphElement | null>(null)
 
 const showCover = computed(() => props.phase === 'ready' || props.question === null)
 const isAnswerable = computed(() => props.phase === 'answering')
+const isCorrect = computed(() => props.outcome?.kind === 'correct')
+const resultStyle = computed(() => OPTION_STYLES[isCorrect.value ? 'correct' : 'chosen'])
+const optionViews = computed(() =>
+  (props.question?.options ?? []).map((text, index) => ({ text, index, style: OPTION_STYLES[optionState(index)] })),
+)
 
 const resultTitle = computed(() => {
   if (props.outcome === null) {
@@ -107,84 +120,97 @@ function focusResult(): void {
 </script>
 
 <template>
-  <div class="card-stage w-full max-w-5xl" :style="FLIP_DURATIONS">
+  <div class="card-stage w-full" :style="FLIP_DURATIONS">
     <Transition name="card-flip" mode="out-in" @before-leave="makeInert" @after-enter="focusAfterFlip">
       <div
         v-if="showCover"
         key="cover"
-        class="flex min-h-[18rem] flex-col items-center justify-center gap-6 rounded-3xl border-4 border-white/30 bg-[repeating-linear-gradient(45deg,#3730a3_0_24px,#312e81_24px_48px)] p-8 text-center shadow-2xl"
+        class="marquee-bulbs relative flex min-h-[20rem] flex-col items-center justify-center gap-6 rounded-card bg-(--team) p-12 text-center text-(--team-on) shadow-[0_6px_0_var(--team-deep)] [--focus-ring:var(--team-on)]"
       >
-        <p class="text-3xl font-bold">Ready, {{ teamName }}?</p>
+        <p class="relative text-3xl font-bold">Ready, {{ teamName }}?</p>
         <button
           ref="startButton"
           type="button"
-          class="min-h-24 min-w-64 rounded-3xl bg-highlight px-12 text-5xl font-black text-ink shadow-[0_8px_0_#a16207] transition-transform hover:scale-105 active:translate-y-1"
+          class="relative rounded-full bg-card px-16 py-4 font-display text-6xl font-extrabold text-(--team-text) shadow-[0_8px_0_var(--team-deep)] transition-transform active:translate-y-1.5"
           @click="$emit('start')"
         >
           Start
         </button>
-        <p class="text-lg text-indigo-100">The timer starts when the answers appear.</p>
+        <p class="relative text-xl">The timer starts when the answers appear.</p>
       </div>
 
-      <div
-        v-else-if="question !== null"
-        :key="cardId"
-        class="rounded-3xl bg-white p-6 text-ink shadow-2xl lg:p-8"
-      >
-        <h2 ref="promptHeading" tabindex="-1" class="text-4xl leading-tight font-bold">{{ question.prompt }}</h2>
-        <div class="mt-5 grid gap-3 md:grid-cols-2" role="group" aria-label="Answer choices">
-          <button
-            v-for="(option, index) in question.options"
-            :key="index"
-            type="button"
-            class="flex min-h-16 items-center gap-4 rounded-2xl border-4 px-5 py-2 text-left text-2xl font-semibold transition-colors disabled:cursor-default"
-            :class="OPTION_CLASSES[optionState(index)]"
-            :disabled="!isAnswerable"
-            :aria-keyshortcuts="String(index + 1)"
-            @click="$emit('answer', index)"
-          >
-            <span class="grid size-12 shrink-0 place-items-center rounded-full bg-indigo-800 text-2xl font-black text-white">
-              {{ OPTION_LABELS[index] }}
-            </span>
-            <span class="flex-1">{{ option }}</span>
-            <template v-if="OPTION_TAGS[optionState(index)] !== null">
-              <span class="shrink-0 text-3xl font-black" aria-hidden="true">{{ OPTION_TAGS[optionState(index)]?.symbol }}</span>
-              <span class="sr-only">{{ OPTION_TAGS[optionState(index)]?.label }}</span>
-            </template>
-          </button>
-        </div>
-        <p v-if="isAnswerable" class="mt-3 text-base text-slate-600">Tip: press 1–{{ OPTION_COUNT }} on the keyboard to answer.</p>
-
-        <Transition name="result" @after-enter="focusResult">
-          <section
-            v-if="outcome !== null"
-            class="mt-5 rounded-2xl border-4 px-5 py-4"
-            :class="outcome.kind === 'correct' ? 'border-correct bg-correct-soft' : 'border-wrong bg-wrong-soft'"
-          >
-            <div class="relative inline-block">
-              <p
-                ref="resultHeading"
-                tabindex="-1"
-                class="text-4xl font-black"
-                :class="outcome.kind === 'correct' ? 'text-correct' : 'text-wrong'"
+      <div v-else-if="question !== null" :key="cardId" class="panel overflow-hidden">
+        <div class="grid gap-5 p-6 lg:p-8">
+          <h2 ref="promptHeading" tabindex="-1" class="border-b-3 border-margin pb-3 text-4xl leading-tight font-bold">
+            {{ question.prompt }}
+          </h2>
+          <div class="grid gap-3 md:grid-cols-2" role="group" aria-label="Answer choices">
+            <button
+              v-for="option in optionViews"
+              :key="option.index"
+              type="button"
+              class="flex min-h-16 items-center gap-4 rounded-tile border-3 px-4 py-2 text-left text-2xl leading-snug font-semibold transition-[border-color,transform] duration-100 enabled:active:translate-y-0.5 disabled:cursor-default"
+              :class="option.style.tile"
+              :disabled="!isAnswerable"
+              :aria-keyshortcuts="String(option.index + 1)"
+              @click="$emit('answer', option.index)"
+            >
+              <span
+                class="grid size-11 shrink-0 place-items-center rounded-full font-display text-xl font-extrabold text-white"
+                :class="option.style.letter"
               >
-                {{ resultTitle }}
-              </p>
-              <template v-if="outcome.kind === 'correct'">
-                <span
-                  v-for="(offset, index) in SPARKLE_OFFSETS"
-                  :key="`${cardId}-${index}`"
-                  class="sparkle text-3xl text-yellow-500"
-                  :style="{ '--dx': offset.dx, '--dy': offset.dy }"
-                  aria-hidden="true"
-                >
-                  ✦
+                {{ OPTION_LABELS[option.index] }}
+              </span>
+              <span class="flex-1">{{ option.text }}</span>
+              <template v-if="option.style.mark !== null">
+                <span class="stamp shrink-0 font-display text-3xl font-extrabold" :class="option.style.mark.color" aria-hidden="true">
+                  {{ option.style.mark.symbol }}
                 </span>
+                <span class="sr-only">{{ option.style.mark.label }}</span>
               </template>
-            </div>
-            <p class="mt-2 text-2xl"><strong>Explanation:</strong> {{ question.explanation }}</p>
-          </section>
-        </Transition>
+            </button>
+          </div>
+
+          <Transition name="result" @after-enter="focusResult">
+            <section
+              v-if="outcome !== null"
+              class="grid grid-cols-[auto_1fr] items-start gap-4 rounded-tile border-3 px-5 py-4"
+              :class="resultStyle.tile"
+            >
+              <span
+                class="stamp grid size-14 place-items-center rounded-full font-display text-3xl font-extrabold text-white"
+                :class="resultStyle.letter"
+                aria-hidden="true"
+              >
+                {{ resultStyle.mark?.symbol }}
+              </span>
+              <div>
+                <div class="relative inline-block">
+                  <p
+                    ref="resultHeading"
+                    tabindex="-1"
+                    class="font-display text-4xl leading-tight font-extrabold"
+                    :class="resultStyle.mark?.color"
+                  >
+                    {{ resultTitle }}
+                  </p>
+                  <template v-if="isCorrect">
+                    <span
+                      v-for="(offset, index) in SPARKLE_OFFSETS"
+                      :key="`${cardId}-${index}`"
+                      class="sparkle text-3xl text-t4"
+                      :style="{ '--dx': offset.dx, '--dy': offset.dy }"
+                      aria-hidden="true"
+                    >
+                      ✦
+                    </span>
+                  </template>
+                </div>
+                <p class="mt-1 text-2xl leading-normal"><strong>Explanation:</strong> {{ question.explanation }}</p>
+              </div>
+            </section>
+          </Transition>
+        </div>
       </div>
     </Transition>
   </div>

@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { OPTION_COUNT } from '../config'
 import { injectGame } from '../composables/useGame'
 import { isIntegerInRange } from '../utils/numbers'
+import { teamThemeClass } from '../utils/teamTheme'
 import ConfirmDialog from './ConfirmDialog.vue'
 import CountdownBar from './CountdownBar.vue'
 import QuestionCard from './QuestionCard.vue'
@@ -103,18 +104,24 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <main class="mx-auto flex min-h-screen w-full max-w-7xl flex-col items-center gap-4 px-4 pt-4 pb-32 lg:px-8">
-    <header class="flex w-full flex-col items-center gap-2">
-      <p class="text-sm font-bold tracking-[0.2em] text-indigo-200 uppercase">{{ contest?.title }}</p>
-      <TeamScoreboard :teams="teams" :active-index="currentTeamIndex" :last-award="lastAward" />
-    </header>
+  <main
+    class="game-screen mx-auto grid min-h-screen w-full max-w-[90rem] gap-6 px-4 pt-4 pb-32 lg:grid-cols-[minmax(14rem,20rem)_1fr] lg:items-start lg:px-8"
+  >
+    <aside class="flex flex-col items-center gap-4 text-center lg:sticky lg:top-4 lg:items-stretch lg:text-left" aria-label="Game status">
+      <p class="text-lg leading-snug font-bold text-ink-soft">{{ contest?.title }}</p>
+      <TeamScoreboard class="lg:flex-col" :teams="teams" :active-index="currentTeamIndex" :last-award="lastAward" />
+    </aside>
 
-    <section class="flex w-full max-w-5xl flex-1 flex-col items-center gap-4" aria-labelledby="active-team-heading">
+    <section
+      class="flex w-full max-w-5xl min-w-0 flex-col items-center gap-5 justify-self-center"
+      :class="teamThemeClass(currentTeamIndex)"
+      aria-labelledby="active-team-heading"
+    >
       <CountdownBar :phase="phase" :remaining-ms="remainingMs" :duration-ms="secondsPerQuestion * 1000">
-        <p class="text-base font-bold tracking-[0.25em] text-highlight uppercase">
-          Now playing · Turn {{ turnNumber }} of {{ questionsPerTeam }}
-        </p>
-        <h1 id="active-team-heading" class="truncate text-6xl leading-tight font-black">{{ currentTeam?.name }}</h1>
+        <h1 id="active-team-heading" class="font-display text-6xl leading-none font-extrabold tracking-tight break-words text-(--team-text)">
+          {{ currentTeam?.name }}
+        </h1>
+        <p class="mt-2 text-xl font-bold text-ink-soft">Turn {{ turnNumber }} of {{ questionsPerTeam }}</p>
       </CountdownBar>
       <QuestionCard
         :phase="phase"

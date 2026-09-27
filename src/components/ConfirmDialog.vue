@@ -40,16 +40,16 @@ function onCancel(event: Event): void {
 <template>
   <dialog
     ref="dialog"
-    class="m-auto w-[min(36rem,calc(100vw-2rem))] rounded-3xl bg-white p-8 text-ink shadow-2xl backdrop:bg-black/60"
+    class="panel m-auto w-[min(36rem,calc(100vw-2rem))] p-8 text-ink backdrop:bg-ink/55"
     aria-labelledby="confirm-dialog-title"
     aria-describedby="confirm-dialog-message"
     @cancel="onCancel"
   >
-    <h2 id="confirm-dialog-title" class="text-3xl font-black">{{ title }}</h2>
+    <h2 id="confirm-dialog-title" class="font-display text-3xl leading-tight font-extrabold">{{ title }}</h2>
     <p id="confirm-dialog-message" class="mt-3 text-xl">{{ message }}</p>
     <div class="mt-8 flex flex-wrap justify-end gap-3">
-      <button type="button" class="btn btn-light" autofocus @click="emit('cancel')">Cancel</button>
-      <button type="button" class="btn bg-indigo-800 text-white hover:bg-indigo-900" @click="emit('confirm')">{{ confirmLabel }}</button>
+      <button type="button" class="btn" autofocus @click="emit('cancel')">Cancel</button>
+      <button type="button" class="btn btn-primary" @click="emit('confirm')">{{ confirmLabel }}</button>
     </div>
   </dialog>
 </template>

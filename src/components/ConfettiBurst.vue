@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+
 const PIECE_COUNT: number = 36
-const COLORS: readonly string[] = ['#fde047', '#34d399', '#60a5fa', '#f472b6', '#fb923c', '#a78bfa']
+const FALLBACK_COLOR: string = 'var(--color-ink)'
 
 interface Piece {
   left: string
@@ -12,15 +14,21 @@ interface Piece {
   height: string
 }
 
-const pieces: Piece[] = Array.from({ length: PIECE_COUNT }, (_, index) => ({
-  left: `${(index * 37 + 11) % 100}%`,
-  delay: `${(index % 9) * 0.22}s`,
-  duration: `${2.6 + (index % 5) * 0.35}s`,
-  drift: `${((index * 53) % 120) - 60}px`,
-  color: COLORS[index % COLORS.length] ?? '#fde047',
-  width: `${8 + (index % 3) * 4}px`,
-  height: `${12 + (index % 4) * 3}px`,
-}))
+const props = defineProps<{
+  colors: readonly string[]
+}>()
+
+const pieces = computed<Piece[]>(() =>
+  Array.from({ length: PIECE_COUNT }, (_, index) => ({
+    left: `${(index * 37 + 11) % 100}%`,
+    delay: `${(index % 9) * 0.22}s`,
+    duration: `${2.6 + (index % 5) * 0.35}s`,
+    drift: `${((index * 53) % 120) - 60}px`,
+    color: props.colors[index % Math.max(1, props.colors.length)] ?? FALLBACK_COLOR,
+    width: `${8 + (index % 3) * 4}px`,
+    height: `${12 + (index % 4) * 3}px`,
+  })),
+)
 </script>
 
 <template>

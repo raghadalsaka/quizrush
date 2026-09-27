@@ -58,7 +58,7 @@ How many questions you need:
 - **Repeats off** (`false`): at least *teams × questions per team*. For example, 3 teams × 5 questions needs 15.
 - **Repeats on** (`true`): at least *questions per team*. For example, 3 teams × 5 questions can run with 5.
 
-The setup screen shows the count and disables **Start Game** until the setup works. Spare questions let teachers use **Different Card** more often.
+If there aren't enough, the setup screen says so and keeps **Start Game** disabled. Spare questions let teachers use **Different Card** more often.
 
 ## Game rules
 

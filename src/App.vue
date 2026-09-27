@@ -24,7 +24,7 @@ onMounted(() => {
 <template>
   <div class="min-h-screen">
     <main v-if="phase === 'loading'" class="grid min-h-screen place-items-center px-4">
-      <p class="text-3xl font-bold text-indigo-100">Loading the quiz…</p>
+      <p class="font-display text-4xl font-extrabold text-ink-soft">Loading the quiz…</p>
     </main>
     <ErrorPanel v-else-if="phase === 'error'" @retry="game.load" />
     <SetupScreen

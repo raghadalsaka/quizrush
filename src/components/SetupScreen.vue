@@ -3,7 +3,8 @@ import { computed, ref } from 'vue'
 import { MAX_QUESTIONS_PER_TEAM, MAX_SECONDS_PER_QUESTION, MAX_TEAMS, MAX_TEAM_NAME_LENGTH, MIN_TEAMS } from '../config'
 import type { Contest } from '../types/contest'
 import type { SetupInput } from '../types/game'
-import { checkSetup, parseWholeNumber } from '../utils/setupRules'
+import { findSetupProblems, parseWholeNumber } from '../utils/setupRules'
+import { teamThemeClass } from '../utils/teamTheme'
 
 const DEFAULT_TEAM_COUNT: number = 2
 const TEAM_NAME_INPUT_LIMIT: number = MAX_TEAM_NAME_LENGTH + 10
@@ -30,12 +31,12 @@ const setupInput = computed<SetupInput>(() => ({
   secondsPerQuestion: parseWholeNumber(String(secondsPerQuestionText.value)),
 }))
 
-const check = computed(() =>
-  checkSetup(setupInput.value, props.contest.questions.length, props.contest.settings.allowCrossTeamRepeats),
+const problems = computed(() =>
+  findSetupProblems(setupInput.value, props.contest.questions.length, props.contest.settings.allowCrossTeamRepeats),
 )
 
 function submit(): void {
-  if (check.value.problems.length > 0) {
+  if (problems.value.length > 0) {
     return
   }
   emit('start', setupInput.value)
@@ -43,22 +44,21 @@ function submit(): void {
 </script>
 
 <template>
-  <main class="mx-auto max-w-6xl px-4 py-8 lg:py-12">
-    <header class="text-center">
-      <p class="text-base font-bold tracking-[0.3em] text-indigo-200 uppercase">Quizrush</p>
-      <h1 class="mt-2 text-5xl font-black">{{ contest.title }}</h1>
-      <p class="mt-3 text-xl text-indigo-100">Set up the teams, then press Start Game.</p>
+  <main class="mx-auto grid max-w-6xl gap-8 px-4 py-8 lg:py-12">
+    <header>
+      <h1 class="font-display text-5xl leading-none font-extrabold tracking-tight lg:text-6xl">{{ contest.title }}</h1>
+      <p class="mt-3 text-xl text-ink-soft">Set up the teams, then press Start Game.</p>
     </header>
 
-    <form class="mt-8 grid gap-8 rounded-3xl bg-white p-6 text-ink shadow-2xl lg:grid-cols-2 lg:p-10" novalidate @submit.prevent="submit">
-      <fieldset class="space-y-5">
-        <legend class="text-2xl font-black">Game settings</legend>
-        <div>
-          <label for="questions-per-team" class="block text-lg font-bold">Questions per team</label>
+    <form class="panel grid gap-8 p-6 lg:grid-cols-[1fr_1.3fr] lg:gap-12 lg:p-10" novalidate @submit.prevent="submit">
+      <fieldset class="grid content-start gap-5">
+        <legend class="mb-5 font-display text-3xl font-extrabold">Game settings</legend>
+        <div class="grid gap-1">
+          <label for="questions-per-team" class="text-lg font-bold">Questions per team</label>
           <input
             id="questions-per-team"
             v-model="questionsPerTeamText"
-            class="field-input mt-1 max-w-40"
+            class="field-input max-w-40"
             type="number"
             inputmode="numeric"
             min="1"
@@ -67,12 +67,12 @@ function submit(): void {
             required
           />
         </div>
-        <div>
-          <label for="seconds-per-question" class="block text-lg font-bold">Seconds per question</label>
+        <div class="grid gap-1">
+          <label for="seconds-per-question" class="text-lg font-bold">Seconds per question</label>
           <input
             id="seconds-per-question"
             v-model="secondsPerQuestionText"
-            class="field-input mt-1 max-w-40"
+            class="field-input max-w-40"
             type="number"
             inputmode="numeric"
             min="1"
@@ -83,17 +83,17 @@ function submit(): void {
         </div>
       </fieldset>
 
-      <fieldset class="space-y-5">
-        <legend class="text-2xl font-black">Teams</legend>
-        <div>
+      <fieldset class="grid content-start gap-5">
+        <legend class="mb-5 font-display text-3xl font-extrabold">Teams</legend>
+        <div class="grid gap-1">
           <p id="team-count-label" class="text-lg font-bold">How many teams?</p>
-          <div class="mt-1 flex gap-2" role="group" aria-labelledby="team-count-label">
+          <div class="flex flex-wrap gap-2" role="group" aria-labelledby="team-count-label">
             <button
               v-for="count in teamCountChoices"
               :key="count"
               type="button"
-              class="btn min-w-14 text-2xl"
-              :class="count === teamCount ? 'bg-indigo-800 text-white' : 'btn-light'"
+              class="grid size-14 place-items-center rounded-tile border-3 font-display text-2xl font-extrabold transition-colors"
+              :class="count === teamCount ? 'border-ink bg-ink text-white' : 'border-rule bg-card text-ink hover:border-ink'"
               :aria-pressed="count === teamCount"
               @click="teamCount = count"
             >
@@ -101,34 +101,34 @@ function submit(): void {
             </button>
           </div>
         </div>
-        <ol class="space-y-3">
-          <li v-for="index in teamCount" :key="index">
-            <label :for="`team-name-${index}`" class="block text-lg font-bold">Team {{ index }} name</label>
-            <input
-              :id="`team-name-${index}`"
-              v-model="teamNames[index - 1]"
-              class="field-input mt-1"
-              type="text"
-              autocomplete="off"
-              :maxlength="TEAM_NAME_INPUT_LIMIT"
-              required
-            />
+        <ol class="grid gap-3">
+          <li v-for="index in teamCount" :key="index" class="grid gap-1" :class="teamThemeClass(index - 1)">
+            <label :for="`team-name-${index}`" class="text-lg font-bold">Team {{ index }} name</label>
+            <div class="flex items-center gap-3">
+              <span class="team-shape text-4xl" aria-hidden="true"></span>
+              <input
+                :id="`team-name-${index}`"
+                v-model="teamNames[index - 1]"
+                class="field-input"
+                type="text"
+                autocomplete="off"
+                :maxlength="TEAM_NAME_INPUT_LIMIT"
+                required
+              />
+            </div>
           </li>
         </ol>
       </fieldset>
 
-      <div class="border-t-2 border-slate-200 pt-6 lg:col-span-2">
-        <p class="text-xl font-bold" :class="check.hasEnoughQuestions ? 'text-correct' : 'text-wrong'">
-          {{ check.capacityMessage }}
-        </p>
-        <ul v-if="check.problems.length > 0" id="setup-problems" class="mt-3 list-disc space-y-1 pl-6 text-lg text-wrong">
-          <li v-for="problem in check.problems" :key="problem">{{ problem }}</li>
+      <div class="flex flex-col items-center gap-6 border-t-3 border-track pt-6 lg:col-span-2">
+        <ul v-if="problems.length > 0" id="setup-problems" class="list-disc space-y-1 pl-6 text-lg font-semibold text-bad">
+          <li v-for="problem in problems" :key="problem">{{ problem }}</li>
         </ul>
         <button
           type="submit"
-          class="btn btn-primary mt-6 min-h-16 px-10 text-2xl"
-          :disabled="check.problems.length > 0"
-          :aria-describedby="check.problems.length > 0 ? 'setup-problems' : undefined"
+          class="btn btn-primary min-h-16 px-10 text-2xl"
+          :disabled="problems.length > 0"
+          :aria-describedby="problems.length > 0 ? 'setup-problems' : undefined"
         >
           Start Game
         </button>
