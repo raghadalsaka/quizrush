@@ -33,22 +33,27 @@ const label = computed(() => {
 
 <template>
   <div class="w-full">
-    <div class="flex items-end justify-between gap-4">
-      <p class="text-2xl font-bold" :class="isLow ? 'text-highlight' : 'text-indigo-100'">{{ label }}</p>
-      <p
-        role="timer"
-        aria-live="off"
-        :aria-label="`${seconds} seconds left`"
-        class="text-6xl leading-none font-black tabular-nums"
-        :class="isLow ? 'text-highlight' : 'text-white'"
-      >
-        {{ seconds }}<span class="text-3xl">s</span>
-      </p>
+    <div class="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
+      <div class="min-w-0">
+        <slot />
+      </div>
+      <div class="text-right">
+        <p class="text-lg font-bold" :class="isLow ? 'text-bad' : 'text-ink-soft'">{{ label }}</p>
+        <p
+          role="timer"
+          aria-live="off"
+          :aria-label="`${seconds} seconds left`"
+          class="font-display text-7xl leading-none font-extrabold tabular-nums"
+          :class="isLow ? 'text-bad' : 'text-ink'"
+        >
+          {{ seconds }}<span class="text-3xl" :class="isLow ? 'text-bad' : 'text-ink-soft'">s</span>
+        </p>
+      </div>
     </div>
-    <div class="mt-3 h-4 overflow-hidden rounded-full bg-white/15" aria-hidden="true">
+    <div class="mt-3 h-4 overflow-hidden rounded-full bg-track" aria-hidden="true">
       <div
         class="timer-fill h-full origin-left rounded-full"
-        :class="isLow ? 'bg-highlight' : 'bg-emerald-400'"
+        :class="isLow ? 'bg-bad' : 'bg-(--team)'"
         :style="{ transform: `scaleX(${fraction})`, transitionDuration: `${TICK_MS}ms` }"
       ></div>
     </div>

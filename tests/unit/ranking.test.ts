@@ -10,6 +10,7 @@ describe('rankTeams', () => {
       { name: 'D', score: 1 },
     ])
     expect(ranked.map((team) => team.name)).toEqual(['B', 'C', 'A', 'D'])
+    expect(ranked.map((team) => team.teamIndex)).toEqual([1, 2, 0, 3])
     expect(ranked.map((team) => team.rank)).toEqual([1, 1, 3, 4])
     expect(ranked.filter((team) => team.isWinner).map((team) => team.name)).toEqual(['B', 'C'])
   })
@@ -19,6 +20,6 @@ describe('rankTeams', () => {
   })
 
   it('celebrates a single team', () => {
-    expect(rankTeams([{ name: 'Solo', score: 3 }])).toEqual([{ name: 'Solo', score: 3, rank: 1, isWinner: true }])
+    expect(rankTeams([{ name: 'Solo', score: 3 }])).toEqual([{ name: 'Solo', score: 3, teamIndex: 0, rank: 1, isWinner: true }])
   })
 })

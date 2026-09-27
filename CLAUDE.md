@@ -74,6 +74,44 @@ npx vitest run -t "replaced card goes to another"   # tests by name
 - TypeScript is pinned to `~6.0`, because `typescript-eslint` 8.x requires `typescript <6.1.0`. Check that before bumping.
 - The top-tied teams are all celebrated, even when the top score is 0.
 
+## Design system
+
+The look is a bright classroom game show: a whiteboard-white stage, navy "marker" ink, and one loud element, which is the active team's color. Keep everything else quiet.
+
+- **Tokens** live in the `@theme` block of `src/styles/main.css`:
+  - Colors: `board`, `card`, `ink` (plus `ink-deep` and `ink-soft`), `rule`, `track`, and `margin` (the index-card rule under the question); the team colors `t1`–`t5`, each with a `-deep` shade, plus `t4-text` for readable sun text; `good` (with `good-deep` and `good-soft`) and `bad` (with `bad-soft`).
+  - Radii: `rounded-card` for panels and the question card, `rounded-tile` for tiles, podiums, inputs and buttons.
+  - Use these tokens only, never raw Tailwind palette colors such as indigo or slate.
+- **Type:**
+  - `font-display` (Bricolage Grotesque, weights 500–800) is for team names, the countdown, scores and headlines. `font-sans` (Atkinson Hyperlegible Next, 400–800) is for questions, answers and everything else.
+  - Both are self-hosted in `src/assets/fonts` with their OFL licenses. Never load fonts from a CDN.
+  - Use sentence case for labels and text, with no tracked uppercase labels. Button labels keep Title Case (Start Game, Different Card, Next Team). Don't append arrows to button text.
+- **Team identity:** `teamThemeClass(index)` from `src/utils/teamTheme.ts` sets these CSS variables:
+  - `--team`, the team's color, and `--team-deep`, its darker shade used for press edges;
+  - `--team-on`, text on the team color;
+  - `--team-text`, the team color made readable on white;
+  - `--team-clip`, the team's shape.
+  - Use them via `bg-(--team)`, `text-(--team-text)` and the `.team-shape` class, and `teamColorVar(index)` where a plain color value is needed. Never hard-code a team color.
+  - Colors and shapes follow entry order: magenta circle, ocean square, fern triangle, sun diamond, grape star.
+- **Shared classes:**
+  - `.btn`, `.btn-primary` and `.btn-small`: a 3px ink border plus a 5px hard "press edge" that sinks on press.
+  - `.panel`: a white card with a 3px ink border and a 6px ink edge.
+  - `.field-input`.
+  - `.marquee-bulbs`: the bulb ring on the card cover, drawn in the team's `--team-on` color.
+  - Motion classes: `.stamp`, `.plus-one`, `.score-pop`, `.sparkle`, `.winner-glow`, `.confetti-piece`, plus the `result` transition.
+  - Press edges come from `--edge` (depth) and `--edge-color` on `.btn` and `.panel`. Set those variables rather than writing a new `box-shadow`.
+  - Hard press edges only go on pressable things and main panels. No soft grey shadows, no decorative gradients.
+- **Layout:**
+  - The game screen has a left rail (the quiz title and the scoreboard tiles, sticky on `lg`) and a main column (team name and turn, the timer, the question card). Below `lg` it stacks.
+  - The teacher box is fixed bottom-left.
+  - The results podium keeps its DOM in rank order and uses flex `order` for the 2-1-3 visual.
+- **Accessibility:**
+  - Feedback is never color alone: ✓ and ✗ come with words, and low time shows "Hurry up!".
+  - Focus is a 3px outline in `--focus-ring`: ink by default, and `--team-on` on the card cover. Keep it visible on any new surface.
+  - Text on team colors must meet 4.5:1 (sun uses ink text).
+- **Motion:** the card flip (timings in `config.ts`), the press sink, the ✓/✗ stamp, the result panel rising in, the +1, the score bump, the correct-answer sparkles, the winner glow and winner confetti. The global `prefers-reduced-motion` rule in `main.css` must cover any new animation.
+- **Media:** the current visuals are built from CSS shapes and motion only (no images in the UI). The project allows media assets; this design just doesn't use any.
+
 ## Content and deployment
 
 - `public/contest.json` is written by the repo owner and uses CRLF line endings. The validator can't tell whether an answer key is right. When the file changes, check that each question has exactly one correct option, and report ambiguous distractors rather than editing them unasked.
