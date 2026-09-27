@@ -106,7 +106,7 @@ onBeforeUnmount(() => {
 
 <template>
   <main
-    class="game-screen mx-auto grid min-h-screen w-full max-w-[90rem] gap-6 px-4 pt-4 pb-32 lg:grid-cols-[minmax(14rem,20rem)_1fr] lg:items-start lg:px-8"
+    class="game-screen mx-auto grid min-h-screen select-none w-full max-w-[90rem] gap-6 px-4 pt-4 pb-32 lg:grid-cols-[minmax(14rem,20rem)_1fr] lg:items-start lg:px-8"
   >
     <aside class="flex flex-col items-center gap-4 text-center lg:sticky lg:top-4 lg:items-stretch lg:text-left" aria-label="Game status">
       <p class="text-lg leading-snug font-bold text-ink-soft">{{ contest?.title }}</p>
