@@ -21,6 +21,9 @@ const label = computed(() => {
   if (props.phase === 'revealing') {
     return 'Get ready…'
   }
+  if (props.phase === 'paused') {
+    return 'Paused'
+  }
   if (props.phase === 'resolved') {
     return 'Timer stopped'
   }

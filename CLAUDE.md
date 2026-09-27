@@ -32,13 +32,13 @@ npx vitest run -t "replaced card goes to another"   # tests by name
 - `src/config.ts`: every tunable (limits, timings, labels). Import from there instead of repeating numbers.
 
 **Game state machine (`useGame.ts`).**
-- Phases: `loading → error | setup → ready → revealing → answering → resolved → ready | results → setup`.
+- Phases: `loading → error | setup → ready → revealing → answering ⇄ paused → resolved → ready | results → setup`. Different Card works from `answering` and `paused`.
 - Every action first checks the current phase, so double clicks and actions in the wrong phase do nothing.
 - Every draw increments `cardId`. Reveal timers and confirmation dialogs capture the `cardId` they were started for, and are ignored once it changes.
 - `answer` and `replaceCard` check `countdown.isExpired()`, so an action that arrives after the deadline, but before the next timer tick, becomes a timeout.
 - Scoring happens in exactly one place (`resolve`), guarded by the `answering` phase, so a turn can award at most one point.
 
-**Timer (`useCountdown.ts`).** The timer counts down to a fixed deadline measured with `performance.now()`, never by counting interval ticks. A `visibilitychange` listener re-checks it when the tab returns, so a suspended tab gets no extra time. `isExpired()` is checked at answer time. The countdown only starts once the card flip has finished.
+**Timer (`useCountdown.ts`).** The timer counts down to a fixed deadline measured with `performance.now()`, never by counting interval ticks. A `visibilitychange` listener re-checks it when the tab returns, so a suspended tab gets no extra time. `isExpired()` is checked at answer time. The countdown only starts once the card flip has finished. `pause()` freezes the exact remaining time (not the last tick's value) and `resume()` restarts the deadline from it, so a pause never adds time; `useGame.pause` checks `isExpired()` first.
 
 **Card reveal timing.**
 - `REVEAL_MS` is derived from `FLIP_OUT_MS + FLIP_IN_MS + REVEAL_SETTLE_MS` in `config.ts`.

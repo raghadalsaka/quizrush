@@ -16,7 +16,8 @@ export interface GameOptions {
   revealMs?: () => number
 }
 
-const IN_GAME_PHASES: readonly Phase[] = ['ready', 'revealing', 'answering', 'resolved']
+const IN_GAME_PHASES: readonly Phase[] = ['ready', 'revealing', 'answering', 'paused', 'resolved']
+const CARD_OPEN_PHASES: readonly Phase[] = ['answering', 'paused']
 
 function defaultRevealMs(): number {
   if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
@@ -53,6 +54,7 @@ export function useGame(options: GameOptions) {
 
   const currentTeam = computed(() => teams.value[currentTeamIndex.value] ?? null)
   const isGameActive = computed(() => IN_GAME_PHASES.includes(phase.value))
+  const isCardOpen = computed(() => CARD_OPEN_PHASES.includes(phase.value))
   const isGameComplete = computed(() => teams.value.length > 0 && teams.value.every((team) => team.turnsTaken >= questionsPerTeam.value))
   const nextTeamIndex = computed(() => {
     if (teams.value.length === 0) {
@@ -226,8 +228,30 @@ export function useGame(options: GameOptions) {
     resolve('timeout', null)
   }
 
+  function pause(): void {
+    if (phase.value !== 'answering') {
+      return
+    }
+    if (countdown.isExpired()) {
+      resolve('timeout', null)
+      return
+    }
+    countdown.pause()
+    phase.value = 'paused'
+    announcement.value = 'Paused. The timer is stopped.'
+  }
+
+  function resume(): void {
+    if (phase.value !== 'paused') {
+      return
+    }
+    phase.value = 'answering'
+    countdown.resume()
+    announcement.value = 'The timer is running again.'
+  }
+
   function replaceCard(forCard: number): boolean {
-    if (phase.value !== 'answering' || forCard !== cardId.value || deck === null) {
+    if (!isCardOpen.value || forCard !== cardId.value || deck === null) {
       return false
     }
     if (countdown.isExpired()) {
@@ -294,6 +318,7 @@ export function useGame(options: GameOptions) {
     remainingMs: countdown.remainingMs,
     isTimerRunning: countdown.isRunning,
     isGameActive,
+    isCardOpen,
     isGameComplete,
     nextTeam,
     turnNumber,
@@ -302,6 +327,8 @@ export function useGame(options: GameOptions) {
     startGame,
     startTurn,
     answer,
+    pause,
+    resume,
     replaceCard,
     nextTurn,
     newGame,

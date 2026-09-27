@@ -171,6 +171,9 @@ function focusResult(): void {
             </button>
           </div>
 
+          <p v-if="phase === 'paused'" class="rounded-tile border-3 border-ink px-5 py-3 text-center font-display text-3xl font-extrabold">
+            Paused
+          </p>
           <Transition name="result" @after-enter="focusResult">
             <section
               v-if="outcome !== null"
