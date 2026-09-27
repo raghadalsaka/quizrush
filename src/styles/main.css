@@ -142,8 +142,14 @@
 @layer base {
   html {
     /* Past 1920x1080 the layout scales in proportion (width or height, whichever is tighter) so 4K touch boards fill the screen. */
-    font-size: max(clamp(16px, 0.55vw + 11px, 26px), min(1.1229vw, 1.9962vh));
+    --root-font-size: max(clamp(16px, 0.55vw + 11px, 26px), min(1.1229vw, 1.9962vh));
+    font-size: var(--root-font-size);
     -webkit-tap-highlight-color: transparent;
+
+    @variant lg {
+      /* On desktop every screen is laid out to fit 44rem of height, so shorter windows scale down instead of scrolling. */
+      font-size: min(var(--root-font-size), calc(100svh / 44));
+    }
   }
 
   html:has(.game-screen) {

@@ -41,6 +41,16 @@ const {
 
 const pending = ref<PendingAction | null>(null)
 
+const advanceLabel = computed(() => {
+  if (isGameComplete.value) {
+    return 'See Results'
+  }
+  if (nextTeam.value !== null) {
+    return `Next Team: ${nextTeam.value.name}`
+  }
+  return 'Next Question'
+})
+
 const dialogText = computed<DialogText>(() => {
   const action = pending.value
   if (action?.kind === 'replace') {
@@ -106,11 +116,23 @@ onBeforeUnmount(() => {
 
 <template>
   <main
-    class="game-screen mx-auto grid min-h-screen select-none w-full max-w-[90rem] gap-6 px-4 pt-4 pb-32 lg:grid-cols-[minmax(14rem,20rem)_1fr] lg:items-start lg:px-8"
+    class="game-screen mx-auto grid min-h-screen select-none w-full max-w-[90rem] gap-6 px-4 pt-4 pb-8 lg:h-dvh lg:min-h-0 lg:grid-cols-[minmax(14rem,20rem)_1fr] lg:grid-rows-[minmax(0,1fr)] lg:px-8 lg:pb-4"
   >
-    <aside class="flex flex-col items-center gap-4 text-center lg:sticky lg:top-4 lg:items-stretch lg:text-left" aria-label="Game status">
+    <aside class="flex flex-col items-center gap-4 text-center lg:relative lg:items-stretch lg:text-left" aria-label="Game status">
       <p class="text-lg leading-snug font-bold text-ink-soft">{{ contest?.title }}</p>
       <TeamScoreboard class="lg:flex-col" :teams="teams" :active-index="currentTeamIndex" :last-award="lastAward" />
+      <TeacherControls
+        class="lg:absolute lg:bottom-0 lg:left-0 lg:z-10 lg:w-max"
+        :phase="phase"
+        :can-replace="canReplace"
+        :is-card-open="isCardOpen"
+        :advance-label="advanceLabel"
+        @pause="game.pause"
+        @resume="game.resume"
+        @replace="requestReplace"
+        @next="game.nextTurn"
+        @new-game="pending = { kind: 'newGame' }"
+      />
     </aside>
 
     <section
@@ -125,28 +147,18 @@ onBeforeUnmount(() => {
         <p class="mt-2 text-xl font-bold text-ink-soft">Turn {{ turnNumber }} of {{ questionsPerTeam }}</p>
       </CountdownBar>
       <QuestionCard
+        class="lg:min-h-0 lg:flex-1"
         :phase="phase"
         :question="currentQuestion"
         :outcome="outcome"
         :card-id="cardId"
         :team-name="currentTeam?.name ?? ''"
+        :advance-label="advanceLabel"
         @start="game.startTurn"
         @answer="game.answer"
+        @next="game.nextTurn"
       />
     </section>
-
-    <TeacherControls
-      :phase="phase"
-      :can-replace="canReplace"
-      :is-card-open="isCardOpen"
-      :is-game-complete="isGameComplete"
-      :next-team-name="nextTeam?.name ?? null"
-      @pause="game.pause"
-      @resume="game.resume"
-      @replace="requestReplace"
-      @next="game.nextTurn"
-      @new-game="pending = { kind: 'newGame' }"
-    />
 
     <ConfirmDialog
       :open="pending !== null"

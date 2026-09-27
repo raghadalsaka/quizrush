@@ -54,11 +54,13 @@ const props = defineProps<{
   outcome: Readonly<Outcome> | null
   cardId: number
   teamName: string
+  advanceLabel: string
 }>()
 
 defineEmits<{
   start: []
   answer: [optionIndex: number]
+  next: []
 }>()
 
 const startButton = ref<HTMLButtonElement | null>(null)
@@ -120,7 +122,7 @@ function focusResult(): void {
 </script>
 
 <template>
-  <div class="w-full perspective-[1600px]" :style="FLIP_DURATIONS">
+  <div class="w-full perspective-[1600px] lg:flex lg:flex-col" :style="FLIP_DURATIONS">
     <Transition name="card-flip" mode="out-in" @before-leave="makeInert" @after-enter="focusAfterFlip">
       <div
         v-if="showCover"
@@ -139,8 +141,8 @@ function focusResult(): void {
         <p class="relative text-xl">The timer starts when the answers appear.</p>
       </div>
 
-      <div v-else-if="question !== null" :key="cardId" class="panel overflow-hidden">
-        <div class="grid gap-5 p-6 lg:p-8">
+      <div v-else-if="question !== null" :key="cardId" class="panel overflow-hidden lg:flex lg:flex-col">
+        <div class="grid gap-5 p-6 lg:overflow-x-hidden lg:overflow-y-auto lg:p-8">
           <h2 ref="promptHeading" tabindex="-1" class="border-b-3 border-margin pb-3 text-4xl leading-tight font-bold">
             {{ question.prompt }}
           </h2>
@@ -210,6 +212,9 @@ function focusResult(): void {
                   </template>
                 </div>
                 <p class="mt-1 text-2xl leading-normal"><strong>Explanation:</strong> {{ question.explanation }}</p>
+                <button type="button" class="btn btn-primary mt-4 lg:hidden" @click="$emit('next')">
+                  {{ advanceLabel }}
+                </button>
               </div>
             </section>
           </Transition>

@@ -103,8 +103,9 @@ The look is a bright classroom game show: a whiteboard-white stage, navy "marker
   - Press edges on `.btn` and `.panel` come from `--edge` (depth) and `--edge-color`; set those rather than writing a new `box-shadow`. Team-colored surfaces use the `shadow-team-edge-*` tokens.
   - Hard press edges only go on pressable things and main panels. No soft grey shadows, no decorative gradients.
 - **Layout:**
-  - The game screen has a left rail (the quiz title and the scoreboard tiles, sticky on `lg`) and a main column (team name and turn, the timer, the question card). Below `lg` it stacks.
-  - The teacher box is fixed bottom-left.
+  - On `lg` every screen fits the viewport with no page scroll. The `lg` root font is capped at `100svh / 44`, so each screen is laid out to fit 44rem of height and shorter windows scale down. Setup puts team names in two columns with Start Game under the settings; results shortens the podium and puts 4th and 5th side by side. Below `lg` screens scroll as before.
+  - The game screen is `h-dvh` on `lg`, with a left rail (the quiz title, the scoreboard tiles, and the teacher box absolutely positioned at the rail's bottom-left, sized to its content so it can extend past the rail) and a main column (team name and turn, the timer, the question card, whose body scrolls internally as a last resort for very long text). Below `lg` it stacks.
+  - The teacher box exists only on `lg`. Below `lg` there is no Pause, Different Card or New Game, and Next Team / See Results appears inside the result panel (`lg:hidden`). `advanceLabel` is computed once in `GameScreen` for both.
   - The results podium keeps its DOM in rank order and uses flex `order` for the 2-1-3 visual.
 - **Accessibility:**
   - Feedback is never color alone: ✓ and ✗ come with words, and low time shows "Hurry up!".
