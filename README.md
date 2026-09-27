@@ -66,6 +66,7 @@ If there aren't enough, the setup screen says so and keeps **Start Game** disabl
 - **Start** draws a random question and flips the card. The timer starts once the answers can be clicked.
 - The first answer (mouse or keys 1–4) locks the question. A correct answer earns exactly 1 point. A wrong answer or a timeout earns 0. The correct answer and the explanation stay visible until the teacher presses **Next Team: <name of the next team>**. With one team it reads **Next Question**, and after the last turn **See Results**.
 - The timer uses a real-time deadline, so a hidden or throttled tab never gets extra time.
+- **Pause** (in the teacher controls, while a question is open) stops the timer and locks the answers. The question stays on screen. **Continue** resumes with the time that was left, or the teacher can press **Different Card** instead.
 - **Different Card** (in the teacher controls, while a question is open) asks for confirmation, then sets the question aside and draws another one with a fresh timer. The turn and score don't change.
 - The final leaderboard celebrates every team tied for the top score.
 

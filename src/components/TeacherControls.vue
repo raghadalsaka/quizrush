@@ -5,19 +5,22 @@ import type { Phase } from '../types/game'
 const props = defineProps<{
   phase: Phase
   canReplace: boolean
+  isCardOpen: boolean
   isGameComplete: boolean
   nextTeamName: string | null
 }>()
 
 defineEmits<{
+  pause: []
+  resume: []
   replace: []
   next: []
   newGame: []
 }>()
 
-const isQuestionOpen = computed(() => props.phase === 'revealing' || props.phase === 'answering')
-const isAnswering = computed(() => props.phase === 'answering')
-const isReplaceBlocked = computed(() => isAnswering.value && !props.canReplace)
+const isPaused = computed(() => props.phase === 'paused')
+const isQuestionOpen = computed(() => props.phase === 'revealing' || props.isCardOpen)
+const isReplaceBlocked = computed(() => props.isCardOpen && !props.canReplace)
 const advanceLabel = computed(() => {
   if (props.isGameComplete) {
     return 'See Results'
@@ -39,8 +42,18 @@ const advanceLabel = computed(() => {
       <button
         v-if="isQuestionOpen"
         type="button"
+        class="btn"
+        :class="isPaused ? 'btn-primary' : 'btn-small'"
+        :disabled="!isCardOpen"
+        @click="isPaused ? $emit('resume') : $emit('pause')"
+      >
+        {{ isPaused ? 'Continue' : 'Pause' }}
+      </button>
+      <button
+        v-if="isQuestionOpen"
+        type="button"
         class="btn btn-small"
-        :disabled="!isAnswering || !canReplace"
+        :disabled="!canReplace"
         :aria-describedby="isReplaceBlocked ? 'replace-unavailable' : undefined"
         @click="$emit('replace')"
       >

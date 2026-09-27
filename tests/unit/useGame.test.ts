@@ -191,13 +191,16 @@ describe('useGame: reveal and teacher controls', () => {
     expect(game.outcome.value?.kind).toBe('timeout')
   })
 
-  it('different card keeps the turn, draws a new question and ignores stale callbacks', async () => {
+  it.each([false, true])('different card keeps the turn, draws a new question and ignores stale callbacks (paused: %s)', async (paused) => {
     const game = await startedGame(['Red', 'Blue'], 2, { revealMs: 500 })
     game.startTurn()
     advance(500)
     const oldCard = game.cardId.value
     const oldQuestion = game.currentQuestion.value
     advance(59_000)
+    if (paused) {
+      game.pause()
+    }
     expect(game.canReplace.value).toBe(true)
     expect(game.replaceCard(oldCard)).toBe(true)
     expect(game.phase.value).toBe('revealing')
@@ -213,12 +216,73 @@ describe('useGame: reveal and teacher controls', () => {
     expect(game.teams.value[0]?.score).toBe(0)
   })
 
-  it('disables a different card when no safe replacement exists', async () => {
+  it.each([false, true])('disables a different card when no safe replacement exists (paused: %s)', async (paused) => {
     const game = await startedGame(['Solo'], 3, { contest: makeContest(3, false) })
     game.startTurn()
+    if (paused) {
+      game.pause()
+    }
     expect(game.canReplace.value).toBe(false)
     expect(game.replaceCard(game.cardId.value)).toBe(false)
+    expect(game.phase.value).toBe(paused ? 'paused' : 'answering')
+  })
+
+  it('pause stops the timer and locks answers, and continue keeps the time that was left', async () => {
+    const game = await startedGame(['Red', 'Blue'], 2)
+    game.startTurn()
+    const question = game.currentQuestion.value
+    advance(20_000)
+    game.pause()
+    expect(game.phase.value).toBe('paused')
+    expect(game.isTimerRunning.value).toBe(false)
+    game.answer(correctIndex(game))
+    game.nextTurn()
+    advance(120_000)
+    expect(game.phase.value).toBe('paused')
+    expect(game.teams.value[0]?.score).toBe(0)
+    expect(game.remainingMs.value).toBe(40_000)
+    game.resume()
     expect(game.phase.value).toBe('answering')
+    expect(game.currentQuestion.value).toBe(question)
+    advance(39_800)
+    expect(game.phase.value).toBe('answering')
+    game.answer(correctIndex(game))
+    expect(game.teams.value[0]?.score).toBe(1)
+  })
+
+  it('continue lets the remaining time run out as a timeout', async () => {
+    const game = await startedGame(['Red'], 2)
+    game.startTurn()
+    advance(50_000)
+    game.pause()
+    game.resume()
+    advance(10_000)
+    expect(game.outcome.value?.kind).toBe('timeout')
+  })
+
+  it('a pause arriving after the deadline but before the tick resolves as a timeout', async () => {
+    const game = await startedGame(['Red'], 2)
+    game.startTurn()
+    jump(60_000)
+    game.pause()
+    expect(game.phase.value).toBe('resolved')
+    expect(game.outcome.value?.kind).toBe('timeout')
+  })
+
+  it('pause and continue do nothing outside an open question', async () => {
+    const game = await startedGame(['Red'], 2, { revealMs: 500 })
+    game.pause()
+    expect(game.phase.value).toBe('ready')
+    game.startTurn()
+    game.pause()
+    expect(game.phase.value).toBe('revealing')
+    advance(500)
+    game.resume()
+    expect(game.phase.value).toBe('answering')
+    game.answer(wrongIndex(game))
+    game.pause()
+    game.resume()
+    expect(game.phase.value).toBe('resolved')
   })
 
   it('new game resets in-memory state and remembers the last setup', async () => {

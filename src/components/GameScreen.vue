@@ -29,6 +29,7 @@ const {
   outcome,
   cardId,
   canReplace,
+  isCardOpen,
   lastAward,
   remainingMs,
   secondsPerQuestion,
@@ -58,13 +59,13 @@ const dialogText = computed<DialogText>(() => {
 
 watch([phase, cardId], () => {
   const action = pending.value
-  if (action?.kind === 'replace' && (phase.value !== 'answering' || action.cardId !== cardId.value)) {
+  if (action?.kind === 'replace' && (!isCardOpen.value || action.cardId !== cardId.value)) {
     pending.value = null
   }
 })
 
 function requestReplace(): void {
-  if (phase.value !== 'answering') {
+  if (!isCardOpen.value) {
     return
   }
   pending.value = { kind: 'replace', cardId: cardId.value }
@@ -137,8 +138,11 @@ onBeforeUnmount(() => {
     <TeacherControls
       :phase="phase"
       :can-replace="canReplace"
+      :is-card-open="isCardOpen"
       :is-game-complete="isGameComplete"
       :next-team-name="nextTeam?.name ?? null"
+      @pause="game.pause"
+      @resume="game.resume"
       @replace="requestReplace"
       @next="game.nextTurn"
       @new-game="pending = { kind: 'newGame' }"

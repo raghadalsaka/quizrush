@@ -6,6 +6,8 @@ export interface Countdown {
   isRunning: Readonly<Ref<boolean>>
   start: (durationMs: number) => void
   stop: () => void
+  pause: () => void
+  resume: () => void
   isExpired: () => boolean
 }
 
@@ -13,6 +15,7 @@ export function useCountdown(onExpire: () => void): Countdown {
   const remainingMs = ref(0)
   const isRunning = ref(false)
   let deadline = 0
+  let isPaused = false
   let intervalId: ReturnType<typeof setInterval> | null = null
 
   function clearTicker(): void {
@@ -25,13 +28,18 @@ export function useCountdown(onExpire: () => void): Countdown {
   function stop(): void {
     clearTicker()
     isRunning.value = false
+    isPaused = false
+  }
+
+  function timeLeft(): number {
+    return Math.max(0, deadline - performance.now())
   }
 
   function tick(): void {
     if (!isRunning.value) {
       return
     }
-    const remaining = Math.max(0, deadline - performance.now())
+    const remaining = timeLeft()
     remainingMs.value = remaining
     if (remaining > 0) {
       return
@@ -46,6 +54,23 @@ export function useCountdown(onExpire: () => void): Countdown {
     deadline = performance.now() + ms
     isRunning.value = true
     intervalId = setInterval(tick, TICK_MS)
+  }
+
+  function pause(): void {
+    if (!isRunning.value) {
+      return
+    }
+    const remaining = timeLeft()
+    stop()
+    remainingMs.value = remaining
+    isPaused = true
+  }
+
+  function resume(): void {
+    if (!isPaused) {
+      return
+    }
+    start(remainingMs.value)
   }
 
   function isExpired(): boolean {
@@ -70,6 +95,8 @@ export function useCountdown(onExpire: () => void): Countdown {
     isRunning: readonly(isRunning),
     start,
     stop,
+    pause,
+    resume,
     isExpired,
   }
 }

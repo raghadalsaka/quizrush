@@ -1,4 +1,4 @@
-export type Phase = 'loading' | 'error' | 'setup' | 'ready' | 'revealing' | 'answering' | 'resolved' | 'results'
+export type Phase = 'loading' | 'error' | 'setup' | 'ready' | 'revealing' | 'answering' | 'paused' | 'resolved' | 'results'
 
 export type OutcomeKind = 'correct' | 'incorrect' | 'timeout'
 
