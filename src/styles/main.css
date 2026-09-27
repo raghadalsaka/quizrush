@@ -141,7 +141,9 @@
 
 @layer base {
   html {
-    font-size: clamp(16px, 0.55vw + 11px, 26px);
+    /* Past 1920x1080 the layout scales in proportion (width or height, whichever is tighter) so 4K touch boards fill the screen. */
+    font-size: max(clamp(16px, 0.55vw + 11px, 26px), min(1.1229vw, 1.9962vh));
+    -webkit-tap-highlight-color: transparent;
   }
 
   html:has(.game-screen) {
