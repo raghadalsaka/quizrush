@@ -50,9 +50,9 @@
   --radius-card: 1.75rem;
   --radius-tile: 1rem;
 
-  --shadow-team-tile: 0 5px 0 var(--team-deep);
-  --shadow-team-card: 0 6px 0 var(--team-deep);
-  --shadow-team-button: 0 8px 0 var(--team-deep);
+  --shadow-team-edge-sm: 0 5px 0 var(--team-deep);
+  --shadow-team-edge-md: 0 6px 0 var(--team-deep);
+  --shadow-team-edge-lg: 0 8px 0 var(--team-deep);
   --shadow-good-edge: 0 3px 0 var(--color-good-deep);
 
   --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);

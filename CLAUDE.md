@@ -81,8 +81,8 @@ The look is a bright classroom game show: a whiteboard-white stage, navy "marker
 - **Tokens** live in the `@theme` block of `src/styles/main.css`:
   - Colors: `board`, `card`, `ink` (plus `ink-deep` and `ink-soft`), `rule`, `track`, and `margin` (the index-card rule under the question); the team colors `t1`–`t5`, each with a `-deep` shade, plus `t4-text` for readable sun text; `good` (with `good-deep` and `good-soft`) and `bad` (with `bad-soft`).
   - Radii: `rounded-card` for panels and the question card, `rounded-tile` for tiles, podiums, inputs and buttons.
-  - Shadows: `shadow-team-tile`, `shadow-team-card` and `shadow-team-button` (the team's hard edge at 5, 6 and 8px) and `shadow-good-edge` (the +1 pill).
-  - Animations: the `--animate-*` tokens with their keyframes (see Motion).
+  - Shadows: `shadow-team-edge-sm`, `-md` and `-lg` (the team-colored hard edge at 5, 6 and 8px) and `shadow-good-edge` (the +1 pill).
+  - Animations: `--animate-*` tokens with their keyframes, used as `animate-stamp`, `animate-plus-one`, `animate-score-pop`, `animate-sparkle`, `animate-winner-glow` and `animate-confetti`.
   - Use these tokens only, never raw Tailwind palette colors such as indigo or slate.
 - **Type:**
   - `font-display` (Bricolage Grotesque, weights 500–800) is for team names, the countdown, scores and headlines. `font-sans` (Atkinson Hyperlegible Next, 400–800) is for questions, answers and everything else.
@@ -95,13 +95,12 @@ The look is a bright classroom game show: a whiteboard-white stage, navy "marker
   - `--team-clip`, the team's shape.
   - Use them via `bg-(--team)`, `text-(--team-text)` and the `.team-shape` class, and `teamColorVar(index)` where a plain color value is needed. Never hard-code a team color.
   - Colors and shapes follow entry order: magenta circle, ocean square, fern triangle, sun diamond, grape star.
+  - The card cover's `.marquee-frame` draws a dashed frame in `--team-on`.
 - **Shared classes:**
   - `.btn`, `.btn-primary`, `.btn-small` and `.btn-large`: a 3px ink border plus a 5px hard "press edge" that sinks on press.
   - `.panel`: a white card with a 3px ink border and a 6px ink edge.
   - `.field-input`.
-  - `.marquee-frame`: the dashed frame on the card cover, drawn in the team's `--team-on` color.
-  - Motion utilities: `animate-stamp`, `animate-plus-one`, `animate-score-pop`, `animate-sparkle`, `animate-winner-glow` and `animate-confetti`, plus the `card-flip` and `result` Vue transitions.
-  - Press edges come from `--edge` (depth) and `--edge-color` on `.btn` and `.panel`. Set those variables rather than writing a new `box-shadow`.
+  - Press edges on `.btn` and `.panel` come from `--edge` (depth) and `--edge-color`; set those rather than writing a new `box-shadow`. Team-colored surfaces use the `shadow-team-edge-*` tokens.
   - Hard press edges only go on pressable things and main panels. No soft grey shadows, no decorative gradients.
 - **Layout:**
   - The game screen has a left rail (the quiz title and the scoreboard tiles, sticky on `lg`) and a main column (team name and turn, the timer, the question card). Below `lg` it stacks.
@@ -111,7 +110,7 @@ The look is a bright classroom game show: a whiteboard-white stage, navy "marker
   - Feedback is never color alone: ✓ and ✗ come with words, and low time shows "Hurry up!".
   - Focus is a 3px outline in `--focus-ring`: ink by default, and `--team-on` on the card cover. Keep it visible on any new surface.
   - Text on team colors must meet 4.5:1 (sun uses ink text).
-- **Motion:** the card flip (timings in `config.ts`), the press sink, the ✓/✗ stamp, the result panel rising in, the +1, the score bump, the correct-answer sparkles, the winner glow and winner confetti. The global `prefers-reduced-motion` rule in `main.css` must cover any new animation. Purely decorative motion (sparkles, confetti, +1) also carries `motion-reduce:hidden`.
+- **Motion:** the card flip (timings in `config.ts`), the press sink, the ✓/✗ stamp, the result panel rising in, the +1, the score bump, the correct-answer sparkles, the winner glow and winner confetti, plus the `card-flip` and `result` Vue transitions. The global `prefers-reduced-motion` rule in `main.css` shortens every CSS animation and transition automatically; don't override it with `!important` or drive motion from JS. Purely decorative motion (each confetti piece, each sparkle, the +1) also carries `motion-reduce:hidden`.
 - **Media:** the current visuals are built from CSS shapes and motion only (no images in the UI). The project allows media assets; this design just doesn't use any.
 - **Where styles live:**
   - Prefer Tailwind utilities in the template for color, spacing, type, layout and responsive states, using the tokens above.

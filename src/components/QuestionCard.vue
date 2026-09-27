@@ -125,13 +125,13 @@ function focusResult(): void {
       <div
         v-if="showCover"
         key="cover"
-        class="marquee-frame relative flex min-h-80 flex-col items-center justify-center gap-6 rounded-card bg-(--team) p-12 text-center text-(--team-on) shadow-team-card [--focus-ring:var(--team-on)]"
+        class="marquee-frame relative flex min-h-80 flex-col items-center justify-center gap-6 rounded-card bg-(--team) p-12 text-center text-(--team-on) shadow-team-edge-md [--focus-ring:var(--team-on)]"
       >
         <p class="relative text-3xl font-bold">Ready, {{ teamName }}?</p>
         <button
           ref="startButton"
           type="button"
-          class="relative rounded-full bg-card px-16 py-4 font-display text-6xl font-extrabold text-(--team-text) shadow-team-button transition-transform active:translate-y-1.5"
+          class="relative rounded-full bg-card px-16 py-4 font-display text-6xl font-extrabold text-(--team-text) shadow-team-edge-lg transition-transform active:translate-y-1.5"
           @click="$emit('start')"
         >
           Start

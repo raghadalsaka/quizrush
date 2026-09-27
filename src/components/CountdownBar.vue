@@ -3,16 +3,17 @@ import { computed } from 'vue'
 import { LOW_TIME_MS, TICK_MS } from '../config'
 import type { Phase } from '../types/game'
 
+type TimerState = 'normal' | 'low'
+
 interface TimerStyle {
-  label: string
+  muted: string
   seconds: string
-  unit: string
   fill: string
 }
 
-const TIMER_STYLES: Record<'normal' | 'low', TimerStyle> = {
-  normal: { label: 'text-ink-soft', seconds: 'text-ink', unit: 'text-ink-soft', fill: 'bg-(--team)' },
-  low: { label: 'text-bad', seconds: 'text-bad', unit: 'text-bad', fill: 'bg-bad' },
+const TIMER_STYLES: Record<TimerState, TimerStyle> = {
+  normal: { muted: 'text-ink-soft', seconds: 'text-ink', fill: 'bg-(--team)' },
+  low: { muted: 'text-bad', seconds: 'text-bad', fill: 'bg-bad' },
 }
 
 const props = defineProps<{
@@ -54,7 +55,7 @@ const label = computed(() => {
         <slot />
       </div>
       <div class="text-right">
-        <p class="text-lg font-bold" :class="timerStyle.label">{{ label }}</p>
+        <p class="text-lg font-bold" :class="timerStyle.muted">{{ label }}</p>
         <p
           role="timer"
           aria-live="off"
@@ -62,7 +63,7 @@ const label = computed(() => {
           class="font-display text-7xl leading-none font-extrabold tabular-nums"
           :class="timerStyle.seconds"
         >
-          {{ seconds }}<span class="text-3xl" :class="timerStyle.unit">s</span>
+          {{ seconds }}<span class="text-3xl" :class="timerStyle.muted">s</span>
         </p>
       </div>
     </div>
