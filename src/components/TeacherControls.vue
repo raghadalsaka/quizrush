@@ -6,8 +6,7 @@ const props = defineProps<{
   phase: Phase
   canReplace: boolean
   isCardOpen: boolean
-  isGameComplete: boolean
-  nextTeamName: string | null
+  advanceLabel: string
 }>()
 
 defineEmits<{
@@ -21,21 +20,12 @@ defineEmits<{
 const isPaused = computed(() => props.phase === 'paused')
 const isQuestionOpen = computed(() => props.phase === 'revealing' || props.isCardOpen)
 const isReplaceBlocked = computed(() => props.isCardOpen && !props.canReplace)
-const advanceLabel = computed(() => {
-  if (props.isGameComplete) {
-    return 'See Results'
-  }
-  if (props.nextTeamName !== null) {
-    return `Next Team: ${props.nextTeamName}`
-  }
-  return 'Next Question'
-})
 </script>
 
 <template>
   <section
     aria-labelledby="teacher-controls-heading"
-    class="panel fixed bottom-3 left-3 z-10 flex max-w-[calc(100vw-1.5rem)] flex-col items-start gap-1.5 rounded-tile p-2.5 [--edge:5px]"
+    class="panel hidden flex-col items-start gap-1.5 rounded-tile p-2.5 [--edge:5px] lg:flex"
   >
     <h2 id="teacher-controls-heading" class="self-center px-1 text-sm font-bold text-ink-soft">Teacher</h2>
     <div class="flex flex-wrap items-center gap-2">

@@ -6,8 +6,9 @@ import ConfettiBurst from './ConfettiBurst.vue'
 
 const PODIUM_SIZE: number = 3
 const ORDINALS: readonly string[] = ['1st', '2nd', '3rd', '4th', '5th']
-const STEP_HEIGHTS: Record<number, string> = { 1: 'h-56', 2: 'h-40', 3: 'h-28' }
+const STEP_HEIGHTS: Record<number, string> = { 1: 'h-56 lg:h-40', 2: 'h-40 lg:h-32', 3: 'h-28' }
 const STEP_ORDER: readonly string[] = ['order-2', 'order-1', 'order-3']
+const LONG_HEADLINE_CHARS: number = 60
 
 const props = defineProps<{
   rankedTeams: readonly RankedTeam[]
@@ -33,6 +34,7 @@ const headline = computed(() => {
   }
   return `${winners.value[0]?.name ?? ''} wins!`
 })
+const headlineSize = computed(() => (headline.value.length > LONG_HEADLINE_CHARS ? 'lg:text-4xl' : 'lg:text-6xl'))
 
 function ordinal(rank: number): string {
   return ORDINALS[rank - 1] ?? `${rank}th`
@@ -40,11 +42,11 @@ function ordinal(rank: number): string {
 </script>
 
 <template>
-  <main class="relative mx-auto grid max-w-5xl select-none justify-items-center gap-8 px-4 py-10 text-center">
+  <main class="relative mx-auto grid max-w-5xl select-none justify-items-center gap-8 px-4 py-10 text-center lg:min-h-dvh lg:content-center lg:gap-4 lg:py-5">
     <ConfettiBurst :colors="confettiColors" />
     <header>
       <p class="text-xl font-bold text-ink-soft">Final results</p>
-      <h1 class="mt-1 font-display text-5xl leading-tight font-extrabold tracking-tight lg:text-6xl">{{ headline }}</h1>
+      <h1 class="mt-1 font-display text-5xl leading-tight font-extrabold tracking-tight" :class="headlineSize">{{ headline }}</h1>
     </header>
 
     <ol class="flex w-full items-end justify-center gap-3 sm:gap-6" aria-label="Leaderboard">
@@ -67,11 +69,16 @@ function ordinal(rank: number): string {
       </li>
     </ol>
 
-    <ol v-if="otherTeams.length > 0" :start="PODIUM_SIZE + 1" class="grid w-full max-w-xl gap-3" aria-label="Other teams">
+    <ol
+      v-if="otherTeams.length > 0"
+      :start="PODIUM_SIZE + 1"
+      class="grid w-full max-w-xl gap-3 lg:flex lg:max-w-3xl lg:justify-center"
+      aria-label="Other teams"
+    >
       <li
         v-for="team in otherTeams"
         :key="team.name"
-        class="grid grid-cols-[auto_auto_1fr_auto] items-center gap-3 rounded-tile border-3 border-rule bg-card px-4 py-2 text-left"
+        class="grid grid-cols-[auto_auto_1fr_auto] items-center gap-3 rounded-tile border-3 border-rule bg-card px-4 py-2 text-left lg:max-w-xl lg:flex-1"
         :class="teamThemeClass(team.teamIndex)"
       >
         <span class="font-display text-2xl font-extrabold">{{ ordinal(team.rank) }}</span>

@@ -68,6 +68,8 @@ If there aren't enough, the setup screen says so and keeps **Start Game** disabl
 - The timer uses a real-time deadline, so a hidden or throttled tab never gets extra time.
 - **Pause** (in the teacher controls, while a question is open) stops the timer and locks the answers. The question stays on screen. **Continue** resumes with the time that was left, or the teacher can press **Different Card** instead.
 - **Different Card** (in the teacher controls, while a question is open) asks for confirmation, then sets the question aside and draws another one with a fresh timer. The turn and score don't change.
+- On screens narrower than 1024px (phones and small tablets) the teacher controls are hidden: there is no Pause, Different Card or New Game, and **Next Team** appears under the explanation instead. Reload the page to start over.
+- On wider screens every screen fits the window without scrolling; shorter windows scale the whole layout down.
 - The final leaderboard celebrates every team tied for the top score.
 
 ### Repeat and replacement rules

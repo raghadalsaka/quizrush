@@ -44,13 +44,13 @@ function submit(): void {
 </script>
 
 <template>
-  <main class="mx-auto grid max-w-6xl gap-8 px-4 py-8 lg:py-12">
+  <main class="mx-auto grid max-w-6xl gap-8 px-4 py-8 lg:min-h-dvh lg:content-center lg:gap-6 lg:py-6">
     <header>
       <h1 class="font-display text-5xl leading-none font-extrabold tracking-tight lg:text-6xl">{{ contest.title }}</h1>
       <p class="mt-3 text-xl text-ink-soft">Set up the teams, then press Start Game.</p>
     </header>
 
-    <form class="panel grid gap-8 p-6 lg:grid-cols-[1fr_1.3fr] lg:gap-12 lg:p-10" novalidate @submit.prevent="submit">
+    <form class="panel grid gap-8 p-6 lg:grid-cols-[1fr_1.3fr] lg:gap-x-12 lg:gap-y-6 lg:p-8" novalidate @submit.prevent="submit">
       <fieldset class="grid content-start gap-5">
         <legend class="mb-5 font-display text-3xl font-extrabold">Game settings</legend>
         <div class="grid gap-1">
@@ -83,7 +83,7 @@ function submit(): void {
         </div>
       </fieldset>
 
-      <fieldset class="grid content-start gap-5">
+      <fieldset class="grid content-start gap-5 lg:row-span-2">
         <legend class="mb-5 font-display text-3xl font-extrabold">Teams</legend>
         <div class="grid gap-1">
           <p id="team-count-label" class="text-lg font-bold">How many teams?</p>
@@ -101,7 +101,7 @@ function submit(): void {
             </button>
           </div>
         </div>
-        <ol class="grid gap-3">
+        <ol class="grid gap-3 lg:grid-cols-2 lg:gap-x-6">
           <li v-for="index in teamCount" :key="index" class="grid gap-1" :class="teamThemeClass(index - 1)">
             <label :for="`team-name-${index}`" class="text-lg font-bold">Team {{ index }} name</label>
             <div class="flex items-center gap-3">
@@ -120,8 +120,12 @@ function submit(): void {
         </ol>
       </fieldset>
 
-      <div class="flex flex-col items-center gap-6 border-t-3 border-track pt-6 lg:col-span-2">
-        <ul v-if="problems.length > 0" id="setup-problems" class="list-disc space-y-1 pl-6 text-lg font-semibold text-bad">
+      <div class="flex flex-col items-center gap-6 border-t-3 border-track pt-6 lg:gap-4 lg:self-end">
+        <ul
+          v-if="problems.length > 0"
+          id="setup-problems"
+          class="list-disc space-y-1 pl-6 text-lg font-semibold text-bad lg:max-h-20 lg:overflow-y-auto"
+        >
           <li v-for="problem in problems" :key="problem">{{ problem }}</li>
         </ul>
         <button
