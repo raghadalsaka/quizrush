@@ -6,7 +6,7 @@ type JsonObject = Record<string, unknown>
 
 function validContest(): JsonObject {
   return {
-    title: 'Grade 6 English Challenge',
+    title: 'Classroom Challenge',
     settings: { secondsPerQuestion: 60, defaultQuestionsPerTeam: 5, allowCrossTeamRepeats: false },
     questions: [
       { id: 'q1', prompt: 'Pick one', options: ['a', 'b', 'c', 'd'], correctIndex: 1, explanation: 'Because b.' },
