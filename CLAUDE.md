@@ -67,7 +67,7 @@ npx vitest run -t "replaced card goes to another"   # tests by name
 
 ## Constraints
 
-- No backend, accounts, persistence (not even localStorage), external data services or animation libraries. Media assets (images, audio, video) are allowed; put them in `public/` or import them from `src/`.
+- No backend, accounts, persistence (not even localStorage), external data services or animation libraries. The one exception is the cookieless Cloudflare Web Analytics beacon in `index.html`. Media assets (images, audio, video) are allowed; put them in `public/` or import them from `src/`.
 - Reloading the page starts a fresh game.
 - `public/favicon.png` is a 180×180 render of `public/favicon.svg` with square corners, because iOS fills transparent corners with black. Re-render it whenever the SVG changes (for example with `sharp`, run from outside the project so it doesn't become a dependency).
 - The correct answer must not appear in the DOM or in styling before the question is resolved.
