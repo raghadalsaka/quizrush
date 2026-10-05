@@ -1,8 +1,12 @@
-import { MAX_QUESTIONS_PER_TEAM, MAX_SECONDS_PER_QUESTION, OPTION_COUNT } from '../config'
-import type { AnswerOptions, Contest, ContestLoadResult, ContestSettings, Question } from '../types/contest'
-import { isIntegerInRange } from './numbers'
+import { CONTESTS_DIR, MAX_QUESTIONS_PER_TEAM, MAX_SECONDS_PER_QUESTION, OPTION_COUNT } from '../config.ts'
+import type { AnswerOptions, Contest, ContestLoadResult, ContestSettings, Question } from '../types/contest.ts'
+import { isIntegerInRange } from './numbers.ts'
 
 type JsonObject = Record<string, unknown>
+
+const SLUG_PATTERN: RegExp = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+// Top-level folders of the built site, which a quiz page at /<slug>/ must not shadow.
+const RESERVED_SLUGS: ReadonlySet<string> = new Set(['assets', CONTESTS_DIR])
 
 function isObject(value: unknown): value is JsonObject {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -10,6 +14,16 @@ function isObject(value: unknown): value is JsonObject {
 
 function isNonBlankString(value: unknown): value is string {
   return typeof value === 'string' && value.trim().length > 0
+}
+
+function validateSlug(value: unknown, errors: string[]): void {
+  if (typeof value !== 'string' || !SLUG_PATTERN.test(value)) {
+    errors.push('slug must be lowercase letters and digits joined by single hyphens, for example "present-perfect".')
+    return
+  }
+  if (RESERVED_SLUGS.has(value)) {
+    errors.push(`slug "${value}" is reserved; choose another.`)
+  }
 }
 
 function validateSettings(value: unknown, errors: string[]): ContestSettings | null {
@@ -83,12 +97,13 @@ function validateQuestion(value: unknown, path: string, seenIds: Set<string>, er
 
 export function validateContest(data: unknown): ContestLoadResult {
   if (!isObject(data)) {
-    return { ok: false, errors: ['The file must contain one JSON object with title, settings and questions.'] }
+    return { ok: false, errors: ['The file must contain one JSON object with title, slug, settings and questions.'] }
   }
   const errors: string[] = []
   if (!isNonBlankString(data.title)) {
     errors.push('title must be non-blank text.')
   }
+  validateSlug(data.slug, errors)
   const settings = validateSettings(data.settings, errors)
   const questions: Question[] = []
   if (!Array.isArray(data.questions) || data.questions.length === 0) {
@@ -105,6 +120,6 @@ export function validateContest(data: unknown): ContestLoadResult {
   if (errors.length > 0 || settings === null) {
     return { ok: false, errors }
   }
-  const contest: Contest = { title: (data.title as string).trim(), settings, questions }
+  const contest: Contest = { title: (data.title as string).trim(), slug: data.slug as string, settings, questions }
   return { ok: true, contest }
 }

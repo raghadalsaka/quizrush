@@ -1,12 +1,13 @@
+import { CONTESTS_DIR } from '../config'
 import type { ContestLoadResult } from '../types/contest'
 import { describeError } from '../utils/errors'
 import { validateContest } from '../utils/validateContest'
 
-export async function loadContest(): Promise<ContestLoadResult> {
-  const url = `${import.meta.env.BASE_URL}contest.json`
+export async function loadContest(file: string): Promise<ContestLoadResult> {
+  const url = `${import.meta.env.BASE_URL}${CONTESTS_DIR}/${file}`
   let response: Response
   try {
-    // no-cache revalidates with the server, so an edited contest.json is not hidden behind a CDN or browser cache.
+    // no-cache revalidates with the server, so an edited quiz file is not hidden behind a CDN or browser cache.
     response = await fetch(url, { cache: 'no-cache' })
   } catch (error) {
     return { ok: false, errors: [`Could not reach ${url}. Check the connection and try again. (${describeError(error)})`] }
@@ -18,7 +19,7 @@ export async function loadContest(): Promise<ContestLoadResult> {
   try {
     data = JSON.parse(await response.text())
   } catch (error) {
-    return { ok: false, errors: [`contest.json is not valid JSON: ${describeError(error)}`] }
+    return { ok: false, errors: [`${file} is not valid JSON: ${describeError(error)}`] }
   }
   return validateContest(data)
 }

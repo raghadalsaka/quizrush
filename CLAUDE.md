@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Quizrush is a single-device classroom quiz for an interactive touch board (a projector also works), where students tap their own answers: 1–5 teams take equal round-robin turns on multiple-choice questions loaded from `public/contest.json`. It runs entirely in the browser (Vue 3 + TypeScript + Vite + Tailwind 4) and is served by GitHub Pages at https://quizrush.raghadalsaka.com.
+Quizrush is a single-device classroom quiz for an interactive touch board (a projector also works), where students tap their own answers: 1–5 teams take equal round-robin turns on multiple-choice questions. Each quiz is one file in `public/contests/*.json`, played at `/<slug>/`; `/` lists them. It runs entirely in the browser (Vue 3 + TypeScript + Vite + Tailwind 4) and is served by GitHub Pages at https://quizrush.raghadalsaka.com.
 
 ## Commands
 
@@ -24,7 +24,7 @@ npx vitest run -t "replaced card goes to another"   # tests by name
 
 ## Architecture
 
-**One screen, no router or store.** `App.vue` creates the single `useGame()` instance and picks the screen from `phase`. `GameScreen` receives the game through `provide`/`inject` (`gameKey`, `injectGame()`), because it needs most of the state. The other screens and the leaf components get props.
+**Pages by path, no router or store.** `App.vue` reads the slug once from `location.pathname` (`slugFromPath`) and shows `HomeScreen` (`''`), `QuizApp` (a slug in the catalog) or `NotFoundScreen`. Links between them are plain `<a href>` full page loads, so a game never survives navigation. `QuizApp.vue` creates the single `useGame()` instance and picks the screen from `phase`. `GameScreen` receives the game through `provide`/`inject` (`gameKey`, `injectGame()`), because it needs most of the state. The other screens and the leaf components get props.
 
 **Layers.**
 - `src/utils/`: framework-free logic (validation, setup rules, deck, ranking, randomness), fully unit-tested.
@@ -54,10 +54,14 @@ npx vitest run -t "replaced card goes to another"   # tests by name
 - The deck is a plain object inside `useGame`, not reactive state. `canReplace` is recomputed when a card becomes answerable.
 
 **Contest loading.**
-- `src/services/contestService.ts` fetches `${import.meta.env.BASE_URL}contest.json` with `cache: 'no-cache'`, so edits aren't hidden behind a CDN or browser cache.
+- The catalog is built at build time by the Vite plugin in `build/contestCatalog.ts`. It reads `public/contests/*.json`, runs `buildContestCatalog` (`src/utils/contestCatalog.ts`: full `validateContest` per file, unique slugs, sorted by title) and exposes `{ slug, title, file }[]` as `virtual:contest-catalog`. Any invalid file fails the build; the dev server reloads when a file changes.
+  - Because GitHub Pages has no rewrites, the plugin's `writeBundle` copies `dist/index.html` to `dist/<slug>/index.html` for every quiz and to `dist/404.html`.
+  - Slugs: `^[a-z0-9]+(-[a-z0-9]+)*$`, with `assets` and `contests` reserved (top-level folders of the build).
+  - Every file in the Vite config's import chain (`build/`, `contestCatalog.ts`, `validateContest.ts`) imports with explicit `.ts` extensions; without them Vite warns that the config won't load under its future native loader. `tsconfig.node.json` uses `NodeNext` resolution, so `vue-tsc -b` rejects an extension-less import anywhere in that chain.
+- `src/services/contestService.ts` fetches `${import.meta.env.BASE_URL}contests/<file>` with `cache: 'no-cache'`, so edits aren't hidden behind a CDN or browser cache.
 - `validateContest` checks the structure. On any failure the app shows a plain "try again" screen and logs the details with `console.error`; there is no fallback data.
 - The UI is for teachers and students, so keep user-visible text free of technical terms (file names, JSON, HTTP codes). Technical details belong in the console or the README.
-- Setup capacity (`setupRules.ts`): repeats off needs `teams × questionsPerTeam` questions; repeats on needs `questionsPerTeam`.
+- Setup capacity (`setupRules.ts`): repeats off needs `teams × questionsPerTeam` questions; repeats on needs `questionsPerTeam`. A quiz file only needs one question; there is deliberately no larger minimum per file, because the setup screen limits the choices to what the quiz can fill.
 
 **Tests (`tests/unit/`).** `helpers.ts` provides:
 - `seededRandomInt` and `pickFirst`: deterministic randomness, injected through `useGame({ randomInt })`.
@@ -128,7 +132,7 @@ The look is a bright classroom game show: a whiteboard-white stage, navy "marker
 
 ## Content and deployment
 
-- `public/contest.json` is written by the repo owner and uses CRLF line endings. The validator can't tell whether an answer key is right. When the file changes, check that each question has exactly one correct option, and report ambiguous distractors rather than editing them unasked.
+- The quiz files in `public/contests/` are written by the repo owner and use CRLF line endings. The validator can't tell whether an answer key is right. When the file changes, check that each question has exactly one correct option, and report ambiguous distractors rather than editing them unasked.
 - `.github/workflows/deploy.yml` runs on pushes to `main` and on manual dispatch. It type-checks, lints, tests, builds with base `/` (the site lives at the domain root) and deploys `dist/`.
 - The `github-pages` environment only allows `main` to deploy. There are no PR checks.
 - The GitHub Pages custom domain and Cloudflare DNS (a CNAME that isn't proxied) are managed by hand in their web UIs. Don't automate or change them.

@@ -16,8 +16,15 @@ export interface ContestSettings {
 
 export interface Contest {
   title: string
+  slug: string
   settings: ContestSettings
   questions: Question[]
+}
+
+export interface CatalogEntry {
+  slug: string
+  title: string
+  file: string
 }
 
 export type ContestLoadResult = { ok: true; contest: Contest } | { ok: false; errors: string[] }

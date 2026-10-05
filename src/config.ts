@@ -11,3 +11,4 @@ export const REVEAL_MS: number = FLIP_OUT_MS + FLIP_IN_MS + REVEAL_SETTLE_MS
 export const TICK_MS: number = 200
 export const LOW_TIME_MS: number = 10_000
 export const OPTION_LABELS: readonly string[] = ['A', 'B', 'C', 'D']
+export const CONTESTS_DIR: string = 'contests'

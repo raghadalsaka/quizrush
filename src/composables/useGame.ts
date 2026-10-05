@@ -104,7 +104,7 @@ export function useGame(options: GameOptions) {
       return
     }
     if (!result.ok) {
-      console.error('Quizrush could not load contest.json:', result.errors)
+      console.error('Quizrush could not load the contest:', result.errors)
       contest.value = null
       phase.value = 'error'
       return

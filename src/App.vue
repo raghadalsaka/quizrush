@@ -1,45 +1,16 @@
 <script setup lang="ts">
-import { onMounted, provide, watchEffect } from 'vue'
-import ErrorPanel from './components/ErrorPanel.vue'
-import GameScreen from './components/GameScreen.vue'
-import ResultsScreen from './components/ResultsScreen.vue'
-import SetupScreen from './components/SetupScreen.vue'
-import { gameKey, useGame } from './composables/useGame'
-import { loadContest } from './services/contestService'
+import { contestCatalog } from 'virtual:contest-catalog'
+import HomeScreen from './components/HomeScreen.vue'
+import NotFoundScreen from './components/NotFoundScreen.vue'
+import QuizApp from './components/QuizApp.vue'
+import { slugFromPath } from './utils/contestCatalog'
 
-const game = useGame({ loadContest })
-provide(gameKey, game)
-
-const { phase, contest, lastSetup, announcement, rankedTeams, questionsPerTeam, isGameActive } = game
-
-watchEffect(() => {
-  document.title = contest.value === null ? 'Quizrush' : `${contest.value.title} · Quizrush`
-})
-
-onMounted(() => {
-  void game.load()
-})
+const slug = slugFromPath(window.location.pathname, import.meta.env.BASE_URL)
+const entry = contestCatalog.find((candidate) => candidate.slug === slug)
 </script>
 
 <template>
-  <div class="min-h-screen">
-    <main v-if="phase === 'loading'" class="grid min-h-screen place-items-center px-4">
-      <p class="font-display text-4xl font-extrabold text-ink-soft">Loading the quiz…</p>
-    </main>
-    <ErrorPanel v-else-if="phase === 'error'" @retry="game.load" />
-    <SetupScreen
-      v-else-if="phase === 'setup' && contest !== null"
-      :contest="contest"
-      :initial="lastSetup"
-      @start="game.startGame"
-    />
-    <ResultsScreen
-      v-else-if="phase === 'results'"
-      :ranked-teams="rankedTeams"
-      :questions-per-team="questionsPerTeam"
-      @new-game="game.newGame"
-    />
-    <GameScreen v-else-if="isGameActive" />
-    <p class="sr-only" role="status" aria-live="polite" aria-atomic="true">{{ announcement }}</p>
-  </div>
+  <HomeScreen v-if="slug === ''" :entries="contestCatalog" />
+  <QuizApp v-else-if="entry !== undefined" :entry="entry" />
+  <NotFoundScreen v-else />
 </template>

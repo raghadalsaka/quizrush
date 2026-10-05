@@ -17,11 +17,17 @@ npm run preview    # serve the production build at http://localhost:4173
 
 ## Editing the questions
 
-All content lives in [`public/contest.json`](public/contest.json). Edit it, commit, and push to `main`; the site redeploys automatically.
+Each quiz is one JSON file in [`public/contests/`](public/contests/). Edit or add a file, commit, and push to `main`; the site redeploys automatically.
+
+- The home page (`https://quizrush.raghadalsaka.com/`) shows one button per quiz, sorted by title.
+- Each quiz has its own address made from its `slug`: `https://quizrush.raghadalsaka.com/<slug>/`. Share that link to open a quiz directly.
+- To add a quiz, copy an existing file, give it a new `slug` and `title`, and replace the questions. The file name doesn't matter; the slug does.
+- The setup screen has an **All Quizzes** button that goes back to the home page. It isn't shown during a game.
 
 ```json
 {
   "title": "Classroom Challenge",
+  "slug": "classroom-challenge",
   "settings": {
     "secondsPerQuestion": 60,
     "defaultQuestionsPerTeam": 5,
@@ -41,7 +47,8 @@ All content lives in [`public/contest.json`](public/contest.json). Edit it, comm
 
 | Field | Rule |
 | --- | --- |
-| `title` | Non-blank text. |
+| `title` | Non-blank text. Shown on the home page button and the setup screen. |
+| `slug` | The quiz's address: lowercase letters and digits joined by single hyphens, such as `present-perfect`. Unique across all quizzes; `assets` and `contests` are reserved. Changing it breaks links already shared. |
 | `settings.secondsPerQuestion` | Whole number, 1–600. The default timer on the setup screen. |
 | `settings.defaultQuestionsPerTeam` | Whole number, 1–50. The default turn count on the setup screen. |
 | `settings.allowCrossTeamRepeats` | `true` or `false` (no quotes). See the repeat rules below. |
@@ -51,7 +58,7 @@ All content lives in [`public/contest.json`](public/contest.json). Edit it, comm
 | `questions[].correctIndex` | `0`–`3`: the position of the right answer (`0` is the first option). |
 | `questions[].explanation` | Non-blank text, shown after every answer or timeout. |
 
-The CI tests validate `public/contest.json`, so a file that breaks any rule is never deployed. If the quiz still can't load (for example, no internet), players see a plain "couldn't be loaded" message with a **Try again** button, and the technical details go to the browser console (F12 → Console). The app never starts with broken data. The JSON is public, so anyone can read the answers.
+The build and the CI tests validate every file in `public/contests/` and reject duplicate slugs, so a file that breaks any rule is never deployed. A quiz needs at least one question; the setup screen only allows team and question counts that fit it. An address that matches no quiz shows a "couldn't be found" page with a link to the home page. If the quiz still can't load (for example, no internet), players see a plain "couldn't be loaded" message with a **Try again** button, and the technical details go to the browser console (F12 → Console). The app never starts with broken data. The JSON is public, so anyone can read the answers.
 
 How many questions you need:
 
@@ -82,6 +89,8 @@ If there aren't enough, the setup screen says so and keeps **Start Game** disabl
 ## Deployment (GitHub Pages)
 
 The site is served at `https://quizrush.raghadalsaka.com`. `.github/workflows/deploy.yml` runs on every push to `main` and on manual dispatch. It runs the type-check, lint, and tests, builds, and deploys `dist/` with `actions/configure-pages`, `actions/upload-pages-artifact`, and `actions/deploy-pages`. Only `main` is allowed to deploy to the `github-pages` environment.
+
+GitHub Pages can't rewrite URLs, so the build (the plugin in `build/contestCatalog.ts`) copies the app's `index.html` to `<slug>/index.html` for every quiz and to `404.html` for unknown addresses.
 
 ### Base path
 

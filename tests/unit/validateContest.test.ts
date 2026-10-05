@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest'
-import shippedContest from '../../public/contest.json'
 import { validateContest } from '../../src/utils/validateContest'
 
 type JsonObject = Record<string, unknown>
@@ -7,6 +6,7 @@ type JsonObject = Record<string, unknown>
 function validContest(): JsonObject {
   return {
     title: 'Classroom Challenge',
+    slug: 'classroom-challenge',
     settings: { secondsPerQuestion: 60, defaultQuestionsPerTeam: 5, allowCrossTeamRepeats: false },
     questions: [
       { id: 'q1', prompt: 'Pick one', options: ['a', 'b', 'c', 'd'], correctIndex: 1, explanation: 'Because b.' },
@@ -34,14 +34,6 @@ function settingsOf(contest: JsonObject): JsonObject {
 }
 
 describe('validateContest', () => {
-  it('accepts the shipped public/contest.json with room for 5 teams x 5 questions', () => {
-    const result = validateContest(shippedContest)
-    expect(result.ok).toBe(true)
-    if (result.ok) {
-      expect(result.contest.questions.length).toBeGreaterThanOrEqual(25)
-    }
-  })
-
   it('accepts a valid contest and trims text', () => {
     const contest = validContest()
     contest.title = '  Spaced title  '
@@ -63,6 +55,15 @@ describe('validateContest', () => {
 
   const cases: [string, (contest: JsonObject) => void, string][] = [
     ['blank title', (c) => { c.title = '   ' }, 'title'],
+    ['missing slug', (c) => { delete c.slug }, 'slug must'],
+    ['blank slug', (c) => { c.slug = '' }, 'slug must'],
+    ['uppercase slug', (c) => { c.slug = 'Present-Perfect' }, 'slug must'],
+    ['slug with spaces', (c) => { c.slug = 'present perfect' }, 'slug must'],
+    ['slug with a double hyphen', (c) => { c.slug = 'present--perfect' }, 'slug must'],
+    ['slug with an edge hyphen', (c) => { c.slug = '-present' }, 'slug must'],
+    ['slug with a slash', (c) => { c.slug = 'a/b' }, 'slug must'],
+    ['reserved slug assets', (c) => { c.slug = 'assets' }, 'slug "assets" is reserved'],
+    ['reserved slug contests', (c) => { c.slug = 'contests' }, 'slug "contests" is reserved'],
     ['missing settings', (c) => { delete c.settings }, 'settings'],
     ['zero timer', (c) => { settingsOf(c).secondsPerQuestion = 0 }, 'secondsPerQuestion'],
     ['string timer', (c) => { settingsOf(c).secondsPerQuestion = '60' }, 'secondsPerQuestion'],

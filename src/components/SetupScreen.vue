@@ -9,6 +9,8 @@ import { teamThemeClass } from '../utils/teamTheme'
 const DEFAULT_TEAM_COUNT: number = 2
 const TEAM_NAME_INPUT_LIMIT: number = MAX_TEAM_NAME_LENGTH + 10
 
+const homeUrl = import.meta.env.BASE_URL
+
 const props = defineProps<{
   contest: Contest
   initial: Readonly<SetupInput> | null
@@ -45,9 +47,12 @@ function submit(): void {
 
 <template>
   <main class="mx-auto grid max-w-6xl gap-8 px-4 py-8 lg:min-h-dvh lg:content-center lg:gap-6 lg:py-6">
-    <header>
-      <h1 class="font-display text-5xl leading-none font-extrabold tracking-tight lg:text-6xl">{{ contest.title }}</h1>
-      <p class="mt-3 text-xl text-ink-soft">Set up the teams, then press Start Game.</p>
+    <header class="flex flex-wrap items-start justify-between gap-4">
+      <div>
+        <h1 class="font-display text-5xl leading-none font-extrabold tracking-tight lg:text-6xl">{{ contest.title }}</h1>
+        <p class="mt-3 text-xl text-ink-soft">Set up the teams, then press Start Game.</p>
+      </div>
+      <a :href="homeUrl" class="btn btn-small">All Quizzes</a>
     </header>
 
     <form class="panel grid gap-8 p-6 lg:grid-cols-[1fr_1.3fr] lg:gap-x-12 lg:gap-y-6 lg:p-8" novalidate @submit.prevent="submit">

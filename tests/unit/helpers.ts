@@ -30,6 +30,7 @@ export function makeQuestion(id: string, correctIndex: number = 0): Question {
 export function makeContest(questionCount: number, allowCrossTeamRepeats: boolean): Contest {
   return {
     title: 'Test Contest',
+    slug: 'test-contest',
     settings: { secondsPerQuestion: 60, defaultQuestionsPerTeam: 5, allowCrossTeamRepeats },
     questions: Array.from({ length: questionCount }, (_, index) => makeQuestion(`q${index + 1}`)),
   }
