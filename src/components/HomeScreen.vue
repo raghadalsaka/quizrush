@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { CatalogEntry } from '../types/contest'
+import CreatorCredit from './CreatorCredit.vue'
 
 defineProps<{
   entries: readonly CatalogEntry[]
@@ -12,7 +13,10 @@ const baseUrl = import.meta.env.BASE_URL
   <main class="mx-auto grid max-w-6xl select-none gap-8 px-4 py-8 lg:min-h-dvh lg:content-center lg:gap-6 lg:py-6">
     <header>
       <h1 class="font-display text-5xl leading-none font-extrabold tracking-tight lg:text-6xl">Quizrush</h1>
-      <p class="mt-3 text-xl text-ink-soft">Choose a quiz to play.</p>
+      <div class="mt-3 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+        <p class="text-xl text-ink-soft">Choose a quiz to play.</p>
+        <CreatorCredit />
+      </div>
     </header>
 
     <nav aria-label="Quizzes" class="panel p-6 lg:p-8">
