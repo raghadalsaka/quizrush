@@ -9,267 +9,267 @@
   "questions": [
     {
       "id": "writing-corrections-01",
-      "prompt": "Choose the correctly edited sentence: “on thursday the girls was waiting for the bus”",
+      "prompt": "Choose the correctly edited sentence: “every monday lina walks to school”",
       "options": [
-        "On Thursday, the girls were waiting for the bus.",
-        "On Thursday, the girls was waiting for the bus.",
-        "On thursday, the girls were waiting for the bus.",
-        "On Thursday, the girls were waited for the bus."
+        "Every Monday, Lina walks to school.",
+        "Every Monday Lina walk to school.",
+        "Every monday, Lina walks to school.",
+        "Every Monday, Lina walk to school."
       ],
       "correctIndex": 0,
-      "explanation": "Capitalize Thursday and use were waiting with the plural subject girls."
+      "explanation": "Capitalize Monday and Lina, add a comma after the opening phrase, and use walks with Lina."
     },
     {
       "id": "writing-corrections-02",
-      "prompt": "Choose the correctly edited sentence: “does your cousins plays football on fridays”",
+      "prompt": "Choose the correctly edited sentence: “my friends was at the park yesterday”",
       "options": [
-        "Does your cousins play football on Fridays?",
-        "Do your cousins play football on Fridays?",
-        "Do your cousins plays football on Fridays?",
-        "Do your cousins play football on fridays?"
+        "My friends was at the park yesterday.",
+        "My friends were at the park yesterday.",
+        "My friends were at the park yesterday?",
+        "My friends is at the park yesterday."
       ],
       "correctIndex": 1,
-      "explanation": "Cousins is plural, so use do; after do, use play. Capitalize Fridays."
+      "explanation": "Friends is plural, so use were. End the statement with a period."
     },
     {
       "id": "writing-corrections-03",
-      "prompt": "Choose the correctly edited sentence: “last sunday my brother dont went to the market”",
+      "prompt": "Choose the correctly edited sentence: “does sara likes science”",
       "options": [
-        "Last Sunday, my brother didn’t went to the market.",
-        "Last Sunday, my brother doesn’t go to the market.",
-        "Last Sunday, my brother didn’t go to the market.",
-        "Last sunday, my brother didn’t go to the market."
+        "Does Sara likes science?",
+        "Do Sara like science?",
+        "Does Sara like science?",
+        "Does Sara like science."
       ],
       "correctIndex": 2,
-      "explanation": "Last Sunday calls for past time; use didn’t plus the base form go."
+      "explanation": "After does, use the base form like. Capitalize Sara and end the question with a question mark."
     },
     {
       "id": "writing-corrections-04",
-      "prompt": "Choose the correctly edited sentence: “wow that children are brilliant artists”",
+      "prompt": "Choose the correctly edited sentence: “wow this cakes are delicious”",
       "options": [
-        "Wow! That children are brilliant artists!",
-        "Wow! Those children is brilliant artists!",
-        "Wow! Those children are a brilliant artists!",
-        "Wow! Those children are brilliant artists!"
+        "Wow! This cakes are delicious!",
+        "Wow, these cakes is delicious!",
+        "Wow! These cakes are delicious?",
+        "Wow! These cakes are delicious!"
       ],
       "correctIndex": 3,
-      "explanation": "Children is plural, so use those and are, with no singular article before artists."
+      "explanation": "Cakes is plural, so use these and are. An exclamation mark suits the strong feeling."
     },
     {
       "id": "writing-corrections-05",
-      "prompt": "Choose the correctly edited sentence: “have sara ever wrote a letter in english”",
+      "prompt": "Choose the correctly edited sentence: “i have finished my homework”",
       "options": [
-        "Has Sara ever written a letter in English?",
-        "Has Sara ever wrote a letter in English?",
-        "Have Sara ever written a letter in English?",
-        "Has Sara ever written a letter in english?"
+        "I have finished my homework.",
+        "i have finished my homework.",
+        "I has finished my homework.",
+        "I have finish my homework."
       ],
       "correctIndex": 0,
-      "explanation": "Use has with Sara, the past participle written, and a capital letter for English."
+      "explanation": "Always capitalize I; use have followed by the past participle finished."
     },
     {
       "id": "writing-corrections-06",
-      "prompt": "Choose the correctly edited sentence: “the teacher asked where was the notebooks”",
+      "prompt": "Choose the correctly edited sentence: “we bought pens pencils and paper”",
       "options": [
-        "The teacher asked where were the notebooks.",
-        "The teacher asked where the notebooks were.",
-        "The teacher asked where the notebooks was.",
-        "The teacher asked where the notebook were."
+        "We bought pens pencils and paper.",
+        "We bought pens, pencils and paper.",
+        "We bought pens, pencils and paper?",
+        "We bought pens, pencils, and papers?"
       ],
       "correctIndex": 1,
-      "explanation": "An indirect question uses statement word order; plural notebooks takes were."
+      "explanation": "Separate items in a list with commas and end the statement with a period."
     },
     {
       "id": "writing-corrections-07",
-      "prompt": "Choose the correctly edited sentence: “in june our class visited petra and took photos”",
+      "prompt": "Choose the correctly edited sentence: “did omar visited the museum yesterday”",
       "options": [
-        "In June, our class visited petra and took photos.",
-        "In june, our class visited Petra and took photos.",
-        "In June, our class visited Petra and took photos.",
-        "In June, our class visit Petra and took photos."
+        "Did Omar visited the museum yesterday?",
+        "Does Omar visit the museum yesterday?",
+        "Did Omar visit the museum yesterday?",
+        "Did Omar visit the museum yesterday."
       ],
       "correctIndex": 2,
-      "explanation": "Capitalize the month and place name, and keep both verbs in the past."
+      "explanation": "After did, use the base form visit. Capitalize Omar and use a question mark."
     },
     {
       "id": "writing-corrections-08",
-      "prompt": "Choose the correctly edited sentence: “my friends has finished there posters already”",
+      "prompt": "Choose the correctly edited sentence: “these book is on the table”",
       "options": [
-        "My friends has finished their posters already.",
-        "My friends have finished there posters already.",
-        "My friends have finish their posters already.",
-        "My friends have finished their posters already."
+        "These book are on the table.",
+        "This books are on the table.",
+        "These books is on the table.",
+        "These books are on the table."
       ],
       "correctIndex": 3,
-      "explanation": "Plural friends takes have; their shows possession, and finished is the past participle."
+      "explanation": "These refers to more than one book, so use books are."
     },
     {
       "id": "writing-corrections-09",
-      "prompt": "Choose the correctly edited sentence: “did mr khaled taught arabic on tuesday”",
+      "prompt": "Choose the correctly edited sentence: “my sister study english on thursdays”",
       "options": [
-        "Did Mr Khaled teach Arabic on Tuesday?",
-        "Did Mr Khaled taught Arabic on Tuesday?",
-        "Did Mr Khaled teach arabic on Tuesday?",
-        "Did Mr Khaled teach Arabic on tuesday?"
+        "My sister studies English on Thursdays.",
+        "My sister study English on Thursdays.",
+        "My sister studies english on Thursdays.",
+        "My sister studies English on thursdays."
       ],
       "correctIndex": 0,
-      "explanation": "After did, use teach. Capitalize the language and the day."
+      "explanation": "With my sister, use studies. Capitalize the language English and the day Thursday."
     },
     {
       "id": "writing-corrections-10",
-      "prompt": "Choose the correctly edited sentence: “this boxes belongs to my younger sister”",
+      "prompt": "Choose the correctly edited sentence: “where do your brother live”",
       "options": [
-        "These boxes belongs to my younger sister.",
-        "These boxes belong to my younger sister.",
-        "This boxes belong to my younger sister.",
-        "These box belong to my younger sister."
+        "Where do your brother live?",
+        "Where does your brother live?",
+        "Where does your brother lives?",
+        "Where does your brother live."
       ],
       "correctIndex": 1,
-      "explanation": "Boxes is plural, so use these and belong."
+      "explanation": "Brother is singular, so use does and the base verb live."
     },
     {
       "id": "writing-corrections-11",
-      "prompt": "Choose the correctly edited sentence: “when i arrived my parents was cooking dinner”",
+      "prompt": "Choose the correctly edited sentence: “the children was excited about the trip”",
       "options": [
-        "When I arrived, my parents was cooking dinner.",
-        "When i arrived, my parents were cooking dinner.",
-        "When I arrived, my parents were cooking dinner.",
-        "When I arrived, my parents were cook dinner."
+        "The children was excited about the trip.",
+        "The children were excited about the trip?",
+        "The children were excited about the trip.",
+        "The children is excited about the trip."
       ],
       "correctIndex": 2,
-      "explanation": "Capitalize I, use were with plural parents, and separate the opening clause with a comma."
+      "explanation": "Children is plural, so use were for a past situation."
     },
     {
       "id": "writing-corrections-12",
-      "prompt": "Choose the correctly edited sentence: “she dont know if the library is open today”",
+      "prompt": "Choose the correctly edited sentence: “the baby crys when she is hungry”",
       "options": [
-        "She don’t know if the library is open today.",
-        "She doesn’t knows if the library is open today.",
-        "She doesn’t know if the library are open today.",
-        "She doesn’t know if the library is open today."
+        "The baby crys when she is hungry.",
+        "The baby cry when she is hungry.",
+        "The baby cries when she are hungry.",
+        "The baby cries when she is hungry."
       ],
       "correctIndex": 3,
-      "explanation": "She takes doesn’t, followed by the base form know; library is singular."
+      "explanation": "For a consonant followed by y, change y to i and add es: cries."
     },
     {
       "id": "writing-corrections-13",
-      "prompt": "Choose the correctly edited sentence: “in august we travelled to aqaba jordan”",
+      "prompt": "Choose the correctly edited sentence: “in july we travelled to aqaba jordan”",
       "options": [
-        "In August, we travelled to Aqaba, Jordan.",
-        "In August, we travelled to Aqaba, jordan.",
-        "In august, we travelled to Aqaba, Jordan.",
-        "In August, we travel to Aqaba, Jordan."
+        "In July, we travelled to Aqaba, Jordan.",
+        "In july, we travelled to Aqaba, Jordan.",
+        "In July we travelled to Aqaba Jordan.",
+        "In July, we travelled to aqaba, Jordan."
       ],
       "correctIndex": 0,
-      "explanation": "Capitalize August and Jordan; use travelled for a finished trip."
+      "explanation": "Capitalize the month and place names. Add commas after the opening phrase and between city and country."
     },
     {
       "id": "writing-corrections-14",
-      "prompt": "Choose the correctly edited sentence: “how many book have your brother read this month”",
+      "prompt": "Choose the correctly edited sentence: “have they eaten lunch yet”",
       "options": [
-        "How many book has your brother read this month?",
-        "How many books has your brother read this month?",
-        "How many books have your brother read this month?",
-        "How many books has your brother reads this month?"
+        "Has they eaten lunch yet?",
+        "Have they eaten lunch yet?",
+        "Have they ate lunch yet?",
+        "Have they eaten lunch yet."
       ],
       "correctIndex": 1,
-      "explanation": "How many needs a plural noun; singular brother takes has, followed by read."
+      "explanation": "Use have with they and the past participle eaten. This is a question."
     },
     {
       "id": "writing-corrections-15",
-      "prompt": "Choose the correctly edited sentence: “listen those birds is singing outside”",
+      "prompt": "Choose the correctly edited sentence: “look those birds flies so high”",
       "options": [
-        "Listen! Those birds is singing outside.",
-        "Listen! That birds are singing outside.",
-        "Listen! Those birds are singing outside.",
-        "Listen! Those birds are sings outside."
+        "Look! Those birds flies so high!",
+        "Look! That birds fly so high!",
+        "Look! Those birds fly so high!",
+        "Look! Those birds fly so high?"
       ],
       "correctIndex": 2,
-      "explanation": "Birds is plural, so use those and are singing."
+      "explanation": "Birds is plural, so use fly. Exclamation marks fit the excited call."
     },
     {
       "id": "writing-corrections-16",
-      "prompt": "Choose the correctly edited sentence: “mr sami and ms lina teaches art on wednesdays”",
+      "prompt": "Choose the correctly edited sentence: “mr sami teach art on wednesdays”",
       "options": [
-        "Mr Sami and Ms Lina teaches art on Wednesdays.",
-        "Mr Sami and Ms Lina teach art on wednesdays.",
-        "Mr Sami and Ms Lina teaching art on Wednesdays.",
-        "Mr Sami and Ms Lina teach art on Wednesdays."
+        "Mr Sami teach art on Wednesdays.",
+        "Mr Sami teaches art on wednesdays.",
+        "Mr sami teaches art on Wednesdays.",
+        "Mr Sami teaches art on Wednesdays."
       ],
       "correctIndex": 3,
-      "explanation": "Two teachers form a plural subject, so use teach. Capitalize Wednesdays."
+      "explanation": "A singular subject takes teaches. Capitalize the name Sami and the day Wednesday."
     },
     {
       "id": "writing-corrections-17",
-      "prompt": "Choose the correctly edited sentence: “last night we have watched a film and ate popcorn”",
+      "prompt": "Choose the correctly edited sentence: “last night we watch a funny film”",
       "options": [
-        "Last night, we watched a film and ate popcorn.",
-        "Last night, we have watched a film and ate popcorn.",
-        "Last night, we watched a film and eaten popcorn.",
-        "Last night, we watches a film and ate popcorn."
+        "Last night, we watched a funny film.",
+        "Last night, we watch a funny film.",
+        "Last night we watches a funny film.",
+        "Last night, we watching a funny film."
       ],
       "correctIndex": 0,
-      "explanation": "Last night is finished; use past simple for both actions: watched and ate."
+      "explanation": "Last night signals past time; use watched. Add a comma after the opening time phrase."
     },
     {
       "id": "writing-corrections-18",
-      "prompt": "Choose the correctly edited sentence: “my father has went to the shop so he isnt home”",
+      "prompt": "Choose the correctly edited sentence: “my father dont eat fish”",
       "options": [
-        "My father has went to the shop, so he isn’t home.",
-        "My father has gone to the shop, so he isn’t home.",
-        "My father have gone to the shop, so he isn’t home.",
-        "My father has gone to the shop, so he aren’t home."
+        "My father don’t eat fish.",
+        "My father doesn’t eat fish.",
+        "My father doesn’t eats fish.",
+        "My father doesn’t eat fish?"
       ],
       "correctIndex": 1,
-      "explanation": "Use has gone for a past action with a result now; he takes isn’t."
+      "explanation": "My father is singular, so use doesn’t plus the base verb eat."
     },
     {
       "id": "writing-corrections-19",
-      "prompt": "Choose the correctly edited sentence: “how exciting these game is”",
+      "prompt": "Choose the correctly edited sentence: “how wonderful these drawings is”",
       "options": [
-        "How exciting these games is!",
-        "How exciting this games are!",
-        "How exciting these games are!",
-        "How exciting these games be!"
+        "How wonderful these drawings is!",
+        "How wonderful this drawings are!",
+        "How wonderful these drawings are!",
+        "How wonderful these drawings are?"
       ],
       "correctIndex": 2,
-      "explanation": "These needs the plural games, which takes are."
+      "explanation": "Drawings is plural, so use are. This is an exclamation."
     },
     {
       "id": "writing-corrections-20",
-      "prompt": "Choose the correctly edited sentence: “neither of the boys have brought his notebook”",
+      "prompt": "Choose the correctly edited sentence: “fatima and noor has cleaned the room”",
       "options": [
-        "Neither of the boys have brought his notebook.",
-        "Neither of the boys has bring his notebook.",
-        "Neither of the boys has brought he notebook.",
-        "Neither of the boys has brought his notebook."
+        "Fatima and Noor has cleaned the room.",
+        "Fatima and Noor have clean the room.",
+        "Fatima and noor have cleaned the room.",
+        "Fatima and Noor have cleaned the room."
       ],
       "correctIndex": 3,
-      "explanation": "Neither is singular here, so use has brought; his is the possessive form before notebook."
+      "explanation": "Two people form a plural subject: have cleaned. Capitalize both names."
     },
     {
       "id": "writing-corrections-21",
-      "prompt": "Choose the correctly edited sentence: “where did your cousins went after school”",
+      "prompt": "Choose the correctly edited sentence: “is your cousins coming today”",
       "options": [
-        "Where did your cousins go after school?",
-        "Where did your cousins went after school?",
-        "Where does your cousins go after school?",
-        "Where did your cousins gone after school?"
+        "Are your cousins coming today?",
+        "Is your cousins coming today?",
+        "Are your cousins coming today.",
+        "Are your cousins comes today?"
       ],
       "correctIndex": 0,
-      "explanation": "After did, use the base form go; does does not agree with plural cousins."
+      "explanation": "Cousins is plural, so use are. End the question with a question mark."
     },
     {
       "id": "writing-corrections-22",
-      "prompt": "Choose the correctly edited sentence: “we hasnt worked on our project since monday”",
+      "prompt": "Choose the correctly edited sentence: “we didnt go to school on sunday”",
       "options": [
-        "We haven’t work on our project since Monday.",
-        "We haven’t worked on our project since Monday.",
-        "We hasn’t worked on our project since Monday.",
-        "We haven’t worked on our project since monday."
+        "We didn’t went to school on Sunday.",
+        "We didn’t go to school on Sunday.",
+        "We didn’t go to school on sunday.",
+        "We didn’t goes to school on Sunday."
       ],
       "correctIndex": 1,
-      "explanation": "Use haven’t with we, then the past participle worked. Capitalize Monday."
+      "explanation": "After didn’t, use the base verb go. Capitalize Sunday."
     },
     {
       "id": "writing-corrections-23",
@@ -281,31 +281,31 @@
         "She has lost her keys, so she can’t opens the door."
       ],
       "correctIndex": 2,
-      "explanation": "Use has lost with she, and use the base verb open after can’t."
+      "explanation": "Use has lost with she, add a comma before so, and use can’t to show the result."
     },
     {
       "id": "writing-corrections-24",
-      "prompt": "Choose the correctly edited sentence: “last saturday hana and her friends goed to the museum”",
+      "prompt": "Choose the correctly edited sentence: “on saturday we met hana at the library”",
       "options": [
-        "Last Saturday, Hana and her friends goes to the museum.",
-        "Last Saturday, Hana and her friends goed to the museum.",
-        "Last saturday, Hana and her friends went to the museum.",
-        "Last Saturday, Hana and her friends went to the museum."
+        "On saturday, we met Hana at the library.",
+        "On Saturday, we meets Hana at the library.",
+        "On Saturday we met hana at the library.",
+        "On Saturday, we met Hana at the library."
       ],
       "correctIndex": 3,
-      "explanation": "Last Saturday is a finished time, so use went; capitalize Saturday."
+      "explanation": "Capitalize the day and name, use met for past time, and place a comma after the opening phrase."
     },
     {
       "id": "writing-corrections-25",
-      "prompt": "Choose the correctly edited sentence: “what a interesting story your grandmother told us”",
+      "prompt": "Choose the correctly edited sentence: “what a interesting story this are”",
       "options": [
-        "What an interesting story your grandmother told us!",
-        "What a interesting story your grandmother told us!",
-        "What an interesting story your grandmother telled us!",
-        "What an interesting story your grandmother tells us yesterday!"
+        "What an interesting story this is!",
+        "What a interesting story this is!",
+        "What an interesting story this are!",
+        "What an interesting story this is?"
       ],
       "correctIndex": 0,
-      "explanation": "Use an before interesting and keep the irregular past form told."
+      "explanation": "Use an before the vowel sound in interesting, and is with this. End the exclamation with !"
     },
     {
       "id": "writing-corrections-26",
@@ -313,59 +313,59 @@
       "options": [
         "Ali speaks arabic, French and English.",
         "Ali speaks Arabic, French and English.",
-        "Ali speaks Arabic French and English.",
-        "Ali speak Arabic, French and English."
+        "Ali speak Arabic, French and English.",
+        "Ali speaks Arabic French and English."
       ],
       "correctIndex": 1,
-      "explanation": "Capitalize language names, separate list items with commas, and use speaks with Ali."
+      "explanation": "Capitalize language names and separate list items with commas. Ali takes speaks."
     },
     {
       "id": "writing-corrections-27",
-      "prompt": "Choose the correctly edited sentence: “had the girls ate breakfast before they left”",
+      "prompt": "Choose the correctly edited sentence: “did the girls brought their notebooks”",
       "options": [
-        "Had the girls ate breakfast before they left?",
-        "Had the girls eaten breakfast before they leave?",
-        "Had the girls eaten breakfast before they left?",
-        "Has the girls eaten breakfast before they left?"
+        "Did the girls brought their notebooks?",
+        "Did the girls bring their notebooks.",
+        "Did the girls bring their notebooks?",
+        "Does the girls bring their notebooks?"
       ],
       "correctIndex": 2,
-      "explanation": "Past perfect uses had plus the past participle eaten before another past event."
+      "explanation": "After did, use the base form bring. A question ends with ?"
     },
     {
       "id": "writing-corrections-28",
-      "prompt": "Choose the correctly edited sentence: “each of these shoes are made from leather”",
+      "prompt": "Choose the correctly edited sentence: “this shoes are new”",
       "options": [
-        "Each of these shoes are made from leather.",
-        "Each of this shoes is made from leather.",
-        "Each of these shoes is make from leather.",
-        "Each of these shoes is made from leather."
+        "This shoes are new.",
+        "These shoes is new.",
+        "Those shoe are new.",
+        "These shoes are new."
       ],
       "correctIndex": 3,
-      "explanation": "Each is singular and takes is; the passive form is made."
+      "explanation": "Shoes is plural, so use these and are."
     },
     {
       "id": "writing-corrections-29",
-      "prompt": "Choose the correctly edited sentence: “i has never seen such a beautiful rainbow”",
+      "prompt": "Choose the correctly edited sentence: “i has never seen snow”",
       "options": [
-        "I have never seen such a beautiful rainbow.",
-        "I has never seen such a beautiful rainbow.",
-        "I have never saw such a beautiful rainbow.",
-        "i have never seen such a beautiful rainbow."
+        "I have never seen snow.",
+        "I has never seen snow.",
+        "I have never saw snow.",
+        "i have never seen snow."
       ],
       "correctIndex": 0,
       "explanation": "Capitalize I and use have plus the past participle seen."
     },
     {
       "id": "writing-corrections-30",
-      "prompt": "Choose the correctly edited sentence: “where was your parents when the storm began”",
+      "prompt": "Choose the correctly edited sentence: “where was your parents last evening”",
       "options": [
-        "Where was your parents when the storm began?",
-        "Where were your parents when the storm began?",
-        "Where were your parents when the storm begin?",
-        "Where were your parents when the storm begun?"
+        "Where was your parents last evening?",
+        "Where were your parents last evening?",
+        "Where were your parents last evening.",
+        "Where is your parents last evening?"
       ],
       "correctIndex": 1,
-      "explanation": "Plural parents takes were; the past simple of begin is began."
+      "explanation": "Parents is plural, so use were for a past question and finish with ?"
     }
   ]
 }
