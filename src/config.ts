@@ -11,4 +11,6 @@ export const REVEAL_MS: number = FLIP_OUT_MS + FLIP_IN_MS + REVEAL_SETTLE_MS
 export const TICK_MS: number = 200
 export const LOW_TIME_MS: number = 10_000
 export const OPTION_LABELS: readonly string[] = ['A', 'B', 'C', 'D']
+// Prompts carrying a list or passage are set smaller so less of the card needs scrolling.
+export const LONG_PROMPT_LENGTH: number = 160
 export const CONTESTS_DIR: string = 'contests'

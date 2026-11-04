@@ -1,12 +1,15 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { CatalogEntry } from '../types/contest'
+import { groupByCategory } from '../utils/contestCatalog'
 import CreatorCredit from './CreatorCredit.vue'
 
-defineProps<{
+const props = defineProps<{
   entries: readonly CatalogEntry[]
 }>()
 
 const baseUrl = import.meta.env.BASE_URL
+const groups = computed(() => groupByCategory(props.entries))
 </script>
 
 <template>
@@ -20,11 +23,16 @@ const baseUrl = import.meta.env.BASE_URL
     </header>
 
     <nav aria-label="Quizzes" class="panel p-6 lg:p-8">
-      <ul class="grid gap-5 px-1 pb-2 sm:grid-cols-2 lg:max-h-[28rem] lg:grid-cols-3 lg:overflow-y-auto">
-        <li v-for="entry in entries" :key="entry.slug" class="grid">
-          <a :href="`${baseUrl}${entry.slug}/`" class="btn btn-large px-6 text-center">{{ entry.title }}</a>
-        </li>
-      </ul>
+      <div class="grid gap-6 lg:max-h-[28rem] lg:overflow-y-auto">
+        <section v-for="group in groups" :key="group.category" class="grid gap-3">
+          <h2 class="px-1 font-display text-3xl leading-tight font-extrabold">{{ group.category }}</h2>
+          <ul class="grid gap-5 px-1 pb-2 sm:grid-cols-2 lg:grid-cols-3">
+            <li v-for="entry in group.entries" :key="entry.slug" class="grid">
+              <a :href="`${baseUrl}${entry.slug}/`" class="btn btn-large px-6 text-center">{{ entry.title }}</a>
+            </li>
+          </ul>
+        </section>
+      </div>
     </nav>
   </main>
 </template>

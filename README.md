@@ -19,15 +19,16 @@ npm run preview    # serve the production build at http://localhost:4173
 
 Each quiz is one JSON file in [`public/contests/`](public/contests/). Edit or add a file, commit, and push to `main`; the site redeploys automatically.
 
-- The home page (`https://quizrush.raghadalsaka.com/`) shows one button per quiz, sorted by title.
+- The home page (`https://quizrush.raghadalsaka.com/`) shows one button per quiz, grouped under its `category`. Categories are sorted by name and the quizzes inside each by title.
 - Each quiz has its own address made from its `slug`: `https://quizrush.raghadalsaka.com/<slug>/`. Share that link to open a quiz directly.
-- To add a quiz, copy an existing file, give it a new `slug` and `title`, and replace the questions. The file name doesn't matter; the slug does.
+- To add a quiz, copy an existing file, give it a new `slug`, `title` and `category`, and replace the questions. The file name doesn't matter; the slug does.
 - The setup screen has an **All Quizzes** button that goes back to the home page. It isn't shown during a game.
 
 ```json
 {
   "title": "Classroom Challenge",
   "slug": "classroom-challenge",
+  "category": "Midterm",
   "settings": {
     "secondsPerQuestion": 60,
     "defaultQuestionsPerTeam": 5,
@@ -49,11 +50,12 @@ Each quiz is one JSON file in [`public/contests/`](public/contests/). Edit or ad
 | --- | --- |
 | `title` | Non-blank text. Shown on the home page button and the setup screen. |
 | `slug` | The quiz's address: lowercase letters and digits joined by single hyphens, such as `present-perfect`. Unique across all quizzes; `assets` and `contests` are reserved. Changing it breaks links already shared. |
+| `category` | Non-blank text. The heading the quiz appears under on the home page. Quizzes with exactly the same text share a heading, and a new text creates a new heading. |
 | `settings.secondsPerQuestion` | Whole number, 1–600. The default timer on the setup screen. |
 | `settings.defaultQuestionsPerTeam` | Whole number, 1–50. The default turn count on the setup screen. |
 | `settings.allowCrossTeamRepeats` | `true` or `false` (no quotes). See the repeat rules below. |
 | `questions[].id` | Non-blank and unique. Keep ids stable when editing. |
-| `questions[].prompt` | Non-blank text. |
+| `questions[].prompt` | Non-blank text. Line breaks (`\n`) are kept, so a prompt can carry a notice, list or short passage; prompts over 160 characters are shown smaller. |
 | `questions[].options` | Exactly four non-blank answers. |
 | `questions[].correctIndex` | `0`–`3`: the position of the right answer (`0` is the first option). |
 | `questions[].explanation` | Non-blank text, shown after every answer or timeout. |

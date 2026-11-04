@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildContestCatalog, slugFromPath, type ContestFile } from '../../src/utils/contestCatalog'
+import { buildContestCatalog, groupByCategory, slugFromPath, type ContestFile } from '../../src/utils/contestCatalog'
 import { makeContest } from './helpers'
 
 const shippedContestTexts: Record<string, string> = import.meta.glob('../../public/contests/*.json', {
@@ -24,15 +24,24 @@ describe('buildContestCatalog', () => {
     expect(result).toMatchObject({ ok: true })
   })
 
-  it('lists slug, title and file only, sorted by title', () => {
+  it('lists slug, title, category and file only, sorted by title', () => {
     const result = buildContestCatalog([contestFile('b.json', 'zebra', 'Zebras'), contestFile('a.json', 'apple', 'Apples')])
     expect(result).toEqual({
       ok: true,
       entries: [
-        { slug: 'apple', title: 'Apples', file: 'a.json' },
-        { slug: 'zebra', title: 'Zebras', file: 'b.json' },
+        { slug: 'apple', title: 'Apples', category: 'Test Category', file: 'a.json' },
+        { slug: 'zebra', title: 'Zebras', category: 'Test Category', file: 'b.json' },
       ],
     })
+  })
+
+  it('groups entries by category, sorting categories and keeping the order inside each', () => {
+    const entry = (slug: string, category: string) => ({ slug, title: slug, category, file: `${slug}.json` })
+    const [apple, mango, zebra] = [entry('apple', 'Other'), entry('mango', 'Midterm'), entry('zebra', 'Other')]
+    expect(groupByCategory([apple, mango, zebra])).toEqual([
+      { category: 'Midterm', entries: [mango] },
+      { category: 'Other', entries: [apple, zebra] },
+    ])
   })
 
   it('accepts a quiz with a single question', () => {

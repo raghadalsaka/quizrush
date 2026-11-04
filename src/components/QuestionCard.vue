@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { FLIP_IN_MS, FLIP_OUT_MS, OPTION_LABELS } from '../config'
+import { FLIP_IN_MS, FLIP_OUT_MS, LONG_PROMPT_LENGTH, OPTION_LABELS } from '../config'
 import type { Question } from '../types/contest'
 import type { Outcome, Phase } from '../types/game'
 
@@ -143,7 +143,12 @@ function focusResult(): void {
 
       <div v-else-if="question !== null" :key="cardId" class="panel overflow-hidden lg:flex lg:flex-col">
         <div class="grid gap-5 p-6 lg:overflow-x-hidden lg:overflow-y-auto lg:p-8">
-          <h2 ref="promptHeading" tabindex="-1" class="border-b-3 border-margin pb-3 text-4xl leading-tight font-bold">
+          <h2
+            ref="promptHeading"
+            tabindex="-1"
+            class="border-b-3 border-margin pb-3 font-bold whitespace-pre-line"
+            :class="question.prompt.length > LONG_PROMPT_LENGTH ? 'text-xl leading-snug' : 'text-4xl leading-tight'"
+          >
             {{ question.prompt }}
           </h2>
           <div class="grid gap-3 md:grid-cols-2" role="group" aria-label="Answer choices">

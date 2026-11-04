@@ -1,4 +1,4 @@
-import type { CatalogEntry } from '../types/contest.ts'
+import type { CatalogEntry, CatalogGroup } from '../types/contest.ts'
 import { describeError } from './errors.ts'
 import { validateContest } from './validateContest.ts'
 
@@ -28,19 +28,24 @@ export function buildContestCatalog(files: readonly ContestFile[]): CatalogResul
       errors.push(...result.errors.map((error) => `${file.name}: ${error}`))
       continue
     }
-    const { slug, title } = result.contest
+    const { slug, title, category } = result.contest
     const earlier = entries.find((entry) => entry.slug === slug)
     if (earlier !== undefined) {
       errors.push(`${file.name}: slug "${slug}" is already used by ${earlier.file}.`)
       continue
     }
-    entries.push({ slug, title, file: file.name })
+    entries.push({ slug, title, category, file: file.name })
   }
   if (errors.length > 0) {
     return { ok: false, errors }
   }
   entries.sort((a, b) => a.title.localeCompare(b.title, 'en') || a.slug.localeCompare(b.slug, 'en'))
   return { ok: true, entries }
+}
+
+export function groupByCategory(entries: readonly CatalogEntry[]): CatalogGroup[] {
+  const categories = [...new Set(entries.map((entry) => entry.category))].sort((a, b) => a.localeCompare(b, 'en'))
+  return categories.map((category) => ({ category, entries: entries.filter((entry) => entry.category === category) }))
 }
 
 // Returns '' for the home page; anything else is a slug to look up, which may not exist.

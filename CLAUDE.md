@@ -54,13 +54,15 @@ npx vitest run -t "replaced card goes to another"   # tests by name
 - The deck is a plain object inside `useGame`, not reactive state. `canReplace` is recomputed when a card becomes answerable.
 
 **Contest loading.**
-- The catalog is built at build time by the Vite plugin in `build/contestCatalog.ts`. It reads `public/contests/*.json`, runs `buildContestCatalog` (`src/utils/contestCatalog.ts`: full `validateContest` per file, unique slugs, sorted by title) and exposes `{ slug, title, file }[]` as `virtual:contest-catalog`. Any invalid file fails the build; the dev server reloads when a file changes.
+- The catalog is built at build time by the Vite plugin in `build/contestCatalog.ts`. It reads `public/contests/*.json`, runs `buildContestCatalog` (`src/utils/contestCatalog.ts`: full `validateContest` per file, unique slugs, sorted by title) and exposes `{ slug, title, category, file }[]` as `virtual:contest-catalog`. `HomeScreen` shows them under one heading per `category` (`groupByCategory`, sorted by name). A category is free text in each quiz file, with no list to maintain. Any invalid file fails the build; the dev server reloads when a file changes.
   - Because GitHub Pages has no rewrites, the plugin's `writeBundle` copies `dist/index.html` to `dist/<slug>/index.html` for every quiz and to `dist/404.html`.
   - Slugs: `^[a-z0-9]+(-[a-z0-9]+)*$`, with `assets` and `contests` reserved (top-level folders of the build).
   - Every file in the Vite config's import chain (`build/`, `contestCatalog.ts`, `validateContest.ts`) imports with explicit `.ts` extensions; without them Vite warns that the config won't load under its future native loader. `tsconfig.node.json` uses `NodeNext` resolution, so `vue-tsc -b` rejects an extension-less import anywhere in that chain.
 - `src/services/contestService.ts` fetches `${import.meta.env.BASE_URL}contests/<file>` with `cache: 'no-cache'`, so edits aren't hidden behind a CDN or browser cache.
 - `validateContest` checks the structure. On any failure the app shows a plain "try again" screen and logs the details with `console.error`; there is no fallback data.
 - The UI is for teachers and students, so keep user-visible text free of technical terms (file names, JSON, HTTP codes). Technical details belong in the console or the README.
+- Prompts keep their line breaks (`whitespace-pre-line`), and `QuestionCard` sets any prompt over `LONG_PROMPT_LENGTH` smaller so passages and their answers fit the card.
+- The quizzes in the `Midterm` category are converted copies of QuestRush's `public/stages/midterm-*` files, with titles and slugs renamed to describe their content. Their question `id`s (`g6-mid-*`), questions and answer keys are the same, so a question fixed in one game needs the same fix in the other.
 - Setup capacity (`setupRules.ts`): repeats off needs `teams × questionsPerTeam` questions; repeats on needs `questionsPerTeam`. A quiz file only needs one question; there is deliberately no larger minimum per file, because the setup screen limits the choices to what the quiz can fill.
 
 **Tests (`tests/unit/`).** `helpers.ts` provides:

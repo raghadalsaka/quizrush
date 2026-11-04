@@ -97,11 +97,14 @@ function validateQuestion(value: unknown, path: string, seenIds: Set<string>, er
 
 export function validateContest(data: unknown): ContestLoadResult {
   if (!isObject(data)) {
-    return { ok: false, errors: ['The file must contain one JSON object with title, slug, settings and questions.'] }
+    return { ok: false, errors: ['The file must contain one JSON object with title, slug, category, settings and questions.'] }
   }
   const errors: string[] = []
   if (!isNonBlankString(data.title)) {
     errors.push('title must be non-blank text.')
+  }
+  if (!isNonBlankString(data.category)) {
+    errors.push('category must be non-blank text.')
   }
   validateSlug(data.slug, errors)
   const settings = validateSettings(data.settings, errors)
@@ -120,6 +123,12 @@ export function validateContest(data: unknown): ContestLoadResult {
   if (errors.length > 0 || settings === null) {
     return { ok: false, errors }
   }
-  const contest: Contest = { title: (data.title as string).trim(), slug: data.slug as string, settings, questions }
+  const contest: Contest = {
+    title: (data.title as string).trim(),
+    category: (data.category as string).trim(),
+    slug: data.slug as string,
+    settings,
+    questions,
+  }
   return { ok: true, contest }
 }

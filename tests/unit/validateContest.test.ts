@@ -6,6 +6,7 @@ type JsonObject = Record<string, unknown>
 function validContest(): JsonObject {
   return {
     title: 'Classroom Challenge',
+    category: 'Midterm',
     slug: 'classroom-challenge',
     settings: { secondsPerQuestion: 60, defaultQuestionsPerTeam: 5, allowCrossTeamRepeats: false },
     questions: [
@@ -37,10 +38,12 @@ describe('validateContest', () => {
   it('accepts a valid contest and trims text', () => {
     const contest = validContest()
     contest.title = '  Spaced title  '
+    contest.category = '  Spaced category  '
     const result = validateContest(contest)
     expect(result.ok).toBe(true)
     if (result.ok) {
       expect(result.contest.title).toBe('Spaced title')
+      expect(result.contest.category).toBe('Spaced category')
       expect(result.contest.questions).toHaveLength(2)
     }
   })
@@ -55,6 +58,9 @@ describe('validateContest', () => {
 
   const cases: [string, (contest: JsonObject) => void, string][] = [
     ['blank title', (c) => { c.title = '   ' }, 'title'],
+    ['missing category', (c) => { delete c.category }, 'category must'],
+    ['blank category', (c) => { c.category = '   ' }, 'category must'],
+    ['non-text category', (c) => { c.category = 1 }, 'category must'],
     ['missing slug', (c) => { delete c.slug }, 'slug must'],
     ['blank slug', (c) => { c.slug = '' }, 'slug must'],
     ['uppercase slug', (c) => { c.slug = 'Present-Perfect' }, 'slug must'],
