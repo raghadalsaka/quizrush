@@ -15,7 +15,7 @@ const props = defineProps<{
 const game = useGame({ loadContest: () => loadContest(props.entry.file) })
 provide(gameKey, game)
 
-const { phase, contest, lastSetup, announcement, rankedTeams, questionsPerTeam, isGameActive } = game
+const { phase, contest, mode, lastSetup, lastSetupByMode, announcement, rankedTeams, questionsPerTeam, isGameActive } = game
 
 watchEffect(() => {
   document.title = contest.value === null ? 'Quizrush' : `${contest.value.title} · Quizrush`
@@ -36,12 +36,14 @@ onMounted(() => {
       v-else-if="phase === 'setup' && contest !== null"
       :contest="contest"
       :initial="lastSetup"
+      :initial-by-mode="lastSetupByMode"
       @start="game.startGame"
     />
     <ResultsScreen
       v-else-if="phase === 'results'"
       :ranked-teams="rankedTeams"
       :questions-per-team="questionsPerTeam"
+      :mode="mode"
       @new-game="game.newGame"
     />
     <GameScreen v-else-if="isGameActive" />

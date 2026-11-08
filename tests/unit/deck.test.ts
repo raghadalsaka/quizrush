@@ -3,12 +3,14 @@ import {
   canReplaceActive,
   createDeck,
   drawForTurn,
+  MAX_DECK_TEAMS,
   isFeasible,
   replaceActive,
   resolveActive,
   safeCandidates,
   type Deck,
 } from '../../src/utils/deck'
+import { MAX_PLAYERS } from '../../src/config'
 import type { RandomInt } from '../../src/utils/random'
 import { requiredQuestionCount } from '../../src/utils/setupRules'
 import { pickFirst, seededRandomInt } from './helpers'
@@ -179,5 +181,66 @@ describe('deck: randomized games never run out of questions', () => {
         replaced.forEach((id) => expect(log.resolvedByTeam[team]).not.toContain(id))
       })
     }
+  })
+})
+
+function hallHolds(deck: Deck): boolean {
+  const needs = deck.resolvedCount.map((resolved, team) => deck.questionsPerTeam - resolved - (deck.active?.team === team ? 1 : 0))
+  const available = deck.questionIds.filter((id) => !deck.consumed.has(id) && id !== deck.active?.questionId)
+  const teamCount = needs.length
+  for (let subset = 1; subset < 1 << teamCount; subset++) {
+    const members = needs.flatMap((_, team) => ((subset & (1 << team)) !== 0 ? [team] : []))
+    const demand = members.reduce((sum, team) => sum + (needs[team] ?? 0), 0)
+    const usable = available.filter((id) => members.some((team) => !deck.exposedBy[team]?.has(id) && (needs[team] ?? 0) > 0))
+    if (demand > 0 && usable.length < demand) {
+      return false
+    }
+  }
+  return true
+}
+
+describe('deck: feasibility matches Hall\'s condition', () => {
+  it('agrees with a brute-force subset check on random exposure patterns', () => {
+    const random = seededRandomInt(20261108)
+    for (let trial = 0; trial < 600; trial++) {
+      const teamCount = 1 + random(5)
+      const questionsPerTeam = 1 + random(3)
+      const deck = createDeck(ids(teamCount * questionsPerTeam + random(3)), teamCount, questionsPerTeam, false)
+      deck.questionIds.forEach((id) => {
+        if (random(4) === 0) {
+          deck.consumed.add(id)
+        }
+        deck.exposedBy.forEach((exposed) => {
+          if (random(3) === 0) {
+            exposed.add(id)
+          }
+        })
+      })
+      deck.resolvedCount.forEach((_, team) => {
+        deck.resolvedCount[team] = random(questionsPerTeam + 1)
+      })
+      expect(isFeasible(deck)).toBe(hallHolds(deck))
+    }
+  })
+})
+
+describe('deck: classroom-sized games', () => {
+  it('runs 30 players with replacements without running out of questions', () => {
+    const random = seededRandomInt(30)
+    for (let game = 0; game < 40; game++) {
+      const teamCount = 6 + random(25)
+      const questionsPerTeam = 1 + random(2)
+      const allowRepeats = random(2) === 1
+      const questionCount = requiredQuestionCount(teamCount, questionsPerTeam, allowRepeats) + random(4)
+      const deck = createDeck(ids(questionCount), teamCount, questionsPerTeam, allowRepeats)
+      const log = playGame(deck, teamCount, random, 0.4)
+      log.resolvedByTeam.forEach((resolved) => expect(resolved).toHaveLength(questionsPerTeam))
+      expectNoRepeatWithinTeam(log)
+    }
+  })
+
+  it('refuses more teams than its exposure masks can track, which still fits every allowed player count', () => {
+    expect(() => createDeck(ids(40), MAX_DECK_TEAMS + 1, 1, false)).toThrow()
+    expect(MAX_PLAYERS).toBeLessThanOrEqual(MAX_DECK_TEAMS)
   })
 })

@@ -7,14 +7,21 @@ export interface Outcome {
   selectedIndex: number | null
 }
 
-export interface Team {
+export type GameMode = 'individual' | 'teams'
+
+export interface RosterEntry {
   name: string
+  emoji: string
+}
+
+export interface Team extends RosterEntry {
   score: number
   turnsTaken: number
 }
 
 export interface SetupInput {
-  teamNames: readonly string[]
+  mode: GameMode
+  roster: readonly RosterEntry[]
   questionsPerTeam: number
   secondsPerQuestion: number
 }

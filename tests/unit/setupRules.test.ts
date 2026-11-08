@@ -1,9 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import type { SetupInput } from '../../src/types/game'
 import { findSetupProblems, normalizeTeamName, parseWholeNumber, requiredQuestionCount } from '../../src/utils/setupRules'
+import { makeNames as names, makeRoster } from './helpers'
 
 function setup(teamNames: string[], questionsPerTeam: number = 5, secondsPerQuestion: number = 60): SetupInput {
-  return { teamNames, questionsPerTeam, secondsPerQuestion }
+  return { mode: 'teams', roster: makeRoster(teamNames), questionsPerTeam, secondsPerQuestion }
+}
+
+function playerSetup(names: string[], questionsPerPlayer: number = 1): SetupInput {
+  return { mode: 'individual', roster: makeRoster(names), questionsPerTeam: questionsPerPlayer, secondsPerQuestion: 60 }
 }
 
 describe('requiredQuestionCount', () => {
@@ -54,6 +59,25 @@ describe('findSetupProblems', () => {
 
   it.each([0, 1.5, Number.NaN, 601])('rejects %s seconds per question', (value) => {
     expect(findSetupProblems(setup(['A'], 5, value), 100, false).join()).toContain('Seconds per question')
+  })
+})
+
+describe('findSetupProblems: individual players', () => {
+  it('accepts 1 to 30 players with one question each from a 30-question quiz', () => {
+    expect(findSetupProblems(playerSetup(names(1)), 30, false)).toEqual([])
+    expect(findSetupProblems(playerSetup(names(30)), 30, false)).toEqual([])
+  })
+
+  it('asks for at least one name and at most 30', () => {
+    expect(findSetupProblems(playerSetup([]), 30, false)).toContain('Enter at least one player name.')
+    expect(findSetupProblems(playerSetup(names(31)), 100, false).join()).toContain('at most 30 player names')
+  })
+
+  it('words problems for players instead of teams', () => {
+    const problems = findSetupProblems(playerSetup(['Sam', 'sam'], 2), 3, false)
+    expect(problems).toContain('Player 2 has the same name as Player 1.')
+    expect(problems.join()).toContain('Lower the questions per player or the number of players.')
+    expect(findSetupProblems(playerSetup(['Sam'], 0), 30, false).join()).toContain('Questions per player')
   })
 })
 

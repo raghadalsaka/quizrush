@@ -1,7 +1,17 @@
 import { afterEach, beforeEach, vi } from 'vitest'
 import { effectScope, type EffectScope } from 'vue'
+import { EMOJI_POOL } from '../../src/config'
 import type { RandomInt } from '../../src/utils/random'
 import type { Contest, Question } from '../../src/types/contest'
+import type { RosterEntry } from '../../src/types/game'
+
+export function makeNames(count: number): string[] {
+  return Array.from({ length: count }, (_, index) => `Student ${index + 1}`)
+}
+
+export function makeRoster(names: readonly string[]): RosterEntry[] {
+  return names.map((name, index) => ({ name, emoji: EMOJI_POOL[index % EMOJI_POOL.length] as string }))
+}
 
 export function seededRandomInt(seed: number): RandomInt {
   let state = seed >>> 0

@@ -3,7 +3,8 @@ import type { EffectScope } from 'vue'
 import { OPTION_COUNT } from '../../src/config'
 import { useGame, type Game } from '../../src/composables/useGame'
 import type { Contest, ContestLoadResult } from '../../src/types/contest'
-import { makeContest, runInScope, seededRandomInt, useFakeClock } from './helpers'
+import type { GameMode } from '../../src/types/game'
+import { makeContest, makeNames, makeRoster, runInScope, seededRandomInt, useFakeClock } from './helpers'
 
 const { advance, jump } = useFakeClock()
 let scope: EffectScope | undefined
@@ -24,11 +25,15 @@ function createGame(loadResult: ContestLoadResult | (() => ContestLoadResult), r
   return created.value
 }
 
-async function startedGame(teamNames: string[], questionsPerTeam: number, options: { contest?: Contest; revealMs?: number } = {}): Promise<Game> {
+async function startedGame(
+  teamNames: string[],
+  questionsPerTeam: number,
+  options: { contest?: Contest; revealMs?: number; mode?: GameMode } = {},
+): Promise<Game> {
   const contest = options.contest ?? makeContest(30, false)
   const game = createGame({ ok: true, contest }, options.revealMs ?? 0)
   await game.load()
-  expect(game.startGame({ teamNames, questionsPerTeam, secondsPerQuestion: 60 })).toBe(true)
+  expect(game.startGame({ mode: options.mode ?? 'teams', roster: makeRoster(teamNames), questionsPerTeam, secondsPerQuestion: 60 })).toBe(true)
   return game
 }
 
@@ -72,8 +77,8 @@ describe('useGame: loading', () => {
   it('refuses to start with an invalid setup', async () => {
     const game = createGame({ ok: true, contest: makeContest(10, false) })
     await game.load()
-    expect(game.startGame({ teamNames: ['Red', ' red '], questionsPerTeam: 2, secondsPerQuestion: 60 })).toBe(false)
-    expect(game.startGame({ teamNames: ['Red', 'Blue'], questionsPerTeam: 6, secondsPerQuestion: 60 })).toBe(false)
+    expect(game.startGame({ mode: 'teams', roster: makeRoster(['Red', ' red ']), questionsPerTeam: 2, secondsPerQuestion: 60 })).toBe(false)
+    expect(game.startGame({ mode: 'teams', roster: makeRoster(['Red', 'Blue']), questionsPerTeam: 6, secondsPerQuestion: 60 })).toBe(false)
     expect(game.phase.value).toBe('setup')
   })
 })
@@ -292,7 +297,8 @@ describe('useGame: reveal and teacher controls', () => {
     game.newGame()
     expect(game.phase.value).toBe('setup')
     expect(game.teams.value).toEqual([])
-    expect(game.lastSetup.value?.teamNames).toEqual(['Red', 'Blue'])
+    expect(game.lastSetup.value?.mode).toBe('teams')
+    expect(game.lastSetup.value?.roster).toEqual(makeRoster(['Red', 'Blue']))
     advance(120_000)
     expect(game.phase.value).toBe('setup')
   })
@@ -310,5 +316,52 @@ describe('useGame: results', () => {
     expect(game.phase.value).toBe('results')
     const winners = game.rankedTeams.value.filter((team) => team.isWinner).map((team) => team.name)
     expect(winners).toEqual(['Red', 'Blue'])
+  })
+})
+
+describe('useGame: individual players', () => {
+  it('gives all 30 players one turn each in entry order, then shows ranked results with their emojis', async () => {
+    const players = makeNames(30)
+    const game = await startedGame(players, 1, { mode: 'individual' })
+    expect(game.mode.value).toBe('individual')
+    const order: number[] = []
+    for (let turn = 0; turn < 30; turn++) {
+      order.push(game.currentTeamIndex.value)
+      game.startTurn()
+      game.answer(turn % 2 === 0 ? correctIndex(game) : wrongIndex(game))
+      game.nextTurn()
+    }
+    expect(order).toEqual(Array.from({ length: 30 }, (_, index) => index))
+    expect(game.phase.value).toBe('results')
+    const roster = makeRoster(players)
+    const ranked = game.rankedTeams.value
+    expect(ranked.filter((player) => player.isWinner)).toHaveLength(15)
+    expect(ranked.map((player) => player.rank)).toEqual([...Array<number>(15).fill(1), ...Array<number>(15).fill(16)])
+    ranked.forEach((player) => expect(player.emoji).toBe(roster[player.teamIndex]?.emoji))
+  })
+
+  it('remembers the last setup of each mode, so switching modes does not lose a typed class list', async () => {
+    const game = await startedGame(['Ana', 'Ben'], 2, { mode: 'individual' })
+    game.newGame()
+    expect(game.startGame({ mode: 'teams', roster: makeRoster(['Red', 'Blue']), questionsPerTeam: 5, secondsPerQuestion: 60 })).toBe(true)
+    game.newGame()
+    expect(game.lastSetup.value?.mode).toBe('teams')
+    expect(game.lastSetupByMode.value.individual?.roster).toEqual(makeRoster(['Ana', 'Ben']))
+    expect(game.lastSetupByMode.value.individual?.questionsPerTeam).toBe(2)
+    expect(game.lastSetupByMode.value.teams?.roster).toEqual(makeRoster(['Red', 'Blue']))
+  })
+
+  it('finishes a round for everyone before the next round starts', async () => {
+    const game = await startedGame(['Ana', 'Ben', 'Cy'], 2, { mode: 'individual' })
+    const order: number[] = []
+    for (let turn = 0; turn < 6; turn++) {
+      order.push(game.currentTeamIndex.value)
+      game.startTurn()
+      game.answer(correctIndex(game))
+      game.nextTurn()
+    }
+    expect(order).toEqual([0, 1, 2, 0, 1, 2])
+    expect(game.teams.value.map((player) => player.score)).toEqual([2, 2, 2])
+    expect(game.lastSetup.value?.mode).toBe('individual')
   })
 })

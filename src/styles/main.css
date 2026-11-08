@@ -215,15 +215,6 @@
   .field-input {
     @apply w-full rounded-tile border-3 border-rule bg-card px-4 py-2 text-xl font-semibold text-ink focus:border-ink;
   }
-
-  .team-shape {
-    display: inline-block;
-    flex: none;
-    width: 1em;
-    height: 1em;
-    background: var(--team);
-    clip-path: var(--team-clip);
-  }
 }
 
 .team-1 {
@@ -231,7 +222,6 @@
   --team-text: var(--color-t1);
   --team-deep: var(--color-t1-deep);
   --team-on: #ffffff;
-  --team-clip: circle(50%);
 }
 
 .team-2 {
@@ -239,7 +229,6 @@
   --team-text: var(--color-t2);
   --team-deep: var(--color-t2-deep);
   --team-on: #ffffff;
-  --team-clip: inset(0 round 18%);
 }
 
 .team-3 {
@@ -247,7 +236,6 @@
   --team-text: var(--color-t3);
   --team-deep: var(--color-t3-deep);
   --team-on: #ffffff;
-  --team-clip: polygon(50% 6%, 97% 92%, 3% 92%);
 }
 
 .team-4 {
@@ -255,7 +243,6 @@
   --team-text: var(--color-t4-text);
   --team-deep: var(--color-t4-deep);
   --team-on: var(--color-ink);
-  --team-clip: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
 }
 
 .team-5 {
@@ -263,7 +250,6 @@
   --team-text: var(--color-t5);
   --team-deep: var(--color-t5-deep);
   --team-on: #ffffff;
-  --team-clip: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
 }
 
 .marquee-frame::before {
