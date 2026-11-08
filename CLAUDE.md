@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Quizrush is a single-device classroom quiz for an interactive touch board (a projector also works), where students tap their own answers: 1–5 teams take equal round-robin turns on multiple-choice questions. Each quiz is one file in `public/contests/*.json`, played at `/<slug>/`; `/` lists them. It runs entirely in the browser (Vue 3 + TypeScript + Vite + Tailwind 4) and is served by GitHub Pages at https://quizrush.raghadalsaka.com.
+Quizrush is a single-device classroom quiz for an interactive touch board (a projector also works), where students tap their own answers: up to 30 individual players (the default mode) or 1–5 teams take equal round-robin turns on multiple-choice questions. Each quiz is one file in `public/contests/*.json`, played at `/<slug>/`; `/` lists them. It runs entirely in the browser (Vue 3 + TypeScript + Vite + Tailwind 4) and is served by GitHub Pages at https://quizrush.raghadalsaka.com.
 
 ## Commands
 
@@ -31,6 +31,13 @@ npx vitest run -t "replaced card goes to another"   # tests by name
 - `src/composables/`: the Vue glue. `useGame` owns all state and timers; `useCountdown` is the timer.
 - `src/config.ts`: every tunable (limits, timings, labels). Import from there instead of repeating numbers.
 
+**Modes and roster.**
+- `SetupInput` carries a `mode` (`'individual' | 'teams'`, `MODE_WORDS` in `config.ts` holds the wording) and a `roster` of `RosterEntry { name, emoji }`. Gameplay only ever sees that roster, so a future Google Classroom import can supply the same list; manual entry lives in `PlayerRoster.vue` (one name per line) and the team fields in `SetupScreen`.
+- Individual Players is selected whenever a quiz is opened fresh; New Game returns to setup with the last mode, and each mode's fields come back from its own last game (`lastSetupByMode`), so playing Teams doesn't wipe a typed class list. Each mode keeps its own questions-per-turn value (players default to `DEFAULT_QUESTIONS_PER_PLAYER`). The mode toggle heads the settings column (its "Game settings" legend is screen-reader only), because the roster column has no height to spare in the `lg` fit.
+- Internally a player is a "team" (`Team`, `teams`, `questionsPerTeam`, the deck's team index); only user-visible text changes with the mode.
+- Emojis come from `EMOJI_POOL` (the same pool as QuestRush). `fillDefaultEmojis` gives entries without a pick a pool emoji nobody picked. `buildRoster` pairs names with picks. In Individual mode picks are keyed by name (`rosterKey`, also the duplicate-name check), so they follow the student when lines move. Both pickers use `EmojiSelect`.
+- `AvatarBadge` draws the emoji wherever a team shape used to be; it is the place a student photo goes later.
+
 **Game state machine (`useGame.ts`).**
 - Phases: `loading → error | setup → ready → revealing → answering ⇄ paused → resolved → ready | results → setup`. Different Card works from `answering` and `paused`.
 - Every action first checks the current phase, so double clicks and actions in the wrong phase do nothing.
@@ -50,7 +57,7 @@ npx vitest run -t "replaced card goes to another"   # tests by name
 - Two sets are tracked:
   - `exposedBy[team]`: filled when a card is revealed, including cards that are later replaced. A team never sees a question twice.
   - `consumed`: repeats-off mode only, filled when a question is answered or times out. A replaced card therefore goes back into the deck for other teams only.
-- `safeCandidates` only offers questions for which every remaining turn of every team can still be filled. It checks this with Hall's condition over team subsets (≤ 31 of them). This filter runs on every draw, not only on Different Card. Without it, an ordinary random draw can leave a later team with no question after replacements. The randomized test in `deck.test.ts` catches that.
+- `safeCandidates` only offers questions for which every remaining turn of every team can still be filled. It checks Hall's condition as a max flow from needy teams to groups of questions that share an exposure mask, because enumerating team subsets is impossible at 30 players; `safeCandidates` runs one check per distinct mask. Masks are 32-bit, so `createDeck` refuses more than `MAX_DECK_TEAMS` (31); a test keeps `MAX_PLAYERS` under it. This filter runs on every draw, not only on Different Card. Without it, an ordinary random draw can leave a later team with no question after replacements. The randomized test in `deck.test.ts` catches that.
 - The deck is a plain object inside `useGame`, not reactive state. `canReplace` is recomputed when a card becomes answerable.
 
 **Contest loading.**
@@ -63,7 +70,7 @@ npx vitest run -t "replaced card goes to another"   # tests by name
 - The UI is for teachers and students, so keep user-visible text free of technical terms (file names, JSON, HTTP codes). Technical details belong in the console or the README.
 - Prompts keep their line breaks (`whitespace-pre-line`), and `QuestionCard` sets any prompt over `LONG_PROMPT_LENGTH` smaller so passages and their answers fit the card.
 - The quizzes in the `Midterm` category are converted copies of QuestRush's `public/stages/midterm-*` files, with titles and slugs renamed to describe their content. Their question `id`s (`g6-mid-*`), questions and answer keys are the same, so a question fixed in one game needs the same fix in the other.
-- Setup capacity (`setupRules.ts`): repeats off needs `teams × questionsPerTeam` questions; repeats on needs `questionsPerTeam`. A quiz file only needs one question; there is deliberately no larger minimum per file, because the setup screen limits the choices to what the quiz can fill.
+- Setup capacity (`setupRules.ts`): repeats off needs `teams × questionsPerTeam` questions; repeats on needs `questionsPerTeam` (players count as teams). A quiz file only needs one question; there is deliberately no larger minimum per file, because the setup screen limits the choices to what the quiz can fill.
 
 **Tests (`tests/unit/`).** `helpers.ts` provides:
 - `seededRandomInt` and `pickFirst`: deterministic randomness, injected through `useGame({ randomInt })`.
@@ -97,10 +104,9 @@ The look is a bright classroom game show: a whiteboard-white stage, navy "marker
 - **Team identity:** `teamThemeClass(index)` from `src/utils/teamTheme.ts` sets these CSS variables:
   - `--team`, the team's color, and `--team-deep`, its darker shade used for press edges;
   - `--team-on`, text on the team color;
-  - `--team-text`, the team color made readable on white;
-  - `--team-clip`, the team's shape.
-  - Use them via `bg-(--team)`, `text-(--team-text)` and the `.team-shape` class, and `teamColorVar(index)` where a plain color value is needed. Never hard-code a team color.
-  - Colors and shapes follow entry order: magenta circle, ocean square, fern triangle, sun diamond, grape star.
+  - `--team-text`, the team color made readable on white.
+  - Use them via `bg-(--team)` and `text-(--team-text)`, and `teamColorVar(index)` where a plain color value is needed. Never hard-code a team color.
+  - Colors follow entry order: magenta, ocean, fern, sun, grape, repeating after `TEAM_PALETTE_SIZE` entries. Each entry's chosen emoji (in `AvatarBadge`, ringed in `--team`) replaced the old per-team shapes.
   - The card cover's `.marquee-frame` draws a dashed frame in `--team-on`.
 - **Shared classes:**
   - `.btn`, `.btn-primary`, `.btn-small` and `.btn-large`: a 3px ink border plus a 5px hard "press edge" that sinks on press.
@@ -111,8 +117,9 @@ The look is a bright classroom game show: a whiteboard-white stage, navy "marker
 - **Layout:**
   - On `lg` every screen fits the viewport with no page scroll. The `lg` root font is capped at `100svh / 44`, so each screen is laid out to fit 44rem of height and shorter windows scale down. Setup puts team names in two columns with Start Game under the settings; results shortens the podium and puts 4th and 5th side by side. Below `lg` screens scroll as before.
   - The game screen is `h-dvh` on `lg`, with a left rail (the quiz title, the scoreboard tiles, and the teacher box absolutely positioned at the rail's bottom-left, sized to its content so it can extend past the rail) and a main column (team name and turn, the timer, the question card, whose body scrolls internally as a last resort for very long text). Below `lg` it stacks.
+  - With more than `ROOMY_LAYOUT_LIMIT` (5) entries, `densityFor` turns the scoreboard crowded: smaller tiles, shown as a queue (`turnQueue`: the player answering on top, then the next turns in order, wrapping around), and on `lg` it scrolls inside the rail above the teacher box, back to the top on each turn. The results list below the podium becomes a scrolling grid the same way.
   - The teacher box exists only on `lg`. Below `lg` there is no Pause, Different Card or New Game, and Next Team / See Results appears inside the result panel (`lg:hidden`). `advanceLabel` is computed once in `GameScreen` for both.
-  - The "Created by Raghad Alsaka" credit (`CreatorCredit.vue`, linking to https://raghadalsaka.com/) appears only on the home and setup screens, right-aligned on the subtitle's line ("Choose a quiz to play.", "Set up the teams, ..."). Its link pads its tap area with `py-2 -my-2`, so it reaches 2.5rem without making the header taller. Links that leave the page (it, All Quizzes) never go on the game or results screens, where a stray tap would wipe the game.
+  - The "Created by Raghad Alsaka" credit (`CreatorCredit.vue`, linking to https://raghadalsaka.com/) appears only on the home and setup screens, right-aligned on the subtitle's line ("Choose a quiz to play.", "Set up the players, ..." or "Set up the teams, ..."). Its link pads its tap area with `py-2 -my-2`, so it reaches 2.5rem without making the header taller. Links that leave the page (it, All Quizzes) never go on the game or results screens, where a stray tap would wipe the game.
   - The results podium keeps its DOM in rank order and uses flex `order` for the 2-1-3 visual.
 - **Accessibility:**
   - Feedback is never color alone: ✓ and ✗ come with words, and low time shows "Hurry up!".
@@ -124,7 +131,7 @@ The look is a bright classroom game show: a whiteboard-white stage, navy "marker
   - `<html>` has `touch-manipulation` (no double-tap zoom; pinch zoom stays for accessibility) and `overscroll-none` (no pull-to-refresh, which would reload and wipe the game). The tap highlight is off because buttons have their own press edge.
   - The game and results screens are `select-none`, so a long press doesn't select text. Setup stays selectable for its inputs.
   - Keep tap targets at least as large as today's smallest (`.btn-small`, 2.5rem) and keep anything students tap in the lower two thirds of the screen, within reach.
-- **Media:** the current visuals are built from CSS shapes and motion only (no images in the UI). The project allows media assets; this design just doesn't use any.
+- **Media:** the current visuals are built from CSS, system emoji and motion only (no images in the UI). The project allows media assets; this design just doesn't use any.
 - **Where styles live:**
   - Prefer Tailwind utilities in the template for color, spacing, type, layout and responsive states, using the tokens above.
   - A value with no matching utility becomes an `@theme` token when it is reused or part of the design language, otherwise an arbitrary value. Use the nearest utility only when the difference is invisible.

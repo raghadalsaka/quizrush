@@ -15,7 +15,12 @@ export interface Deck {
   active: ActiveCard | null
 }
 
+export const MAX_DECK_TEAMS: number = 31
+
 export function createDeck(questionIds: readonly string[], teamCount: number, questionsPerTeam: number, allowCrossTeamRepeats: boolean): Deck {
+  if (teamCount > MAX_DECK_TEAMS) {
+    throw new Error(`A deck tracks exposure in 32-bit masks, so it supports at most ${MAX_DECK_TEAMS} teams, not ${teamCount}`)
+  }
   return {
     questionIds: [...questionIds],
     allowCrossTeamRepeats,
@@ -35,7 +40,40 @@ function exposureMasks(deck: Deck): Map<string, number> {
   return masks
 }
 
-// Hall's condition: every group of teams must jointly still have enough distinct questions for all of its remaining turns.
+function maxFlow(capacity: number[], nodeCount: number, source: number, sink: number): number {
+  let total = 0
+  for (;;) {
+    const parent = Array.from({ length: nodeCount }, () => -1)
+    parent[source] = source
+    const queue = [source]
+    for (let head = 0; head < queue.length && parent[sink] === -1; head++) {
+      const node = queue[head] ?? source
+      for (let next = 0; next < nodeCount; next++) {
+        if (parent[next] === -1 && (capacity[node * nodeCount + next] ?? 0) > 0) {
+          parent[next] = node
+          queue.push(next)
+        }
+      }
+    }
+    if (parent[sink] === -1) {
+      return total
+    }
+    let bottleneck = Number.POSITIVE_INFINITY
+    for (let node = sink; node !== source; node = parent[node] ?? source) {
+      const from = parent[node] ?? source
+      bottleneck = Math.min(bottleneck, capacity[from * nodeCount + node] ?? 0)
+    }
+    for (let node = sink; node !== source; node = parent[node] ?? source) {
+      const from = parent[node] ?? source
+      capacity[from * nodeCount + node] = (capacity[from * nodeCount + node] ?? 0) - bottleneck
+      capacity[node * nodeCount + from] = (capacity[node * nodeCount + from] ?? 0) + bottleneck
+    }
+    total += bottleneck
+  }
+}
+
+// Hall's condition (every group of teams jointly has enough distinct questions for its remaining turns), checked as a max flow
+// from teams to groups of questions with the same exposure, so it stays fast for 30 players instead of 2^30 subsets.
 function canMeetDemand(needs: readonly number[], availableMasks: readonly number[], allowCrossTeamRepeats: boolean): boolean {
   const needyTeams = needs.flatMap((need, team) => (need > 0 ? [team] : []))
   if (allowCrossTeamRepeats) {
@@ -44,22 +82,29 @@ function canMeetDemand(needs: readonly number[], availableMasks: readonly number
       return unseen >= (needs[team] ?? 0)
     })
   }
-  const subsetCount = 1 << needyTeams.length
-  for (let subset = 1; subset < subsetCount; subset++) {
-    let demand = 0
-    let teamsMask = 0
-    needyTeams.forEach((team, position) => {
-      if ((subset & (1 << position)) !== 0) {
-        demand += needs[team] ?? 0
-        teamsMask |= 1 << team
+  const groupSizes = new Map<number, number>()
+  availableMasks.forEach((mask) => groupSizes.set(mask, (groupSizes.get(mask) ?? 0) + 1))
+  const groups = [...groupSizes]
+  const firstGroupNode = 1 + needyTeams.length
+  const sink = firstGroupNode + groups.length
+  const nodeCount = sink + 1
+  const capacity = Array.from({ length: nodeCount * nodeCount }, () => 0)
+  let demand = 0
+  needyTeams.forEach((team, position) => {
+    const need = needs[team] ?? 0
+    const teamNode = 1 + position
+    demand += need
+    capacity[teamNode] = need
+    groups.forEach(([mask], groupPosition) => {
+      if ((mask & (1 << team)) === 0) {
+        capacity[teamNode * nodeCount + firstGroupNode + groupPosition] = need
       }
     })
-    const seenByAll = availableMasks.filter((mask) => (mask & teamsMask) === teamsMask).length
-    if (availableMasks.length - seenByAll < demand) {
-      return false
-    }
-  }
-  return true
+  })
+  groups.forEach(([, size], groupPosition) => {
+    capacity[(firstGroupNode + groupPosition) * nodeCount + sink] = size
+  })
+  return maxFlow(capacity, nodeCount, 0, sink) >= demand
 }
 
 function remainingTurns(deck: Deck, team: number): number {
@@ -91,12 +136,20 @@ export function safeCandidates(deck: Deck, team: number): string[] {
   }
   const baseMasks = exposureMasks(deck)
   const exposed = deck.exposedBy[team]
-  return deck.questionIds.filter(
-    (id) =>
-      !exposed?.has(id) &&
-      (deck.allowCrossTeamRepeats || !deck.consumed.has(id)) &&
-      isFeasibleWith(deck, { team, questionId: id }, baseMasks),
-  )
+  // Questions with the same exposure are interchangeable, so one feasibility check per exposure mask covers them all.
+  const verdictByMask = new Map<number, boolean>()
+  return deck.questionIds.filter((id) => {
+    if (exposed?.has(id) || (!deck.allowCrossTeamRepeats && deck.consumed.has(id))) {
+      return false
+    }
+    const mask = baseMasks.get(id) ?? 0
+    let verdict = verdictByMask.get(mask)
+    if (verdict === undefined) {
+      verdict = isFeasibleWith(deck, { team, questionId: id }, baseMasks)
+      verdictByMask.set(mask, verdict)
+    }
+    return verdict
+  })
 }
 
 function assign(deck: Deck, team: number, randomInt: RandomInt): string {

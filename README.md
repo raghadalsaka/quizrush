@@ -1,7 +1,7 @@
 # quizrush
 Quizrush is a timed, team-based classroom quiz app. Built with Vue 3 and hosted on GitHub Pages, it uses JSON questions, random draws, instant explanations, and a live leaderboard.
 
-One teacher runs it on one interactive touch board (or a projector) for 1–5 teams. Everything happens in the browser: there is no backend, no accounts, and nothing is saved. Reloading the page starts a fresh game.
+One teacher runs it on one interactive touch board (or a projector) for up to 30 individual players or 1–5 teams. Everything happens in the browser: there is no backend, no accounts, and nothing is saved. Reloading the page starts a fresh game.
 
 ## Run it locally
 
@@ -64,14 +64,16 @@ The build and the CI tests validate every file in `public/contests/` and reject 
 
 How many questions you need:
 
-- **Repeats off** (`false`): at least *teams × questions per team*. For example, 3 teams × 5 questions needs 15.
+- **Repeats off** (`false`): at least *teams × questions per team* (or *players × questions per player*). For example, 3 teams × 5 questions needs 15, and 30 players × 1 question needs 30.
 - **Repeats on** (`true`): at least *questions per team*. For example, 3 teams × 5 questions can run with 5.
 
 If there aren't enough, the setup screen says so and keeps **Start Game** disabled. Spare questions let teachers use **Different Card** more often.
 
 ## Game rules
 
-- Teams play in the order they were entered, one question per turn, and every team gets the same number of turns.
+- The setup screen starts in **Individual Players** mode every time a quiz is opened. Type up to 30 names, one per line; turns follow that order and each player gets one question unless the teacher changes it. **Teams** mode is the 1–5 team setup.
+- Every player or team gets an emoji, picked beside its name or left on the one it was given. The emoji is shown next to the name on the turn heading, the scoreboard and the final results.
+- Players or teams play in the order they were entered, one question per turn, and everyone gets the same number of turns. Everyone has a turn before the next round starts.
 - **Start** draws a random question and flips the card. The timer starts once the answers can be clicked.
 - The first answer (mouse or keys 1–4) locks the question. A correct answer earns exactly 1 point. A wrong answer or a timeout earns 0. The correct answer and the explanation stay visible until the teacher presses **Next Team: <name of the next team>**. With one team it reads **Next Question**, and after the last turn **See Results**.
 - The timer uses a real-time deadline, so a hidden or throttled tab never gets extra time.
@@ -79,7 +81,7 @@ If there aren't enough, the setup screen says so and keeps **Start Game** disabl
 - **Different Card** (in the teacher controls, while a question is open) asks for confirmation, then sets the question aside and draws another one with a fresh timer. The turn and score don't change.
 - On screens narrower than 1024px (phones and small tablets) the teacher controls are hidden: there is no Pause, Different Card or New Game, and **Next Team** appears under the explanation instead. Reload the page to start over.
 - On wider screens every screen fits the window without scrolling; shorter windows scale the whole layout down.
-- The final leaderboard celebrates every team tied for the top score.
+- The final leaderboard ranks everyone, with tied scores sharing a rank, and celebrates everyone tied for the top score.
 
 ### Repeat and replacement rules
 

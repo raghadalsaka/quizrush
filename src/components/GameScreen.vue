@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { OPTION_COUNT } from '../config'
+import { MODE_WORDS, OPTION_COUNT } from '../config'
 import { injectGame } from '../composables/useGame'
 import { isIntegerInRange } from '../utils/numbers'
-import { teamThemeClass } from '../utils/teamTheme'
+import { densityFor, teamThemeClass } from '../utils/teamTheme'
+import AvatarBadge from './AvatarBadge.vue'
 import ConfirmDialog from './ConfirmDialog.vue'
 import CountdownBar from './CountdownBar.vue'
 import QuestionCard from './QuestionCard.vue'
@@ -22,6 +23,7 @@ const game = injectGame()
 const {
   phase,
   contest,
+  mode,
   teams,
   currentTeam,
   currentTeamIndex,
@@ -41,12 +43,15 @@ const {
 
 const pending = ref<PendingAction | null>(null)
 
+const words = computed(() => MODE_WORDS[mode.value])
+const isScoreboardCrowded = computed(() => densityFor(teams.value.length) === 'crowded')
+
 const advanceLabel = computed(() => {
   if (isGameComplete.value) {
     return 'See Results'
   }
   if (nextTeam.value !== null) {
-    return `Next Team: ${nextTeam.value.name}`
+    return `Next ${words.value.title}: ${nextTeam.value.name}`
   }
   return 'Next Question'
 })
@@ -56,7 +61,7 @@ const dialogText = computed<DialogText>(() => {
   if (action?.kind === 'replace') {
     return {
       title: 'Draw a different card?',
-      message: `This question is set aside for ${currentTeam.value?.name ?? 'this team'} and a new one is drawn with a fresh timer. The turn is not used.`,
+      message: `This question is set aside for ${currentTeam.value?.name ?? `this ${words.value.noun}`} and a new one is drawn with a fresh timer. The turn is not used.`,
       confirmLabel: 'Different Card',
     }
   }
@@ -120,7 +125,13 @@ onBeforeUnmount(() => {
   >
     <aside class="flex flex-col items-center gap-4 text-center lg:relative lg:items-stretch lg:text-left" aria-label="Game status">
       <p class="text-lg leading-snug font-bold text-ink-soft">{{ contest?.title }}</p>
-      <TeamScoreboard class="lg:flex-col" :teams="teams" :active-index="currentTeamIndex" :last-award="lastAward" />
+      <TeamScoreboard
+        class="lg:flex-col"
+        :class="{ 'lg:mb-36': isScoreboardCrowded }"
+        :teams="teams"
+        :active-index="currentTeamIndex"
+        :last-award="lastAward"
+      />
       <TeacherControls
         class="lg:absolute lg:bottom-0 lg:left-0 lg:z-10 lg:w-max"
         :phase="phase"
@@ -141,8 +152,9 @@ onBeforeUnmount(() => {
       aria-labelledby="active-team-heading"
     >
       <CountdownBar :phase="phase" :remaining-ms="remainingMs" :duration-ms="secondsPerQuestion * 1000">
-        <h1 id="active-team-heading" class="font-display text-6xl leading-none font-extrabold tracking-tight break-words text-(--team-text)">
-          {{ currentTeam?.name }}
+        <h1 id="active-team-heading" class="flex items-center gap-4 font-display text-6xl leading-none font-extrabold tracking-tight text-(--team-text)">
+          <AvatarBadge v-if="currentTeam !== null" :emoji="currentTeam.emoji" size="lg" />
+          <span class="min-w-0 break-words">{{ currentTeam?.name }}</span>
         </h1>
         <p class="mt-2 text-xl font-bold text-ink-soft">Turn {{ turnNumber }} of {{ questionsPerTeam }}</p>
       </CountdownBar>

@@ -1,7 +1,7 @@
 import { computed, getCurrentScope, inject, onScopeDispose, readonly, ref, shallowRef, type InjectionKey } from 'vue'
-import { OPTION_COUNT, OPTION_LABELS, REVEAL_MS } from '../config'
+import { DEFAULT_GAME_MODE, OPTION_COUNT, OPTION_LABELS, REVEAL_MS } from '../config'
 import type { Contest, ContestLoadResult, Question } from '../types/contest'
-import type { Outcome, OutcomeKind, Phase, ScoreAward, SetupInput, Team } from '../types/game'
+import type { GameMode, Outcome, OutcomeKind, Phase, RosterEntry, ScoreAward, SetupInput, Team } from '../types/game'
 import { canReplaceActive, createDeck, drawForTurn, replaceActive, resolveActive, type Deck } from '../utils/deck'
 import { describeError } from '../utils/errors'
 import { isIntegerInRange } from '../utils/numbers'
@@ -44,6 +44,9 @@ export function useGame(options: GameOptions) {
   const lastAward = ref<ScoreAward | null>(null)
   const announcement = ref('')
   const lastSetup = ref<SetupInput | null>(null)
+  const lastSetupByMode = ref<Partial<Record<GameMode, SetupInput>>>({})
+
+  const mode = computed(() => lastSetup.value?.mode ?? DEFAULT_GAME_MODE)
 
   let deck: Deck | null = null
   let questionsById = new Map<string, Question>()
@@ -130,17 +133,18 @@ export function useGame(options: GameOptions) {
     if (findSetupProblems(input, loaded.questions.length, loaded.settings.allowCrossTeamRepeats).length > 0) {
       return false
     }
-    const names = input.teamNames.map(normalizeTeamName)
-    lastSetup.value = { teamNames: names, questionsPerTeam: input.questionsPerTeam, secondsPerQuestion: input.secondsPerQuestion }
-    deck = createDeck([...questionsById.keys()], names.length, input.questionsPerTeam, loaded.settings.allowCrossTeamRepeats)
-    teams.value = names.map((name) => ({ name, score: 0, turnsTaken: 0 }))
+    const roster: RosterEntry[] = input.roster.map((entry) => ({ name: normalizeTeamName(entry.name), emoji: entry.emoji }))
+    lastSetup.value = { mode: input.mode, roster, questionsPerTeam: input.questionsPerTeam, secondsPerQuestion: input.secondsPerQuestion }
+    lastSetupByMode.value = { ...lastSetupByMode.value, [input.mode]: lastSetup.value }
+    deck = createDeck([...questionsById.keys()], roster.length, input.questionsPerTeam, loaded.settings.allowCrossTeamRepeats)
+    teams.value = roster.map((entry) => ({ ...entry, score: 0, turnsTaken: 0 }))
     questionsPerTeam.value = input.questionsPerTeam
     secondsPerQuestion.value = input.secondsPerQuestion
     currentTeamIndex.value = 0
     lastAward.value = null
     resetRound()
     phase.value = 'ready'
-    announcement.value = `Game started. ${names[0]}, press Start when ready.`
+    announcement.value = `Game started. ${roster[0]?.name}, press Start when ready.`
     return true
   }
 
@@ -303,6 +307,7 @@ export function useGame(options: GameOptions) {
   return {
     phase: readonly(phase),
     contest,
+    mode,
     teams: readonly(teams),
     questionsPerTeam: readonly(questionsPerTeam),
     secondsPerQuestion: readonly(secondsPerQuestion),
@@ -315,6 +320,7 @@ export function useGame(options: GameOptions) {
     lastAward: readonly(lastAward),
     announcement: readonly(announcement),
     lastSetup: readonly(lastSetup),
+    lastSetupByMode: readonly(lastSetupByMode),
     remainingMs: countdown.remainingMs,
     isTimerRunning: countdown.isRunning,
     isGameActive,

@@ -1,5 +1,6 @@
-export interface TeamScore {
-  name: string
+import type { RosterEntry } from '../types/game'
+
+export interface TeamScore extends RosterEntry {
   score: number
 }
 
@@ -17,6 +18,7 @@ export function rankTeams(teams: readonly TeamScore[]): RankedTeam[] {
   const sorted = teams.map((team, teamIndex) => ({ team, teamIndex })).sort((a, b) => b.team.score - a.team.score)
   return sorted.map(({ team, teamIndex }) => ({
     name: team.name,
+    emoji: team.emoji,
     score: team.score,
     teamIndex,
     rank: 1 + teams.filter((other) => other.score > team.score).length,
