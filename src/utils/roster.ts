@@ -1,6 +1,13 @@
-import { EMOJI_POOL } from '../config'
+import { EMOJI_POOL, MAX_PHOTO_LENGTH } from '../config'
 import type { RosterEntry } from '../types/game'
 import { normalizeTeamName } from './setupRules'
+
+// Only small inline pictures: never a link to elsewhere, and never SVG, which can carry script.
+const PHOTO_URL_PATTERN: RegExp = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/]+={0,2}$/
+
+export function isPhotoUrl(value: string): boolean {
+  return value.length <= MAX_PHOTO_LENGTH && PHOTO_URL_PATTERN.test(value)
+}
 
 export function parseRosterNames(text: string): string[] {
   return text

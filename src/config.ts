@@ -23,6 +23,9 @@ export const OPTION_LABELS: readonly string[] = ['A', 'B', 'C', 'D']
 // Prompts carrying a list or passage are set smaller so less of the card needs scrolling.
 export const LONG_PROMPT_LENGTH: number = 160
 export const CONTESTS_DIR: string = 'contests'
+// Must match QuestRush, which writes the class spreadsheet (MAX_EMOJI_LENGTH and MAX_PHOTO_LENGTH there).
+export const MAX_EMOJI_LENGTH: number = 16
+export const MAX_PHOTO_LENGTH: number = 45000
 
 export interface ModeWords {
   label: string

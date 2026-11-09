@@ -36,7 +36,11 @@ npx vitest run -t "replaced card goes to another"   # tests by name
 - Individual Players is selected whenever a quiz is opened fresh; New Game returns to setup with the last mode, and each mode's fields come back from its own last game (`lastSetupByMode`), so playing Teams doesn't wipe a typed class list. Each mode keeps its own questions-per-turn value (players default to `DEFAULT_QUESTIONS_PER_PLAYER`). The mode toggle heads the settings column (its "Game settings" legend is screen-reader only), because the roster column has no height to spare in the `lg` fit.
 - Internally a player is a "team" (`Team`, `teams`, `questionsPerTeam`, the deck's team index); only user-visible text changes with the mode.
 - Emojis come from `EMOJI_POOL` (the same pool as QuestRush). `fillDefaultEmojis` gives entries without a pick a pool emoji nobody picked. `buildRoster` pairs names with picks. In Individual mode picks are keyed by name (`rosterKey`, also the duplicate-name check), so they follow the student when lines move. Both pickers use `EmojiSelect`.
-- `AvatarBadge` draws the emoji wherever a team shape used to be; it is the place a student photo goes later.
+- `AvatarBadge` draws the entry's `photo` when it has one, otherwise its emoji.
+- **Google class roster** (only when built with `VITE_GOOGLE_CLIENT_ID` and `VITE_ROSTER_SHEET_ID`, see `.env.example`): Individual mode gets a Type Names / Google Class toggle under the mode toggle. Flow: Connect Google, pick a class, Start Game. The whole class loads in the sheet's row order (the user chose row order over QuestRush's `position` column) as a read-only preview (`GoogleClassRoster.vue`): no selection, editing, reordering or emoji picking.
+  - The spreadsheet is QuestRush's: `classrooms` (`slug`, `name`) and `students` (`classroom_slug`, `name`, `emoji`, `photo`), columns found by header name (`src/utils/classSheet.ts`). Photos are accepted only as `data:image/(jpeg|png|webp);base64` up to `MAX_PHOTO_LENGTH` (`isPhotoUrl` in `utils/roster.ts`, applied by the parser and again by `AvatarBadge`, so no roster source can draw a link or SVG); invalid or blank emojis get pool emojis.
+  - `useClassRoster` (created once in `QuizApp`, passed to `SetupScreen`) owns the source toggle, connection status, class list, loaded class and the typed list, so New Game comes back to the same class and a Google game doesn't wipe typed names. Every pick re-reads the `students` tab; a newer pick aborts the earlier download.
+  - `services/googleSignIn.ts` (GIS token client, `spreadsheets.readonly`) and `services/googleSheets.ts` (`readSheetTab`, one `values/<tab>` GET). A 401 throws `GoogleConnectionExpired`, which sends setup back to Connect Google. Teacher-facing errors are `FriendlyError`s; anything else shows a generic message and goes to the console.
 
 **Game state machine (`useGame.ts`).**
 - Phases: `loading → error | setup → ready → revealing → answering ⇄ paused → resolved → ready | results → setup`. Different Card works from `answering` and `paused`.
@@ -80,7 +84,7 @@ npx vitest run -t "replaced card goes to another"   # tests by name
 
 ## Constraints
 
-- No backend, accounts, persistence (not even localStorage), external data services or animation libraries. The one exception is the cookieless Cloudflare Web Analytics beacon in `index.html`. Media assets (images, audio, video) are allowed; put them in `public/` or import them from `src/`.
+- No backend, accounts, persistence (not even localStorage), external data services or animation libraries. The exceptions are the cookieless Cloudflare Web Analytics beacon in `index.html` and the optional, read-only Google class roster (Google Identity Services script plus Sheets API GETs, token in memory only). Never request a Google scope that can write, and never write anything back to Google. Media assets (images, audio, video) are allowed; put them in `public/` or import them from `src/`.
 - Reloading the page starts a fresh game.
 - `public/favicon.png` is a 180×180 render of `public/favicon.svg` with square corners, because iOS fills transparent corners with black. Re-render it whenever the SVG changes (for example with `sharp`, run from outside the project so it doesn't become a dependency).
 - The correct answer must not appear in the DOM or in styling before the question is resolved.
