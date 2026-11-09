@@ -1,0 +1,612 @@
+{
+  "title": "Grammar: -ed and -ing Adjectives",
+  "slug": "grammar-ed-and-ing-adjectives",
+  "category": "Grammar",
+  "settings": {
+    "secondsPerQuestion": 30,
+    "defaultQuestionsPerTeam": 5,
+    "allowCrossTeamRepeats": false
+  },
+  "questions": [
+    {
+      "id": "adj-ed-ing-01",
+      "prompt": "Fill in the blank.\nAfter walking for three hours, we felt ____ and stopped to rest.",
+      "options": [
+        "excited",
+        "tiring",
+        "exciting",
+        "tired"
+      ],
+      "correctIndex": 3,
+      "explanation": "We felt tired. The long walk caused the feeling."
+    },
+    {
+      "id": "adj-ed-ing-02",
+      "prompt": "Fill in the blank.\nThe long walk was ____ because we had to climb several steep hills.",
+      "options": [
+        "relaxed",
+        "tiring",
+        "tired",
+        "relaxing"
+      ],
+      "correctIndex": 1,
+      "explanation": "The walk was tiring because it made us feel tired."
+    },
+    {
+      "id": "adj-ed-ing-03",
+      "prompt": "Fill in the blank.\nI was ____ to hear that our class had won first prize.",
+      "options": [
+        "exciting",
+        "disappointed",
+        "disappointing",
+        "excited"
+      ],
+      "correctIndex": 3,
+      "explanation": "Excited describes how I felt after hearing the good news."
+    },
+    {
+      "id": "adj-ed-ing-04",
+      "prompt": "Fill in the blank.\nThe final minute of the match was ____ because either team could still win.",
+      "options": [
+        "excited",
+        "bored",
+        "exciting",
+        "boring"
+      ],
+      "correctIndex": 2,
+      "explanation": "Exciting describes the part of the match that made people feel excited."
+    },
+    {
+      "id": "adj-ed-ing-05",
+      "prompt": "Fill in the blank.\nNadia was ____ by the sudden bang and hid behind the sofa.",
+      "options": [
+        "relaxing",
+        "relaxed",
+        "frightening",
+        "frightened"
+      ],
+      "correctIndex": 3,
+      "explanation": "Frightened describes how Nadia felt when she heard the bang."
+    },
+    {
+      "id": "adj-ed-ing-06",
+      "prompt": "Fill in the blank.\nThe sudden bang was so ____ that the children screamed.",
+      "options": [
+        "frightened",
+        "frightening",
+        "amusing",
+        "amused"
+      ],
+      "correctIndex": 1,
+      "explanation": "Frightening describes the sound that caused the fear."
+    },
+    {
+      "id": "adj-ed-ing-07",
+      "prompt": "Fill in the blank.\nI felt ____ when I saw my friends waiting with a birthday cake I hadn't expected.",
+      "options": [
+        "bored",
+        "boring",
+        "surprised",
+        "surprising"
+      ],
+      "correctIndex": 2,
+      "explanation": "Surprised describes how I felt when I saw the unexpected cake."
+    },
+    {
+      "id": "adj-ed-ing-08",
+      "prompt": "Fill in the blank.\nIt was ____ to see snow in the garden after such a warm afternoon.",
+      "options": [
+        "surprised",
+        "boring",
+        "surprising",
+        "bored"
+      ],
+      "correctIndex": 2,
+      "explanation": "Surprising describes an unexpected sight that made people feel surprised."
+    },
+    {
+      "id": "adj-ed-ing-09",
+      "prompt": "Fill in the blank.\nLeen was ____ by the map and couldn't tell which road to take.",
+      "options": [
+        "relaxed",
+        "relaxing",
+        "confused",
+        "confusing"
+      ],
+      "correctIndex": 2,
+      "explanation": "Confused describes how Leen felt when she couldn't understand the map."
+    },
+    {
+      "id": "adj-ed-ing-10",
+      "prompt": "Fill in the blank.\nThe directions were ____ because the same street had two different names.",
+      "options": [
+        "confusing",
+        "confused",
+        "boring",
+        "bored"
+      ],
+      "correctIndex": 0,
+      "explanation": "Confusing describes the directions that caused the confusion."
+    },
+    {
+      "id": "adj-ed-ing-11",
+      "prompt": "Fill in the blank.\nDuring the long wait, I felt ____ because I had nothing to do.",
+      "options": [
+        "excited",
+        "bored",
+        "exciting",
+        "boring"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bored describes how I felt while I had nothing to do."
+    },
+    {
+      "id": "adj-ed-ing-12",
+      "prompt": "Fill in the blank.\nThe lecture was ____ because it repeated the same facts for an hour.",
+      "options": [
+        "interesting",
+        "boring",
+        "bored",
+        "interested"
+      ],
+      "correctIndex": 1,
+      "explanation": "Boring describes the lecture that made listeners feel bored."
+    },
+    {
+      "id": "adj-ed-ing-13",
+      "prompt": "Fill in the blank.\nKareem is ____ in space travel and reads every article he can find about it.",
+      "options": [
+        "interesting",
+        "frightening",
+        "frightened",
+        "interested"
+      ],
+      "correctIndex": 3,
+      "explanation": "Interested describes how Kareem feels about space travel."
+    },
+    {
+      "id": "adj-ed-ing-14",
+      "prompt": "Fill in the blank.\nThe talk was so ____ that we stayed after it ended to ask more questions.",
+      "options": [
+        "interesting",
+        "bored",
+        "boring",
+        "interested"
+      ],
+      "correctIndex": 0,
+      "explanation": "Interesting describes the talk that made us want to learn more."
+    },
+    {
+      "id": "adj-ed-ing-15",
+      "prompt": "Fill in the blank.\nWe were ____ when the picnic was cancelled after we had planned it for weeks.",
+      "options": [
+        "exciting",
+        "excited",
+        "disappointed",
+        "disappointing"
+      ],
+      "correctIndex": 2,
+      "explanation": "Disappointed describes how we felt when our plans fell through."
+    },
+    {
+      "id": "adj-ed-ing-16",
+      "prompt": "Fill in the blank.\nThe result was ____ because our team had hoped to win and came last.",
+      "options": [
+        "satisfying",
+        "disappointed",
+        "satisfied",
+        "disappointing"
+      ],
+      "correctIndex": 3,
+      "explanation": "Disappointing describes the result that caused the feeling."
+    },
+    {
+      "id": "adj-ed-ing-17",
+      "prompt": "Fill in the blank.\nI felt ____ after I sat in the garden and listened to the birds for a while.",
+      "options": [
+        "frightening",
+        "relaxed",
+        "relaxing",
+        "frightened"
+      ],
+      "correctIndex": 1,
+      "explanation": "Relaxed describes how I felt after spending time in the garden."
+    },
+    {
+      "id": "adj-ed-ing-18",
+      "prompt": "Fill in the blank.\nThe gentle music was ____ and helped us unwind after a busy day.",
+      "options": [
+        "annoying",
+        "relaxed",
+        "relaxing",
+        "annoyed"
+      ],
+      "correctIndex": 2,
+      "explanation": "Relaxing describes music that helps people feel relaxed."
+    },
+    {
+      "id": "adj-ed-ing-19",
+      "prompt": "Fill in the blank.\nMy brother was ____ by the constant tapping and asked me to stop.",
+      "options": [
+        "amusing",
+        "amused",
+        "annoyed",
+        "annoying"
+      ],
+      "correctIndex": 2,
+      "explanation": "Annoyed describes how my brother felt about the tapping."
+    },
+    {
+      "id": "adj-ed-ing-20",
+      "prompt": "Fill in the blank.\nThe constant tapping was ____ and made it hard for everyone to concentrate.",
+      "options": [
+        "annoying",
+        "relaxed",
+        "relaxing",
+        "annoyed"
+      ],
+      "correctIndex": 0,
+      "explanation": "Annoying describes the tapping that bothered everyone."
+    },
+    {
+      "id": "adj-ed-ing-21",
+      "prompt": "Fill in the blank.\nI felt ____ when I called my teacher 'Mum' and everyone heard me.",
+      "options": [
+        "relaxing",
+        "embarrassed",
+        "relaxed",
+        "embarrassing"
+      ],
+      "correctIndex": 1,
+      "explanation": "Embarrassed describes how I felt in that moment."
+    },
+    {
+      "id": "adj-ed-ing-22",
+      "prompt": "Fill in the blank.\nIt was ____ to walk onto the stage and suddenly forget my first line.",
+      "options": [
+        "satisfying",
+        "embarrassing",
+        "embarrassed",
+        "satisfied"
+      ],
+      "correctIndex": 1,
+      "explanation": "Embarrassing describes a situation that can make a person feel embarrassed."
+    },
+    {
+      "id": "adj-ed-ing-23",
+      "prompt": "Fill in the blank.\nThe puppy was ____ by the thunder and hid under the bed.",
+      "options": [
+        "frightening",
+        "relaxing",
+        "relaxed",
+        "frightened"
+      ],
+      "correctIndex": 3,
+      "explanation": "Frightened describes how the puppy felt because of the thunder."
+    },
+    {
+      "id": "adj-ed-ing-24",
+      "prompt": "Fill in the blank.\nFinishing the puzzle was ____ because we had worked on it all week.",
+      "options": [
+        "disappointing",
+        "satisfied",
+        "disappointed",
+        "satisfying"
+      ],
+      "correctIndex": 3,
+      "explanation": "Satisfying describes the experience that gave us a sense of satisfaction."
+    },
+    {
+      "id": "adj-ed-ing-25",
+      "prompt": "Choose the words for the first and second blanks.\nThe film was ____, so we felt ____.",
+      "options": [
+        "boring / bored",
+        "boring / boring",
+        "bored / boring",
+        "bored / bored"
+      ],
+      "correctIndex": 0,
+      "explanation": "The film caused the feeling, so it was boring. We felt bored."
+    },
+    {
+      "id": "adj-ed-ing-26",
+      "prompt": "Choose the words for the first and second blanks.\nThe campers were ____ because the noise outside was ____.",
+      "options": [
+        "frightened / frightening",
+        "frightened / frightened",
+        "frightening / frightening",
+        "frightening / frightened"
+      ],
+      "correctIndex": 0,
+      "explanation": "The campers felt frightened. The noise was frightening."
+    },
+    {
+      "id": "adj-ed-ing-27",
+      "prompt": "Choose the words for the first and second blanks.\nThe results were ____, and the team felt ____.",
+      "options": [
+        "disappointed / disappointed",
+        "disappointed / disappointing",
+        "disappointing / disappointing",
+        "disappointing / disappointed"
+      ],
+      "correctIndex": 3,
+      "explanation": "The results caused disappointment, and the team felt it."
+    },
+    {
+      "id": "adj-ed-ing-28",
+      "prompt": "Choose the words for the first and second blanks.\nI felt ____ because the instructions were ____.",
+      "options": [
+        "confused / confusing",
+        "confusing / confusing",
+        "confused / confused",
+        "confusing / confused"
+      ],
+      "correctIndex": 0,
+      "explanation": "I felt confused. The instructions were confusing."
+    },
+    {
+      "id": "adj-ed-ing-29",
+      "prompt": "Choose the words for the first and second blanks.\nThe story was ____, and the children were ____ by it.",
+      "options": [
+        "amused / amused",
+        "amused / amusing",
+        "amusing / amused",
+        "amusing / amusing"
+      ],
+      "correctIndex": 2,
+      "explanation": "Amusing describes the story. Amused describes how the children felt."
+    },
+    {
+      "id": "adj-ed-ing-30",
+      "prompt": "Choose the words for the first and second blanks.\nWe felt ____ after our ____ climb to the top.",
+      "options": [
+        "tiring / tiring",
+        "tired / tiring",
+        "tired / tired",
+        "tiring / tired"
+      ],
+      "correctIndex": 1,
+      "explanation": "We felt tired. The climb was tiring."
+    },
+    {
+      "id": "adj-ed-ing-31",
+      "prompt": "Choose the words for the first and second blanks.\nThe news was ____, so everyone felt ____.",
+      "options": [
+        "surprising / surprised",
+        "surprised / surprising",
+        "surprising / surprising",
+        "surprised / surprised"
+      ],
+      "correctIndex": 0,
+      "explanation": "The news was surprising. Everyone felt surprised."
+    },
+    {
+      "id": "adj-ed-ing-32",
+      "prompt": "Choose the words for the first and second blanks.\nThe children were ____ because the science show was ____.",
+      "options": [
+        "excited / exciting",
+        "exciting / excited",
+        "excited / excited",
+        "exciting / exciting"
+      ],
+      "correctIndex": 0,
+      "explanation": "Excited describes the children’s feeling. Exciting describes the show that caused it."
+    },
+    {
+      "id": "adj-ed-ing-33",
+      "prompt": "Fill in the blank.\nI felt ____ when my lost backpack turned up with everything still inside.",
+      "options": [
+        "relieving",
+        "relieved",
+        "disappointing",
+        "disappointed"
+      ],
+      "correctIndex": 1,
+      "explanation": "Relieved describes how I felt when I stopped worrying about the backpack."
+    },
+    {
+      "id": "adj-ed-ing-34",
+      "prompt": "Fill in the blank.\nThe magician's trick was ____ because the coin seemed to disappear in mid-air.",
+      "options": [
+        "amazing",
+        "annoying",
+        "amazed",
+        "annoyed"
+      ],
+      "correctIndex": 0,
+      "explanation": "Amazing describes the trick that made people feel amazed."
+    },
+    {
+      "id": "adj-ed-ing-35",
+      "prompt": "Fill in the blank.\nWe were ____ by the silly voices in the puppet show and couldn't stop laughing.",
+      "options": [
+        "frightened",
+        "frightening",
+        "amusing",
+        "amused"
+      ],
+      "correctIndex": 3,
+      "explanation": "Amused describes how we felt. The silly voices made us laugh."
+    },
+    {
+      "id": "adj-ed-ing-36",
+      "prompt": "Fill in the blank.\nThe broken zip was ____ because it got stuck every time I tried to open my bag.",
+      "options": [
+        "annoyed",
+        "annoying",
+        "satisfying",
+        "satisfied"
+      ],
+      "correctIndex": 1,
+      "explanation": "Annoying describes the broken zip that kept bothering me."
+    },
+    {
+      "id": "adj-ed-ing-37",
+      "prompt": "Fill in the blank.\nAfter carrying the heavy boxes upstairs, the helpers were ____ and needed a break.",
+      "options": [
+        "exhausted",
+        "exhausting",
+        "relaxing",
+        "relaxed"
+      ],
+      "correctIndex": 0,
+      "explanation": "Exhausted describes how the helpers felt. They were very tired."
+    },
+    {
+      "id": "adj-ed-ing-38",
+      "prompt": "Fill in the blank.\nCarrying the heavy boxes upstairs was ____ even for the strongest helpers.",
+      "options": [
+        "exhausting",
+        "exhausted",
+        "relaxing",
+        "relaxed"
+      ],
+      "correctIndex": 0,
+      "explanation": "Exhausting describes an activity that makes people feel very tired."
+    },
+    {
+      "id": "adj-ed-ing-39",
+      "prompt": "Fill in the blank.\nI was ____ that my plant had grown so much in just one week.",
+      "options": [
+        "amazed",
+        "boring",
+        "amazing",
+        "bored"
+      ],
+      "correctIndex": 0,
+      "explanation": "Amazed describes how I felt about the plant's unexpected growth."
+    },
+    {
+      "id": "adj-ed-ing-40",
+      "prompt": "Fill in the blank.\nThe instructions were ____ because they skipped two important steps.",
+      "options": [
+        "relaxing",
+        "relaxed",
+        "confused",
+        "confusing"
+      ],
+      "correctIndex": 3,
+      "explanation": "Confusing describes the instructions that were hard to follow."
+    },
+    {
+      "id": "adj-ed-ing-41",
+      "prompt": "Fill in the blank.\nSara was ____ by her first model plane because it flew exactly as she had hoped.",
+      "options": [
+        "disappointing",
+        "satisfying",
+        "disappointed",
+        "satisfied"
+      ],
+      "correctIndex": 3,
+      "explanation": "Satisfied describes how Sara felt about the result she wanted."
+    },
+    {
+      "id": "adj-ed-ing-42",
+      "prompt": "Fill in the blank.\nWhen our teacher told a joke with an unexpected ending, everyone agreed it was ____.",
+      "options": [
+        "amused",
+        "amusing",
+        "exhausting",
+        "exhausted"
+      ],
+      "correctIndex": 1,
+      "explanation": "Amusing describes the joke that made people laugh."
+    },
+    {
+      "id": "adj-ed-ing-43",
+      "prompt": "Fill in the blank.\nAs the storm got louder, we grew ____ about the boat that hadn't returned.",
+      "options": [
+        "excited",
+        "worrying",
+        "worried",
+        "exciting"
+      ],
+      "correctIndex": 2,
+      "explanation": "Worried describes how we felt about the missing boat."
+    },
+    {
+      "id": "adj-ed-ing-44",
+      "prompt": "Fill in the blank.\nThe weather report was ____ because it warned of dangerous winds near the coast.",
+      "options": [
+        "relaxing",
+        "worried",
+        "worrying",
+        "relaxed"
+      ],
+      "correctIndex": 2,
+      "explanation": "Worrying describes news that gives people a reason to worry."
+    },
+    {
+      "id": "adj-ed-ing-45",
+      "prompt": "Choose the words for the first and second blanks.\nThe riddle was ____, so I felt ____ until someone explained it.",
+      "options": [
+        "puzzling / puzzled",
+        "puzzling / puzzling",
+        "puzzled / puzzled",
+        "puzzled / puzzling"
+      ],
+      "correctIndex": 0,
+      "explanation": "The riddle caused the confusion. I felt puzzled."
+    },
+    {
+      "id": "adj-ed-ing-46",
+      "prompt": "Choose the words for the first and second blanks.\nI was ____ after the ____ task of packing twenty boxes.",
+      "options": [
+        "exhausting / exhausted",
+        "exhausting / exhausting",
+        "exhausted / exhausting",
+        "exhausted / exhausted"
+      ],
+      "correctIndex": 2,
+      "explanation": "I felt exhausted. Packing the boxes was exhausting."
+    },
+    {
+      "id": "adj-ed-ing-47",
+      "prompt": "Choose the words for the first and second blanks.\nThe news about the storm was ____, so the sailors felt ____.",
+      "options": [
+        "worried / worried",
+        "worrying / worried",
+        "worrying / worrying",
+        "worried / worrying"
+      ],
+      "correctIndex": 1,
+      "explanation": "The news was worrying. Worried describes the sailors' feeling."
+    },
+    {
+      "id": "adj-ed-ing-48",
+      "prompt": "Choose the words for the first and second blanks.\nThe audience was ____ by the dancer's ____ performance.",
+      "options": [
+        "amazing / amazed",
+        "amazed / amazed",
+        "amazed / amazing",
+        "amazing / amazing"
+      ],
+      "correctIndex": 2,
+      "explanation": "The audience felt amazed. The performance was amazing."
+    },
+    {
+      "id": "adj-ed-ing-49",
+      "prompt": "Choose the words for the first and second blanks.\nThe warm bath was ____, and I felt ____ afterwards.",
+      "options": [
+        "relaxing / relaxing",
+        "relaxing / relaxed",
+        "relaxed / relaxing",
+        "relaxed / relaxed"
+      ],
+      "correctIndex": 1,
+      "explanation": "Relaxing describes the bath. Relaxed describes how I felt."
+    },
+    {
+      "id": "adj-ed-ing-50",
+      "prompt": "Choose the words for the first and second blanks.\nWe were ____ by the final score because our team's performance was ____.",
+      "options": [
+        "disappointing / disappointed",
+        "disappointing / disappointing",
+        "disappointed / disappointed",
+        "disappointed / disappointing"
+      ],
+      "correctIndex": 3,
+      "explanation": "Disappointed describes our feeling. Disappointing describes the performance."
+    }
+  ]
+}

@@ -71,7 +71,7 @@ function ordinal(rank: number): string {
       >
         <span v-if="team.isWinner" class="rounded-full bg-t4 px-4 py-1 text-lg font-extrabold text-ink">Winner</span>
         <AvatarBadge :emoji="team.emoji" size="md" />
-        <span class="w-full text-2xl leading-tight font-bold break-words">{{ team.name }}</span>
+        <span class="w-full text-2xl leading-tight font-bold wrap-break-word">{{ team.name }}</span>
         <div
           class="flex w-full flex-col items-center justify-center rounded-t-tile bg-(--team) text-(--team-on)"
           :class="[STEP_HEIGHTS[team.rank], { 'animate-winner-glow': team.isWinner }]"
@@ -97,7 +97,7 @@ function ordinal(rank: number): string {
       >
         <span class="font-display text-2xl font-extrabold">{{ ordinal(team.rank) }}</span>
         <AvatarBadge :emoji="team.emoji" size="sm" />
-        <span class="min-w-0 text-xl font-bold break-words">{{ team.name }}</span>
+        <span class="min-w-0 text-xl font-bold wrap-break-word">{{ team.name }}</span>
         <span class="font-display text-2xl font-extrabold tabular-nums">{{ team.score }} / {{ questionsPerTeam }}</span>
       </li>
     </ol>
