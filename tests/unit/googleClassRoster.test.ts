@@ -76,11 +76,22 @@ describe('Google class roster on the setup screen', () => {
     expect(rosterColumn(wrapper).find('#class-choice').exists()).toBe(false)
   })
 
+  it('opens on Google Source, listed before Type Names', () => {
+    const wrapper = mount(SetupScreen, {
+      props: { contest: makeContest(10, false), initial: null, initialByMode: {}, classRoster: useClassRoster(fakeDeps()) },
+    })
+    const sourceButtons = wrapper.get('[aria-label="Where the names come from"]').findAll('button')
+    expect(sourceButtons.map((button) => button.text())).toEqual(['Google Source', 'Type Names'])
+    expect(sourceButtons.map((button) => button.attributes('aria-pressed'))).toEqual(['true', 'false'])
+    expect(wrapper.find('textarea#player-names').exists()).toBe(false)
+    expect(wrapper.findAll('button').some((button) => button.text() === 'Connect Google')).toBe(true)
+  })
+
   it('offers only typed names when the site was built without Google', () => {
     const wrapper = mount(SetupScreen, {
       props: { contest: makeContest(10, false), initial: null, initialByMode: {}, classRoster: useClassRoster(fakeDeps({ isConfigured: () => false })) },
     })
-    expect(wrapper.findAll('button').some((button) => button.text() === 'Google Class')).toBe(false)
+    expect(wrapper.findAll('button').some((button) => button.text() === 'Google Source')).toBe(false)
     expect(wrapper.find('textarea#player-names').exists()).toBe(true)
   })
 })

@@ -51,7 +51,8 @@ function friendlyMessage(error: unknown): string {
 
 // Lives as long as the quiz page, so New Game comes back to the same connection and class.
 export function useClassRoster(deps: ClassRosterDeps = googleDeps): ClassRoster {
-  const source = ref<RosterSource>('typed')
+  const isAvailable = deps.isConfigured()
+  const source = ref<RosterSource>(isAvailable ? 'google' : 'typed')
   const status = ref<ClassRosterStatus>('disconnected')
   const message = ref('')
   const classes = ref<ClassChoice[]>([])
@@ -125,7 +126,7 @@ export function useClassRoster(deps: ClassRosterDeps = googleDeps): ClassRoster 
   }
 
   return {
-    isAvailable: deps.isConfigured(),
+    isAvailable,
     source,
     status,
     message,

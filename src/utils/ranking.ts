@@ -19,6 +19,7 @@ export function rankTeams(teams: readonly TeamScore[]): RankedTeam[] {
   return sorted.map(({ team, teamIndex }) => ({
     name: team.name,
     emoji: team.emoji,
+    photo: team.photo,
     score: team.score,
     teamIndex,
     rank: 1 + teams.filter((other) => other.score > team.score).length,

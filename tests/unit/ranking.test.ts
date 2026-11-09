@@ -24,6 +24,15 @@ describe('rankTeams', () => {
     expect(rankTeams([{ name: 'Solo', emoji: '🦊', score: 3 }])).toEqual([{ name: 'Solo', emoji: '🦊', score: 3, teamIndex: 0, rank: 1, isWinner: true }])
   })
 
+  it('keeps each player photo, so the results show it', () => {
+    const photo = 'data:image/jpeg;base64,QUJD'
+    const ranked = rankTeams([
+      { name: 'Lina', emoji: '🦊', photo, score: 1 },
+      { name: 'Sami', emoji: '🐯', score: 2 },
+    ])
+    expect(ranked.map((team) => team.photo)).toEqual([undefined, photo])
+  })
+
   it('ranks 30 players with shared ranks for ties', () => {
     const players = Array.from({ length: 30 }, (_, index) => ({ name: `P${index + 1}`, emoji: `e${index}`, score: index % 3 }))
     const ranked = rankTeams(players)
