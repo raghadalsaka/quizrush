@@ -4,6 +4,7 @@ import ErrorPanel from './ErrorPanel.vue'
 import GameScreen from './GameScreen.vue'
 import ResultsScreen from './ResultsScreen.vue'
 import SetupScreen from './SetupScreen.vue'
+import { useClassRoster } from '../composables/useClassRoster'
 import { gameKey, useGame } from '../composables/useGame'
 import { loadContest } from '../services/contestService'
 import type { CatalogEntry } from '../types/contest'
@@ -14,6 +15,7 @@ const props = defineProps<{
 
 const game = useGame({ loadContest: () => loadContest(props.entry.file) })
 provide(gameKey, game)
+const classRoster = useClassRoster()
 
 const { phase, contest, mode, lastSetup, lastSetupByMode, announcement, rankedTeams, questionsPerTeam, isGameActive } = game
 
@@ -37,6 +39,7 @@ onMounted(() => {
       :contest="contest"
       :initial="lastSetup"
       :initial-by-mode="lastSetupByMode"
+      :class-roster="classRoster"
       @start="game.startGame"
     />
     <ResultsScreen

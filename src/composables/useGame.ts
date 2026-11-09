@@ -133,7 +133,7 @@ export function useGame(options: GameOptions) {
     if (findSetupProblems(input, loaded.questions.length, loaded.settings.allowCrossTeamRepeats).length > 0) {
       return false
     }
-    const roster: RosterEntry[] = input.roster.map((entry) => ({ name: normalizeTeamName(entry.name), emoji: entry.emoji }))
+    const roster: RosterEntry[] = input.roster.map((entry) => ({ ...entry, name: normalizeTeamName(entry.name) }))
     lastSetup.value = { mode: input.mode, roster, questionsPerTeam: input.questionsPerTeam, secondsPerQuestion: input.secondsPerQuestion }
     lastSetupByMode.value = { ...lastSetupByMode.value, [input.mode]: lastSetup.value }
     deck = createDeck([...questionsById.keys()], roster.length, input.questionsPerTeam, loaded.settings.allowCrossTeamRepeats)

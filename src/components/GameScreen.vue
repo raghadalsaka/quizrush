@@ -153,7 +153,7 @@ onBeforeUnmount(() => {
     >
       <CountdownBar :phase="phase" :remaining-ms="remainingMs" :duration-ms="secondsPerQuestion * 1000">
         <h1 id="active-team-heading" class="flex items-center gap-4 font-display text-6xl leading-none font-extrabold tracking-tight text-(--team-text)">
-          <AvatarBadge v-if="currentTeam !== null" :emoji="currentTeam.emoji" size="lg" />
+          <AvatarBadge v-if="currentTeam !== null" :emoji="currentTeam.emoji" :photo="currentTeam.photo" size="lg" />
           <span class="min-w-0 break-words">{{ currentTeam?.name }}</span>
         </h1>
         <p class="mt-2 text-xl font-bold text-ink-soft">Turn {{ turnNumber }} of {{ questionsPerTeam }}</p>

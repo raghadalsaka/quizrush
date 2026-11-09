@@ -12,6 +12,7 @@ export type GameMode = 'individual' | 'teams'
 export interface RosterEntry {
   name: string
   emoji: string
+  photo?: string
 }
 
 export interface Team extends RosterEntry {

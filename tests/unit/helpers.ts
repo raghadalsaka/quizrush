@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, vi } from 'vitest'
 import { effectScope, type EffectScope } from 'vue'
+import type { ClassRosterDeps } from '../../src/composables/useClassRoster'
 import { EMOJI_POOL } from '../../src/config'
 import type { RandomInt } from '../../src/utils/random'
 import type { Contest, Question } from '../../src/types/contest'
@@ -81,4 +82,28 @@ export function runInScope<T>(create: () => T): { value: T; scope: EffectScope }
     throw new Error('effect scope did not run')
   }
   return { value, scope }
+}
+
+export const CLASS_VALUES: unknown[][] = [
+  ['slug', 'name', 'current_stage_slug', 'created_at'],
+  ['6b', 'Grade 6B'],
+  ['6a', 'Grade 6A'],
+]
+
+export const STUDENT_VALUES: unknown[][] = [
+  ['id', 'classroom_slug', 'name', 'emoji', 'position', 'created_at', 'photo'],
+  ['1', '6a', 'Lina', '🦊', '2', '', 'data:image/png;base64,QUJD'],
+  ['2', '6b', 'Omar', '🐼', '1', ''],
+  ['3', '6a', 'Sami', '🐯', '1', ''],
+]
+
+export function fakeDeps(overrides: Partial<ClassRosterDeps> = {}): ClassRosterDeps {
+  return {
+    isConfigured: () => true,
+    preload: () => Promise.resolve(),
+    token: () => 'token',
+    requestToken: () => Promise.resolve('token'),
+    readTab: (_token, tab) => Promise.resolve(tab === 'classrooms' ? CLASS_VALUES : STUDENT_VALUES),
+    ...overrides,
+  }
 }

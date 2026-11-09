@@ -1,7 +1,7 @@
 # quizrush
 Quizrush is a timed, team-based classroom quiz app. Built with Vue 3 and hosted on GitHub Pages, it uses JSON questions, random draws, instant explanations, and a live leaderboard.
 
-One teacher runs it on one interactive touch board (or a projector) for up to 30 individual players or 1–5 teams. Everything happens in the browser: there is no backend, no accounts, and nothing is saved. Reloading the page starts a fresh game.
+One teacher runs it on one interactive touch board (or a projector) for up to 30 individual players or 1–5 teams. Everything happens in the browser: there is no backend, no accounts, and nothing is saved. Reloading the page starts a fresh game. Class lists can optionally be read from a Google spreadsheet, read-only (see [Google classes](#google-classes)).
 
 ## Run it locally
 
@@ -71,7 +71,7 @@ If there aren't enough, the setup screen says so and keeps **Start Game** disabl
 
 ## Game rules
 
-- The setup screen starts in **Individual Players** mode every time a quiz is opened. Type up to 30 names, one per line; turns follow that order and each player gets one question unless the teacher changes it. **Teams** mode is the 1–5 team setup.
+- The setup screen starts in **Individual Players** mode every time a quiz is opened. Type up to 30 names, one per line; turns follow that order and each player gets one question unless the teacher changes it. **Teams** mode is the 1–5 team setup. When Google is set up, a whole class can be loaded instead of typing names (see [Google classes](#google-classes)).
 - Every player or team gets an emoji, picked beside its name or left on the one it was given. The emoji is shown next to the name on the turn heading, the scoreboard and the final results.
 - Players or teams play in the order they were entered, one question per turn, and everyone gets the same number of turns. Everyone has a turn before the next round starts.
 - **Start** draws a random question and flips the card. The timer starts once the answers can be clicked.
@@ -89,6 +89,23 @@ If there aren't enough, the setup screen says so and keeps **Start Game** disabl
 - **Repeats off:** a question that has been answered or timed out is used up for the whole game. A replaced question goes back into the deck for *other* teams.
 - **Repeats on:** a question can come up again for a different team at any time.
 - Every draw, including a replacement, only chooses questions that still leave enough for every remaining turn of every team. When no such question exists, **Different Card** is disabled with an explanation. A valid setup can therefore never run out of questions mid-game.
+
+## Google classes
+
+When the site is built with `VITE_GOOGLE_CLIENT_ID` and `VITE_ROSTER_SHEET_ID` (see `.env.example`), Individual Players mode offers **Google Class** beside **Type Names**. The teacher presses **Connect Google**, picks a class, and presses **Start Game**. The whole class plays, top to bottom in the spreadsheet's row order, and the setup screen shows a read-only preview of the names with their photos or emojis. There is no student selection, renaming, reordering or emoji picking in this mode: roster changes are made in the spreadsheet and show the next time the class is loaded.
+
+- **The spreadsheet is QuestRush's.** It reads the `classrooms` tab (`slug`, `name`) for the class list and the `students` tab (`classroom_slug`, `name`, `emoji`, `photo`) for the students; the `position` column is ignored. Columns are found by their header name, so don't rename the header cells.
+- **Read-only.** The sign-in asks only for `https://www.googleapis.com/auth/spreadsheets.readonly`, and QuizRush only sends GET requests. It never writes rosters, attendance or scores to Google.
+- **Photos** are shown only when the cell holds a small inline JPEG, PNG or WebP picture (a `data:image/...;base64,` value, as QuestRush writes them). A missing or other photo falls back to the student's emoji, and a missing emoji to an unused one from the pool.
+- A class with more than 30 students can't be started. Names longer than 30 characters or repeated names block Start Game until they are fixed in the spreadsheet.
+- The Google token lives in memory only, so reloading or opening another quiz asks the teacher to connect again.
+
+### Setup (manual, in the Google Cloud console and GitHub)
+
+1. In the Google Cloud project behind QuestRush's sign-in client (or a new one with the **Google Sheets API** enabled), add `https://www.googleapis.com/auth/spreadsheets.readonly` under **Google Auth Platform → Data access**.
+2. On the OAuth client (type **Web application**), add `https://quizrush.raghadalsaka.com` and `http://localhost:5173` under **Authorized JavaScript origins**.
+3. Each teacher's Google account needs at least view access to the spreadsheet, and must be a test user while the app is in **Testing**.
+4. In this GitHub repository, set the variables `QUIZRUSH_GOOGLE_CLIENT_ID` and `QUIZRUSH_ROSTER_SHEET_ID` (neither is secret), then redeploy. For local development, put the same values in `.env`.
 
 ## Deployment (GitHub Pages)
 

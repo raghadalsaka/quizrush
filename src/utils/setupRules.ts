@@ -1,5 +1,5 @@
 import { MAX_PLAYERS, MAX_QUESTIONS_PER_TEAM, MAX_SECONDS_PER_QUESTION, MAX_TEAMS, MAX_TEAM_NAME_LENGTH, MIN_PLAYERS, MIN_TEAMS, MODE_WORDS } from '../config'
-import type { GameMode, SetupInput } from '../types/game'
+import type { GameMode, RosterEntry, SetupInput } from '../types/game'
 import { isIntegerInRange } from './numbers'
 
 const WHOLE_NUMBER_PATTERN: RegExp = /^\d+$/
@@ -61,6 +61,20 @@ function rosterSizeProblem(mode: GameMode, count: number): string | null {
   }
   if (count > MAX_PLAYERS) {
     return `Enter at most ${MAX_PLAYERS} player names. There are ${count} now.`
+  }
+  return null
+}
+
+// A class from Google can't be edited here, so its problems point at the class rather than at the names.
+export function findClassRosterProblem(roster: readonly RosterEntry[] | null): string | null {
+  if (roster === null) {
+    return 'Connect Google and pick a class.'
+  }
+  if (roster.length < MIN_PLAYERS) {
+    return 'This class has no students yet.'
+  }
+  if (roster.length > MAX_PLAYERS) {
+    return `This class has ${roster.length} students. A game takes at most ${MAX_PLAYERS} players.`
   }
   return null
 }

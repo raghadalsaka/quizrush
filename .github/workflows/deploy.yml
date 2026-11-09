@@ -41,6 +41,9 @@ jobs:
 
       - name: Build
         run: npx vite build
+        env:
+          VITE_GOOGLE_CLIENT_ID: ${{ vars.QUIZRUSH_GOOGLE_CLIENT_ID }}
+          VITE_ROSTER_SHEET_ID: ${{ vars.QUIZRUSH_ROSTER_SHEET_ID }}
 
       - name: Configure Pages
         uses: actions/configure-pages@v6

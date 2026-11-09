@@ -61,7 +61,7 @@ watch(
       ]"
       :aria-current="index === activeIndex ? 'step' : undefined"
     >
-      <AvatarBadge :emoji="team.emoji" size="sm" />
+      <AvatarBadge :emoji="team.emoji" :photo="team.photo" size="sm" />
       <span class="min-w-0 text-lg font-bold break-words">{{ team.name }}</span>
       <span
         :key="team.score"
