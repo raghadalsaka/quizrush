@@ -23,10 +23,10 @@ import PlayerRoster from './PlayerRoster.vue'
 
 const DEFAULT_TEAM_COUNT: number = 2
 const GAME_MODES: readonly GameMode[] = ['individual', 'teams']
-const ROSTER_SOURCES: readonly RosterSource[] = ['typed', 'google']
+const ROSTER_SOURCES: readonly RosterSource[] = ['google', 'typed']
 const ROSTER_SOURCE_LABELS: Record<RosterSource, string> = {
   typed: 'Type Names',
-  google: 'Google Class',
+  google: 'Google Source',
 }
 const TEAM_NAME_INPUT_LIMIT: number = MAX_TEAM_NAME_LENGTH + 10
 const TOGGLE_STYLES: Record<'on' | 'off', string> = {
